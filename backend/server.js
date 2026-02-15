@@ -19,8 +19,14 @@ promClient.collectDefaultMetrics();
 app.use(helmet());
 
 const corsOptions = {
-    origin: ['http://localhost:3001',
-        'https://amazing-crisp-9bcb1a.netlify.app'],
+    origin: [
+        'http://localhost:3001',  // Development frontend
+        'https://amazing-crisp-9bcb1a.netlify.app',  // Old deployment
+        'https://cssekku3-5.cpkku.com',  // Production (Domain)
+        'http://cssekku3-5.cpkku.com',   // Production HTTP
+        'https://43.241.56.46',  // Production (IP fallback)
+        'http://43.241.56.46'    // Production HTTP (IP fallback)
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -35,6 +36,11 @@ model User {
   notification            Notification[]
   createdRoutes           Route[]             @relation("DriverRoutes")
   vehicles                Vehicle[]
+
+  //Relations
+  reportedIncidents Incident[] @relation("ReporterIncidents")
+  incidentsAgainst  Incident[] @relation("ReportedUserIncidents")
+  resolvedIncidents Incident[] @relation("ResolverIncidents")
 
   @@index([role])
   @@index([isActive])
@@ -76,6 +82,9 @@ model Notification {
   createdAt       DateTime         @default(now())
   adminReviewedAt DateTime?
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  incidentsId String?
+  incident    Incident? @relation("IncidentNotifications", fields: [incidentsId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
   @@index([userId, readAt])
@@ -131,6 +140,7 @@ model Route {
   bookings        Booking[]
   driver          User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
   vehicle         Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  incidents       Incident[]
 
   @@index([driverId])
   @@index([vehicleId])
@@ -153,6 +163,46 @@ model Booking {
   cancelReason    CancelReason?
   passenger       User          @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
   route           Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  incidents       Incident[]
+}
+
+model Incident {
+  id             String           @id @default(cuid())
+  reporterId     String
+  reportedUserId String?
+  routeId        String?
+  bookingId      String?
+  type           IncidentType
+  status         IncidentStatus   @default(PENDING)
+  priority       IncidentPriority @default(NORMAL)
+  title          String
+  description    String           @db.Text
+  location       Json?            @db.Json
+  evidenceUrls   String[]
+  metadata       Json?            @db.Json
+  resolvedBy     String?
+  resolvedAt     DateTime?
+  resolution     String?          @db.Text
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  //Relations
+  reporter      User           @relation("ReporterIncidents", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser  User?          @relation("ReportedUserIncidents", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  resolver      User?          @relation("ResolverIncidents", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  route         Route?         @relation(fields: [routeId], references: [id], onDelete: SetNull)
+  booking       Booking?       @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  notifications Notification[] @relation("IncidentNotifications")
+
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([routeId])
+  @@index([bookingId])
+  @@index([status])
+  @@index([priority])
+  @@index([type])
+  @@index([createdAt])
+  @@index([resolvedAt])
 }
 
 enum Role {
@@ -206,4 +256,32 @@ enum NotificationType {
   VERIFICATION
   BOOKING
   ROUTE
+  INCIDENT
+}
+
+enum IncidentType {
+  SAFETY_CONCERN
+  INAPPROPRIATE_BEHAVIOR
+  HARASSMENT
+  ACCIDENT
+  VEHICLE_ISSUE
+  FRAUD
+  ROUTE_ISSUE
+  PAYMENT_DISPUTE
+  OTHER
+}
+
+enum IncidentStatus {
+  PENDING
+  INVESTIGATING
+  RESOLVED
+  DISMISSED
+  ESCALATED
+}
+
+enum IncidentPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }
