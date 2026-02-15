@@ -38,9 +38,12 @@ model User {
   vehicles                Vehicle[]
 
   //Relations
-  reportedIncidents Incident[] @relation("ReporterIncidents")
-  incidentsAgainst  Incident[] @relation("ReportedUserIncidents")
-  resolvedIncidents Incident[] @relation("ResolverIncidents")
+  reportedIncidents    Incident[] @relation("ReporterIncidents")
+  incidentsAgainst     Incident[] @relation("ReportedUserIncidents")
+  resolvedIncidents    Incident[] @relation("ResolverIncidents")
+  adminChatRooms       ChatRoom[] @relation("AdminChatRooms")
+  adminClosedChatRooms ChatRoom[] @relation("AdminClosedChatRooms")
+  messages             Message[]
 
   @@index([role])
   @@index([isActive])
@@ -193,6 +196,7 @@ model Incident {
   route         Route?         @relation(fields: [routeId], references: [id], onDelete: SetNull)
   booking       Booking?       @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   notifications Notification[] @relation("IncidentNotifications")
+  chatRoom      ChatRoom?
 
   @@index([reporterId])
   @@index([reportedUserId])
@@ -203,6 +207,40 @@ model Incident {
   @@index([type])
   @@index([createdAt])
   @@index([resolvedAt])
+}
+
+model ChatRoom {
+  id         String     @id @default(cuid())
+  incidentId String     @unique
+  adminId    String?
+  status     ChatStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+  closedAt   DateTime?
+  closedBy   String? //Admin คนปิด
+
+  // Relation
+  incident Incident  @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  admin    User?     @relation("AdminChatRooms", fields: [adminId], references: [id], onDelete: SetNull)
+  closer   User?     @relation("AdminClosedChatRooms", fields: [closedBy], references: [id], onDelete: SetNull)
+  messages Message[]
+}
+
+model Message {
+  id          String      @id @default(cuid())
+  chatRoomId  String
+  senderId    String
+  messageType MessageType @default(TEXT)
+  content     String?     @db.Text //เก็บข้อความtext
+  attachments String[] //เก็บ url รูปภาพ/ไฟล์
+  location    Json?       @db.Json //เก็บเป็น lat,lng,address
+  createdAt   DateTime    @default(now())
+
+  // Relation
+  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  sender   User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([chatRoomId])
+  @@index([senderId])
 }
 
 enum Role {
@@ -284,4 +322,15 @@ enum IncidentPriority {
   NORMAL
   HIGH
   URGENT
+}
+
+enum ChatStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum MessageType {
+  TEXT // ข้อความธรรมดา
+  FILE // รูปภาพ/ไฟล์
+  LOCATION // พิกัดสถานที่
 }
