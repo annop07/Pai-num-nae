@@ -3,6 +3,7 @@ const { protect, requireAdmin } = require('../middlewares/auth');
 const chatController = require('../controllers/chat.controller');
 const upload = require('../middlewares/upload.middleware');
 const asyncHandler = require('express-async-handler');
+const { uploadToCloudinary } = require('../utils/cloudinary');
 const router = express.Router();
 
 // GET /api/chat/rooms - ดู chat rooms ทั้งหมดของตัวเอง
@@ -20,7 +21,18 @@ router.post(
   protect,
   upload.array('files', 5), // อนุญาตสูงสุด 5 ไฟล์
   asyncHandler(async (req, res) => {
-    const urls = req.files.map(f => f.path); // Cloudinary URLs
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: 'No files uploaded' });
+    }
+
+    // Upload แต่ละไฟล์ไปยัง Cloudinary
+    const uploadPromises = req.files.map(file => 
+      uploadToCloudinary(file.buffer, 'chat-attachments')
+    );
+
+    const results = await Promise.all(uploadPromises);
+    const urls = results.map(r => r.url);
+
     res.status(200).json({ success: true, data: { urls } });
   })
 );
