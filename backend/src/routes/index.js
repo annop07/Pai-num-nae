@@ -5,9 +5,9 @@ const vehicleRoutes = require('./vehicle.routes');
 const routeRoutes = require('./route.routes');
 const driverVerifRoutes = require('./driverVerification.routes');
 const bookingRoutes = require('./booking.routes');
-const notificationRoutes = require('./notification.routes')
-const mapRoutes = require('./maps.routes')
-const chatRoutes = require('./chat.routes');
+const notificationRoutes = require('./notification.routes');
+const mapRoutes = require('./maps.routes');
+const incidentRoutes = require('./incident.routes');
 
 const router = express.Router();
 
@@ -19,6 +19,6 @@ router.use('/driver-verifications', driverVerifRoutes);
 router.use('/bookings', bookingRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/maps', mapRoutes);
-router.use('/chat', chatRoutes);
+router.use('/incidents', incidentRoutes);
 
 module.exports = router;
