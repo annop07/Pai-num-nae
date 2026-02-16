@@ -20,7 +20,6 @@ const INCIDENT_INCLUDE = {
 };
 
 // User Functions
-
 async function createIncident(data, reporterId) {
     if (data.reportedUserId) {
         const user = await prisma.user.findUnique({ where: { id: data.reportedUserId } });
@@ -81,7 +80,6 @@ async function getIncidentById(id) {
 }
 
 // Admin Functions
-
 async function searchIncidentsAdmin(opts = {}) {
     const {
         page = 1,

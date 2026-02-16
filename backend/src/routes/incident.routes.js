@@ -11,6 +11,7 @@ const {
 
 const router = express.Router();
 
+// POST /api/incidents/admin
 router.get(
     '/admin',
     protect,
@@ -19,6 +20,7 @@ router.get(
     incidentController.adminListIncidents
 );
 
+// GET /api/incidents/admin/:id
 router.get(
     '/admin/:id',
     protect,
@@ -27,6 +29,7 @@ router.get(
     incidentController.adminGetIncidentById
 );
 
+// PATCH /api/incidents/admin/:id
 router.patch(
     '/admin/:id',
     protect,
@@ -35,6 +38,7 @@ router.patch(
     incidentController.adminUpdateIncident
 );
 
+// DELETE /api/incidents/admin/:id
 router.delete(
     '/admin/:id',
     protect,
@@ -43,6 +47,7 @@ router.delete(
     incidentController.adminDeleteIncident
 );
 
+// POST /api/incidents
 router.post(
     '/',
     protect,
@@ -50,12 +55,14 @@ router.post(
     incidentController.createIncident
 );
 
+// GET /api/incidents/me
 router.get(
     '/me',
     protect,
     incidentController.getMyIncidents
 );
 
+// GET /api/incidents/:id
 router.get(
     '/:id',
     protect,
