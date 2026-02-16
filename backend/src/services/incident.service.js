@@ -12,7 +12,7 @@ const INCIDENT_INCLUDE = {
         select: { id: true, firstName: true, lastName: true, email: true },
     },
     route: {
-        select: { id: true, origin: true, destination: true, departureTime: true },
+        select: { id: true, startLocation: true, endLocation: true, departureTime: true },
     },
     booking: {
         select: { id: true, status: true, numberOfSeats: true },
@@ -45,6 +45,7 @@ async function createIncident(data, reporterId) {
             routeId: data.routeId || null,
             bookingId: data.bookingId || null,
             type: data.type,
+            priority: data.priority || 'NORMAL',
             title: data.title,
             description: data.description,
             location: data.location || null,
