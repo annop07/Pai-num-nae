@@ -223,6 +223,10 @@ model ChatRoom {
   admin    User?     @relation("AdminChatRooms", fields: [adminId], references: [id], onDelete: SetNull)
   closer   User?     @relation("AdminClosedChatRooms", fields: [closedBy], references: [id], onDelete: SetNull)
   messages Message[]
+
+  @@index([incidentId])
+  @@index([adminId])
+  @@index([status])
 }
 
 model Message {
@@ -241,6 +245,7 @@ model Message {
 
   @@index([chatRoomId])
   @@index([senderId])
+  @@index([createdAt])
 }
 
 enum Role {
