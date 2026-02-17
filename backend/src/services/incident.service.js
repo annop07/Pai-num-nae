@@ -17,6 +17,9 @@ const INCIDENT_INCLUDE = {
     booking: {
         select: { id: true, status: true, numberOfSeats: true },
     },
+    chatRoom: {
+        select: { id: true },
+    },
 };
 
 // User Functions

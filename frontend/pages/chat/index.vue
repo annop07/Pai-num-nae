@@ -355,6 +355,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick, computed, watch } from "vue";
+import { useRoute } from "#app";
 import { useChat } from "@/composables/useChat";
 import { useSocket } from "@/composables/useSocket";
 import { useToast } from "@/composables/useToast";
@@ -385,6 +386,7 @@ const {
   emitTyping,
 } = useSocket();
 
+const route = useRoute();
 const chatContainer = ref(null);
 const newMessage = ref("");
 const isTyping = ref(false);
@@ -573,11 +575,20 @@ watch(activeChatId, (newChatId, oldChatId) => {
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   scrollToBottom();
-  fetchChatRooms();
+  await fetchChatRooms();
   checkMobile();
   window.addEventListener("resize", checkMobile);
+
+  // ถ้ามี query ?room= (เช่น จาก Admin กด Chat with Reporter) ให้เปิด chat นั้นโดยอัตโนมัติ
+  const roomId = route.query?.room;
+  if (roomId && chatList.value.length > 0) {
+    const chat = chatList.value.find((c) => c.id === roomId);
+    if (chat) {
+      await selectChat(chat);
+    }
+  }
 
   // รับข้อความจาก Socket
   onNewMessage((message) => {
