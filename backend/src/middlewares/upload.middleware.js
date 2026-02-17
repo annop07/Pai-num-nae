@@ -17,4 +17,23 @@ const upload = multer({
     },
 });
 
+// สำหรับ Chat: อนุญาตรูปภาพ + วิดีโอ + เอกสาร (หลักฐาน) ขนาดสูงสุด 50MB
+const uploadChat = multer({
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB สำหรับวิดีโอจากกล้องมือถือ
+    fileFilter: (req, file, cb) => {
+        const allowed = file.mimetype.startsWith('image/') ||
+            file.mimetype.startsWith('video/') ||
+            file.mimetype === 'application/pdf' ||
+            file.mimetype === 'application/msword' || // .doc
+            file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; // .docx
+        if (allowed) {
+            cb(null, true);
+        } else {
+            cb(new ApiError(400, 'อนุญาตเฉพาะไฟล์รูปภาพ วิดีโอ และเอกสาร (PDF, DOC, DOCX) เท่านั้น'), false);
+        }
+    },
+});
+
 module.exports = upload;
+module.exports.uploadChat = uploadChat;

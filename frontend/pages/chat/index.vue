@@ -219,12 +219,14 @@
                     {{ msg.text }}
                   </template>
 
-                  <!-- FILE (รูปภาพ/ไฟล์) -->
+                  <!-- FILE (รูปภาพ/วิดีโอ/ไฟล์) -->
                   <template v-else-if="msg.messageType === 'FILE'">
                     <div v-if="msg.attachments?.length" class="space-y-2">
                       <template v-for="(url, i) in msg.attachments" :key="i">
                         <img v-if="isImageUrl(url)" :src="url" class="max-w-full max-h-48 rounded-lg object-cover"
                           alt="รูปภาพ" />
+                        <video v-else-if="isVideoUrl(url)" :src="url" controls class="max-w-full max-h-64 rounded-lg"
+                          preload="metadata">เบราว์เซอร์ไม่รองรับการเล่นวิดีโอ</video>
                         <a v-else :href="url" target="_blank" rel="noopener" class="text-blue-500 underline break-all">
                           เปิดไฟล์
                         </a>
@@ -234,11 +236,33 @@
                   </template>
                   <!-- LOCATION -->
                   <template v-else-if="msg.messageType === 'LOCATION' && msg.location">
-                    <a :href="`https://maps.google.com/?q=${msg.location.lat},${msg.location.lng}`" target="_blank"
-                      rel="noopener" class="inline-flex items-center gap-2 text-blue-500 hover:underline">
-                      <span>📍</span>
-                      {{ msg.location.address || "ดูตำแหน่งบนแผนที่" }}
-                    </a>
+                    <div class="location-card rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                      <div class="map-embed w-full h-40">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          frameborder="0"
+                          style="border:0"
+                          loading="lazy"
+                          referrerpolicy="no-referrer-when-downgrade"
+                          :src="`https://maps.google.com/maps?q=${msg.location.lat},${msg.location.lng}&z=15&output=embed`"
+                          allowfullscreen
+                        />
+                      </div>
+                      <div class="px-3 py-2 bg-gray-50 text-sm">
+                        <p v-if="msg.location.address" class="text-gray-700 line-clamp-2 mb-1">
+                          {{ msg.location.address }}
+                        </p>
+                        <a :href="`https://maps.google.com/?q=${msg.location.lat},${msg.location.lng}`"
+                          target="_blank" rel="noopener"
+                          class="inline-flex items-center gap-1 text-blue-600 hover:underline text-xs font-medium">
+                          <span>เปิดใน Google Maps</span>
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
                   </template>
                   <template v-else>
                     {{ msg.text }}
@@ -298,10 +322,17 @@
                       d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                 </button>
-                <button type="button"
-                  class="p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+                <button type="button" @click="sendLocation"
+                  :disabled="!activeChatId || sendMessageLoading || sendLocationLoading || isChatClosed"
+                  class="p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   title="ส่งตำแหน่ง">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg v-if="sendLocationLoading" class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                  </svg>
+                  <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -344,7 +375,7 @@
                 </svg>
               </button>
             </form>
-            <input ref="fileInput" type="file" multiple accept="image/*,.pdf,.doc,.docx" class="hidden"
+            <input ref="fileInput" type="file" multiple accept="image/*,video/*,.pdf,.doc,.docx" class="hidden"
               @change="handleFileSelect" />
           </div>
         </template>
@@ -522,8 +553,76 @@ const isImageUrl = (url) => {
   if (!url || typeof url !== "string") return false;
   return (
     /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(url) ||
-    url.includes("cloudinary") ||
+    (url.includes("cloudinary") && !url.includes("/video/")) ||
     url.includes("image")
+  );
+};
+
+const isVideoUrl = (url) => {
+  if (!url || typeof url !== "string") return false;
+  return (
+    /\.(mp4|webm|ogg|mov|avi|m4v)(\?|$)/i.test(url) ||
+    (url.includes("cloudinary") && url.includes("/video/"))
+  );
+};
+
+const sendLocationLoading = ref(false);
+
+const sendLocation = () => {
+  if (!activeChatId.value || sendLocationLoading.value || isChatClosed.value) return;
+  if (!navigator.geolocation) {
+    showToast('เบราว์เซอร์ไม่รองรับการส่งตำแหน่ง');
+    return;
+  }
+
+  sendLocationLoading.value = true;
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // ดึงชื่อสถานที่จาก OpenStreetMap Nominatim (ฟรี ไม่ต้องใช้ API key)
+      let address = null;
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`,
+          { headers: { 'Accept': 'application/json' } }
+        );
+        const data = await res.json();
+        address = data?.display_name || null;
+      } catch {
+        // ถ้า reverse geocode ล้มเหลว ก็ส่งแค่ lat/lng ได้
+      }
+
+      try {
+        socketSendMessage({
+          chatRoomId: activeChatId.value,
+          messageType: 'LOCATION',
+          content: '',
+          location: { lat, lng, address },
+        });
+        showToast('ส่งตำแหน่งสำเร็จ');
+        scrollToBottom();
+      } catch (err) {
+        console.error('Send location error:', err);
+        showToast('ส่งตำแหน่งไม่สำเร็จ');
+      } finally {
+        sendLocationLoading.value = false;
+      }
+    },
+    (error) => {
+      sendLocationLoading.value = false;
+      if (error.code === 1) {
+        showToast('คุณไม่อนุญาตให้เข้าถึงตำแหน่ง กรุณาเปิดสิทธิ์ในเบราว์เซอร์');
+      } else if (error.code === 2) {
+        showToast('ไม่สามารถระบุตำแหน่งได้ กรุณาลองใหม่');
+      } else if (error.code === 3) {
+        showToast('การรอตำแหน่งใช้เวลานานเกินไป');
+      } else {
+        showToast('เกิดข้อผิดพลาดในการส่งตำแหน่ง');
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
 };
 
@@ -645,6 +744,23 @@ definePageMeta({
 <style scoped>
 .font-kanit {
   font-family: "Kanit", sans-serif;
+}
+
+/* Location Map Card */
+.location-card {
+  max-width: 320px;
+  min-width: 200px;
+}
+.map-embed {
+  min-height: 160px;
+  background: #e5e7eb;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Custom Scrollbar */

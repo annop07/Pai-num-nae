@@ -1,7 +1,7 @@
 const express = require('express');
 const { protect, requireAdmin } = require('../middlewares/auth');
 const chatController = require('../controllers/chat.controller');
-const upload = require('../middlewares/upload.middleware');
+const { uploadChat } = require('../middlewares/upload.middleware');
 const asyncHandler = require('express-async-handler');
 const { uploadToCloudinary } = require('../utils/cloudinary');
 const router = express.Router();
@@ -19,7 +19,7 @@ router.post('/rooms/:id/messages', protect, chatController.sendMessage);
 router.post(
   '/rooms/:id/upload',
   protect,
-  upload.array('files', 5), // อนุญาตสูงสุด 5 ไฟล์
+  uploadChat.array('files', 5), // อนุญาตสูงสุด 5 ไฟล์ (รูปภาพ + วิดีโอ สูงสุด 50MB/ไฟล์)
   asyncHandler(async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, message: 'No files uploaded' });
