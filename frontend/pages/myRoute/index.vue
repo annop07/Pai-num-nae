@@ -92,9 +92,9 @@
                                                 <li class="mt-1">
                                                     • จุดปลายทาง:
                                                     <span class="font-medium text-gray-900">{{ route.destination
-                                                    }}</span>
+                                                        }}</span>
                                                     <span v-if="route.destinationAddress"> — {{ route.destinationAddress
-                                                    }}</span>
+                                                        }}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -303,9 +303,9 @@
                                                 <li class="mt-1">
                                                     • จุดปลายทาง:
                                                     <span class="font-medium text-gray-900">{{ trip.destination
-                                                    }}</span>
+                                                        }}</span>
                                                     <span v-if="trip.destinationAddress"> — {{ trip.destinationAddress
-                                                    }}</span>
+                                                        }}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -337,27 +337,41 @@
                                 </div>
 
                                 <div class="flex justify-end space-x-3" :class="{ 'mt-4': selectedTripId !== trip.id }">
+
                                     <template v-if="trip.status === 'pending'">
                                         <button @click.stop="openConfirmModal(trip, 'confirm')"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
                                             ยืนยันคำขอ
                                         </button>
+
                                         <button @click.stop="openConfirmModal(trip, 'reject')"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ปฏิเสธ
                                         </button>
                                     </template>
 
-                                    <button v-else-if="trip.status === 'confirmed'"
-                                        class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
-                                        แชทกับผู้โดยสาร
-                                    </button>
+                                    <template v-else-if="trip.status === 'confirmed'">
+
+                                        <!-- ปุ่มแจ้งเหตุ -->
+                                        <button @click.stop="goToIncidentForm(trip)"
+                                            class="px-4 py-2 text-sm text-yellow-600 transition duration-200 border border-yellow-300 rounded-md hover:bg-yellow-50">
+                                            แจ้งเหตุ
+                                        </button>
+
+                                        <!-- ปุ่มแชท -->
+                                        <button @click.stop="goToChat(trip)"
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
+                                            แชทกับผู้โดยสาร
+                                        </button>
+
+                                    </template>
 
                                     <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"
                                         @click.stop="openConfirmModal(trip, 'delete')"
                                         class="px-4 py-2 text-sm text-gray-600 transition duration-200 border border-gray-300 rounded-md hover:bg-gray-50">
                                         ลบรายการ
                                     </button>
+
                                 </div>
                             </div>
                         </div>
@@ -466,6 +480,10 @@ const selectedLabel = computed(() => {
     const t = allTrips.value.find(x => x.id === selectedTripId.value)
     return t ? `${t.origin} → ${t.destination}` : null
 })
+
+function goToIncidentForm(trip) {
+    navigateTo(`/formIncident?bookingId=${trip.id}`)
+}
 
 // --- Methods ---
 async function fetchMyRoutes() {
