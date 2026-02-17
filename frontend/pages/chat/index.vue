@@ -292,7 +292,11 @@
               <!-- Avatar (ใช้ otherAvatar สำหรับข้อความจากอีกฝั่ง) -->
               <img
                 v-if="msg.sender === 'admin'"
-                :src="msg.otherAvatar || activeChat?.avatar || 'https://ui-avatars.com/api/?name=Admin&background=EBF4FF&color=2563EB'"
+                :src="
+                  msg.otherAvatar ||
+                  activeChat?.avatar ||
+                  'https://ui-avatars.com/api/?name=Admin&background=EBF4FF&color=2563EB'
+                "
                 class="w-8 h-8 rounded-full shadow-sm self-end mb-1 object-cover"
                 alt="Avatar"
               />
@@ -332,10 +336,12 @@
                         </a>
                       </template>
                     </div>
-                    <span v-else>{{ msg.text || '📎 ไฟล์แนบ' }}</span>
+                    <span v-else>{{ msg.text || "📎 ไฟล์แนบ" }}</span>
                   </template>
                   <!-- LOCATION -->
-                  <template v-else-if="msg.messageType === 'LOCATION' && msg.location">
+                  <template
+                    v-else-if="msg.messageType === 'LOCATION' && msg.location"
+                  >
                     <a
                       :href="`https://maps.google.com/?q=${msg.location.lat},${msg.location.lng}`"
                       target="_blank"
@@ -343,7 +349,7 @@
                       class="inline-flex items-center gap-2 text-blue-500 hover:underline"
                     >
                       <span>📍</span>
-                      {{ msg.location.address || 'ดูตำแหน่งบนแผนที่' }}
+                      {{ msg.location.address || "ดูตำแหน่งบนแผนที่" }}
                     </a>
                   </template>
                   <template v-else>
@@ -400,11 +406,37 @@
             <div class="flex items-center space-x-1 mb-2">
               <button
                 type="button"
+                @click="openFilePicker"
+                :disabled="uploadLoading"
                 class="p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+                :class="{ 'opacity-50 cursor-not-allowed': uploadLoading }"
                 title="แนบไฟล์"
-                <input type = "file" ref="fileInput" @change="handleFileUpload">
               >
+                <!-- Loading spinner -->
                 <svg
+                  v-if="uploadLoading"
+                  class="w-6 h-6 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+
+                <!-- แนบไฟล์ icon -->
+                <svg
+                  v-else
                   class="w-6 h-6"
                   fill="none"
                   stroke="currentColor"
@@ -522,6 +554,14 @@
               </svg>
             </button>
           </form>
+          <input
+            ref="fileInput"
+            type="file"
+            multiple
+            accept="image/*,.pdf,.doc,.docx"
+            class="hidden"
+            @change="handleFileSelect"
+          />
         </div>
       </template>
     </div>
@@ -546,6 +586,7 @@ const {
   transformMessageToUI,
   getLastMessagePreview,
   formatRelativeTime,
+  uploadFiles,
 } = useChat();
 
 const {
@@ -558,14 +599,14 @@ const {
   emitTyping,
 } = useSocket();
 
-
 const chatContainer = ref(null);
 const newMessage = ref("");
 const isTyping = ref(false);
 const activeChatId = ref(null);
 const isMobile = ref(false);
 const sendMessageLoading = ref(false);
-let typingTimeout = null;
+const fileInput = ref(null);
+const uploadLoading = ref(false);
 
 // ใช้ chatRooms เป็น chatList ใน template
 const chatList = computed(() => chatRooms.value);
@@ -596,35 +637,33 @@ const selectChat = async (chat) => {
 
 //อนิทเมชั่นการพิมพ์
 const handleTyping = () => {
-  if(!activeChatId.value) return;
+  if (!activeChatId.value) return;
 
   emitTyping(activeChatId.value);
 
   //Clear timeout
   if (typingTimeout) clearTimeout(typingTimeout);
 
-  typingTimeout = setTimeout(() => {
-    
-  }, 3000);
-}
+  typingTimeout = setTimeout(() => {}, 3000);
+};
 
 const sendMessage = () => {
-  if(!newMessage.value.trim() || !activeChatId.value) return;
-  if(sendMessageLoading.value) return; //ไม่ให้กดซ้ำ
-  
-  const messageText = newMessage.value
-  newMessage.value = '' //clear อินพุ้ต
+  if (!newMessage.value.trim() || !activeChatId.value) return;
+  if (sendMessageLoading.value) return; //ไม่ให้กดซ้ำ
+
+  const messageText = newMessage.value;
+  newMessage.value = ""; //clear อินพุ้ต
   sendMessageLoading.value = true;
 
-  try{
+  try {
     //ส่งผ่าน WebSocket
     socketSendMessage({
       chatRoomId: activeChatId.value,
-      messageType: 'TEXT',
+      messageType: "TEXT",
       content: messageText,
-    })
-  } catch(error){
-    console.error('send Message error:', error);
+    });
+  } catch (error) {
+    console.error("send Message error:", error);
     newMessage.value = messageText;
   } finally {
     sendMessageLoading.value = false;
@@ -637,16 +676,61 @@ const checkMobile = () => {
 };
 
 const isImageUrl = (url) => {
-  if (!url || typeof url !== 'string') return false;
-  return /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(url) || url.includes('cloudinary') || url.includes('image');
+  if (!url || typeof url !== "string") return false;
+  return (
+    /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(url) ||
+    url.includes("cloudinary") ||
+    url.includes("image")
+  );
 };
 
-watch(activeChatId,(newChatId,oldChatId) => {
-  if(newChatId && connected.value){
-    joinChat(newChatId);
-    console.log('Joined chat room:', newChatId);
+const openFilePicker = () => {
+  if (uploadLoading.value) return;
+  fileInput.value?.click();
+};
+
+const handleFileSelect = async (event) => {
+  const files = Array.from(event.target.files || []);
+  if (!files.length || !activeChatId.value) return;
+
+  // ตรวจสอบจำนวนไฟล์ (max 5)
+  if (files.length > 5) {
+    alert("สามารถอัปโหลดได้สูงสุด 5 ไฟล์");
+    return;
   }
-})
+
+  uploadLoading.value = true;
+
+  try {
+    // Upload ไฟล์ไปยัง server
+    const urls = await uploadFiles(activeChatId.value, files);
+    if (urls && urls.length > 0) {
+      // ส่งข้อความ type FILE ผ่าน socket
+      socketSendMessage({
+        chatRoomId: activeChatId.value,
+        messageType: "FILE",
+        content: "", // ไม่มี text
+        attachments: urls,
+      });
+
+      console.log("Files uploaded and sent:", urls);
+    }
+  } catch (err) {
+    console.error("File upload error:", err);
+    alert("อัปโหลดไฟล์ไม่สำเร็จ กรุณาลองใหม่");
+  } finally {
+    uploadLoading.value = false;
+    // Clear input
+    if (fileInput.value) fileInput.value.value = "";
+  }
+};
+
+watch(activeChatId, (newChatId, oldChatId) => {
+  if (newChatId && connected.value) {
+    joinChat(newChatId);
+    console.log("Joined chat room:", newChatId);
+  }
+});
 
 onMounted(() => {
   scrollToBottom();
@@ -656,8 +740,8 @@ onMounted(() => {
 
   // รับข้อความจาก Socket
   onNewMessage((message) => {
-    console.log('Received new message:', message);
-    
+    console.log("Received new message:", message);
+
     const uiMessage = transformMessageToUI(message);
 
     // เพิ่มเข้า messages ถ้าอยู่ใน active chat
@@ -667,15 +751,17 @@ onMounted(() => {
     }
 
     // อัปเดต lastMessage ใน sidebar
-    const chatIndex = chatList.value.findIndex(c => c.id === message.chatRoomId);
+    const chatIndex = chatList.value.findIndex(
+      (c) => c.id === message.chatRoomId,
+    );
     if (chatIndex !== -1) {
       chatList.value[chatIndex].lastMessage = getLastMessagePreview({
         content: message.content,
         messageType: message.messageType,
-        attachments: message.attachments
+        attachments: message.attachments,
       });
-      chatList.value[chatIndex].lastTime = 'Now';
-      
+      chatList.value[chatIndex].lastTime = "Now";
+
       // เลื่อน chat นี้ขึ้นมาด้านบน
       const chat = chatList.value.splice(chatIndex, 1)[0];
       chatList.value.unshift(chat);
@@ -684,7 +770,7 @@ onMounted(() => {
 
   // ฟัง typing indicator
   onTyping((data) => {
-    console.log('User typing:', data);
+    console.log("User typing:", data);
     if (data.chatRoomId === activeChatId.value) {
       isTyping.value = true;
       // ซ่อนหลัง 3 วินาที
@@ -695,7 +781,7 @@ onMounted(() => {
   });
 
   if (activeChatId.value && connected.value) {
-    joinChat(activeChatId.value)
+    joinChat(activeChatId.value);
   }
 });
 
