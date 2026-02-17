@@ -1,5 +1,16 @@
 <template>
-  <div class="admin-wrapper">
+  <div>
+    <AdminHeader />
+    <AdminSidebar />
+
+    <main
+      :class="[
+    'admin-wrapper transition-all duration-300',
+    collapsed ? 'ml-20' : 'ml-[280px]'
+      ]"
+    >
+
+
     <header class="page-header">
       <div class="title-group">
         <h1 class="main-title">Incident Management</h1>
@@ -151,10 +162,30 @@
         </div>
       </div>
     </transition>
+    </main>
   </div>
 </template>
 
+import AdminHeader from '~/components/admin/AdminHeader.vue'
+import AdminSidebar from '~/components/admin/AdminSidebar.vue'
+
+definePageMeta({
+  middleware: ['admin-auth']
+})
+
+
 <style scoped>
+.admin-wrapper {
+  padding: 32px;
+  background: #f4f7fa;
+  min-height: 100vh;
+  font-family: 'Kanit', sans-serif;
+  color: #334155;
+
+  margin-left: 280px;   /* ขนาด sidebar */
+  margin-top: 70px;     /* เผื่อ header */
+}
+
 /* --- Core Layout & Typography --- */
 .admin-wrapper { padding: 32px; background: #f4f7fa; min-height: 100vh; font-family: 'Kanit', sans-serif; color: #334155; }
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
