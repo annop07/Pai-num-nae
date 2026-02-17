@@ -436,19 +436,23 @@ async function handleSubmit() {
   isSubmitting.value = true
 
   try {
-    const body = {
-      type: categoryToType[selectedCategory.value],
-      priority: urgencyToPriority[selectedUrgency.value],
-      title: title.value,
-      description: description.value,
-    }
+    const formData = new FormData()
+    formData.append('type', categoryToType[selectedCategory.value])
+    formData.append('priority', urgencyToPriority[selectedUrgency.value])
+    formData.append('title', title.value)
+    formData.append('description', description.value)
 
-    if (bookingId) body.bookingId = bookingId
-    if (location.value) body.location = location.value
+    if (bookingId) formData.append('bookingId', bookingId)
+    if (location.value) formData.append('location', JSON.stringify(location.value))
+
+    // Append evidence files
+    files.value.forEach((f) => {
+      formData.append('evidences', f.file)
+    })
 
     await $api('/incidents', {
       method: 'POST',
-      body,
+      body: formData,
     })
 
     isSuccessModalOpen.value = true

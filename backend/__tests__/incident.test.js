@@ -161,7 +161,6 @@ describe('GET /api/incidents/:id - ดูรายละเอียด', () => 
 });
 
 //Task 2.2 Admin incident
-
 //GET /api/incidents/admin
 describe('GET /api/incidents/admin - Admin ดูรายการทั้งหมด', () => {
     it('ควรดึงรายการทั้งหมดได้ (200)', async () => {

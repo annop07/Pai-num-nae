@@ -4,6 +4,17 @@ const prisma = require('../src/utils/prisma');
 const bcrypt = require('bcrypt');
 const { signToken } = require('../src/utils/jwt');
 
+// Mock Cloudinary
+jest.mock('../src/utils/cloudinary', () => ({
+    uploadToCloudinary: jest.fn().mockImplementation((buffer, folder) => {
+        return Promise.resolve({
+            url: `https://res.cloudinary.com/demo/image/upload/v1234567890/${folder}/sample.jpg`,
+            public_id: 'sample_public_id'
+        });
+    }),
+    deleteFromCloudinary: jest.fn().mockResolvedValue({ result: 'ok' })
+}));
+
 let userToken;
 let adminToken;
 let testUserId;
@@ -167,6 +178,48 @@ describe('POST /api/chat/rooms/:id/messages - ส่งข้อความ', (
         expect(res.status).toBe(201);
         expect(res.body.success).toBe(true);
         expect(res.body.data.messageType).toBe('LOCATION');
+    });
+
+    it('ควรส่งข้อความ FILE สำเร็จ (201)', async () => {
+        const res = await request(app)
+            .post(`/api/chat/rooms/${createdRoomId}/messages`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({
+                messageType: 'FILE',
+                attachments: ['https://res.cloudinary.com/demo/image/upload/v1234567890/chat-attachments/sample.jpg']
+            });
+
+        expect(res.status).toBe(201);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data.messageType).toBe('FILE');
+        expect(Array.isArray(res.body.data.attachments)).toBe(true);
+        expect(res.body.data.attachments.length).toBe(1);
+    });
+});
+
+// ===== 3.1 POST /api/chat/rooms/:id/upload =====
+describe('POST /api/chat/rooms/:id/upload - อัปโหลดไฟล์', () => {
+    it('ควร upload ไฟล์สำเร็จและได้ URL กลับมา (200)', async () => {
+        const res = await request(app)
+            .post(`/api/chat/rooms/${createdRoomId}/upload`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .attach('files', Buffer.from('fake image content'), 'test-image.jpg');
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data).toHaveProperty('urls');
+        expect(Array.isArray(res.body.data.urls)).toBe(true);
+        expect(res.body.data.urls.length).toBeGreaterThan(0);
+        expect(res.body.data.urls[0]).toContain('cloudinary');
+    });
+
+    it('ควร reject ถ้าไม่มีไฟล์ (400)', async () => {
+        const res = await request(app)
+            .post(`/api/chat/rooms/${createdRoomId}/upload`)
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(res.status).toBe(400);
+        expect(res.body.message).toBe('กรุณาอัปโหลดไฟล์');
     });
 });
 

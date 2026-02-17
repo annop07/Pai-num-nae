@@ -1,6 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validate');
 const { protect, requireAdmin } = require('../middlewares/auth');
+const upload = require('../middlewares/upload.middleware');
 const incidentController = require('../controllers/incident.controller');
 const {
     createIncidentSchema,
@@ -51,6 +52,7 @@ router.delete(
 router.post(
     '/',
     protect,
+    upload.array('evidences', 5),
     validate({ body: createIncidentSchema }),
     incidentController.createIncident
 );
