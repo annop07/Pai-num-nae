@@ -72,6 +72,7 @@
                             </NuxtLink>
                         </div>
 
+
                         <!-- Bell (ผู้ใช้ทั่วไป + แอดมินใช้ตัวนี้บนเว็บหลัก) -->
                         <div v-if="token" class="relative">
                             <button ref="bellBtn" class="relative text-gray-600 hover:text-blue-600"
@@ -320,6 +321,15 @@
                             </div>
                         </div>
 
+                        <NuxtLink 
+                            v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
+                            to="/chat"
+                            class="block px-3 py-2 transition-colors duration-200 rounded-md"
+                            :class="$route.path === '/chat' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
+                            @click="closeMobileMenu">
+                            ติดต่อแอดมิน
+                        </NuxtLink>
+
                         <div v-if="!token">
                             <NuxtLink to="/register" class="block px-3 py-2 transition-colors duration-200 rounded-md"
                                 :class="$route.path === '/register' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
@@ -391,6 +401,17 @@
         <main>
             <NuxtPage />
         </main>
+
+        <!-- Floating Chat Button -->
+        <NuxtLink 
+            v-if="token && (user && (user.role === 'PASSENGER' || user.role === 'DRIVER')) && $route.path !== '/chat'"
+            to="/chat"
+            class="fixed bottom-6 right-6 z-50 p-4 text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-110 flex items-center justify-center"
+        >
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+        </NuxtLink>
     </div>
 </template>
 
