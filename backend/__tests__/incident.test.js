@@ -235,7 +235,7 @@ describe('PATCH /api/incidents/admin/:id - Admin อัปเดตสถาน�
 
     it('ควร 404 ถ้า id ไม่มีจริง', async () => {
         const res = await request(app)
-            .patch('/api/incidents/admin/clxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .patch('/api/incidents/admin/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
             .set('Authorization', `Bearer ${adminToken}`)
             .send({ status: 'INVESTIGATING' });
 
@@ -267,7 +267,7 @@ describe('DELETE /api/incidents/admin/:id - Admin ลบ', () => {
 
     it('ควรแสดง 404 ถ้า id ไม่มีจริง', async () => {
         const res = await request(app)
-            .delete('/api/incidents/admin/clxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .delete('/api/incidents/admin/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
             .set('Authorization', `Bearer ${adminToken}`);
 
         expect(res.status).toBe(404);
@@ -275,12 +275,81 @@ describe('DELETE /api/incidents/admin/:id - Admin ลบ', () => {
 });
 
 //DELETE โดย user ธรรมดา
-/*
-*
-*
-*
-*
-*
-*/
+describe('DELETE /api/incidents/:id - User ลบ', () => {
+    it('ควรลบ incident ได้ 200', async () => {
+        // สร้างอันใหม่เพื่อลบ
+        const created = await request(app)
+            .post('/api/incidents')
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({
+                type: 'FRAUD',
+                title: '[TEST] สำหรับลบ',
+                description: 'จะถูกลบทันที',
+            });
+
+        const idToDelete = created.body.data.id;
+
+        const res = await request(app)
+            .delete(`/api/incidents/${idToDelete}`)
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+    });
+
+    it('ควรแสดง 404 ถ้า id ไม่มีจริง', async () => {
+        const res = await request(app)
+            .delete('/api/incidents/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(res.status).toBe(404);
+    });
+});
 //PATCH โดย user ธรรมดา
+describe('PATCH /api/incidents/:id - User อัปเดตสถานะ', () => {
+    it('ควรเปลี่ยนสถานะเป็น INVESTIGATING ได้ (200)', async () => {
+        const res = await request(app)
+            .patch(`/api/incidents/${createdIncidentId}`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({ status: 'INVESTIGATING', priority: 'HIGH' });
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+        expect(res.body.data.status).toBe('INVESTIGATING');
+        expect(res.body.data.priority).toBe('HIGH');
+    });
+
+    it('ควรเปลี่ยนสถานะเป็น RESOLVED พร้อม resolution ได้', async () => {
+        const res = await request(app)
+            .patch(`/api/incidents/${createdIncidentId}`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({
+                status: 'RESOLVED',
+                resolution: 'ตรวจสอบและตักเตือนผู้ขับแล้ว',
+            });
+
+        expect(res.status).toBe(200);
+        expect(res.body.data.status).toBe('RESOLVED');
+        expect(res.body.data.resolution).toBe('ตรวจสอบและตักเตือนผู้ขับแล้ว');
+        expect(res.body.data.resolvedAt).not.toBeNull();
+    });
+
+    it('ควร reject ถ้าไม่ส่ง body 400', async () => {
+        const res = await request(app)
+            .patch(`/api/incidents/${createdIncidentId}`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({});
+
+        expect(res.status).toBe(400);
+    });
+
+    it('ควร 404 ถ้า id ไม่มีจริง', async () => {
+        const res = await request(app)
+            .patch('/api/incidents/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({ status: 'INVESTIGATING' });
+
+        expect(res.status).toBe(404);
+    });
+});
 
