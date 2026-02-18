@@ -184,7 +184,7 @@ async function updateIncidentStatus(id, data, adminId) {
             if (updated.resolution) {
                 body += `\nผลการดำเนินการ: ${updated.resolution}`;
             }
-        } else if (data.status === 'REJECTED') {
+        } else if (data.status === 'DISMISSED') {
             title = `รายงานถูกปฏิเสธ: ${updated.title}`;
             body = `รายงานเหตุการณ์ "${updated.title}" ถูกปฏิเสธ`;
              if (updated.resolution) {

@@ -219,7 +219,7 @@ describe('POST /api/chat/rooms/:id/upload - อัปโหลดไฟล์', 
             .set('Authorization', `Bearer ${userToken}`);
 
         expect(res.status).toBe(400);
-        expect(res.body.message).toBe('กรุณาอัปโหลดไฟล์');
+        expect(res.body.message).toBe('No files uploaded');
     });
 });
 

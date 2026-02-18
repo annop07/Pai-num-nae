@@ -137,4 +137,128 @@ describe('Notification Tests', () => {
         expect(readRes.status).toBe(200);
         expect(readRes.body.data.readAt).not.toBeNull();
     });
+    it('User should receive a notification when Admin resolves the incident', async () => {
+        // Admin resolves the incident
+        const updateRes = await request(app)
+            .patch(`/api/incidents/admin/${incidentId}`)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({
+                status: 'RESOLVED',
+                resolution: 'Fixed the issue'
+            });
+
+        expect(updateRes.status).toBe(200);
+        expect(updateRes.body.data.status).toBe('RESOLVED');
+
+        // Check for notification
+        const notifRes = await request(app)
+            .get('/api/notifications')
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(notifRes.status).toBe(200);
+        const notification = notifRes.body.data.find(n => 
+            n.type === 'INCIDENT' && 
+            n.metadata && 
+            n.metadata.incidentId === incidentId &&
+            n.metadata.status === 'RESOLVED'
+        );
+
+        expect(notification).toBeDefined();
+        if (notification) {
+            expect(notification.title).toContain('แก้ไขแล้ว');
+            expect(notification.body).toContain('Fixed the issue');
+        }
+    });
+
+    it('User should receive a notification when Admin rejects the incident', async () => {
+        // Create another incident for rejection
+        const incRes = await request(app)
+            .post('/api/incidents')
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({
+                type: 'SAFETY_CONCERN',
+                title: '[TEST] To Reject',
+                description: 'Reject this'
+            });
+        expect(incRes.status).toBe(201);
+        const rejectId = incRes.body.data.id;
+
+        // Admin rejects
+        const updateRes = await request(app)
+            .patch(`/api/incidents/admin/${rejectId}`)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({
+                status: 'DISMISSED',
+                resolution: 'Not valid'
+            });
+
+        expect(updateRes.status).toBe(200);
+
+        // Check notification
+        const notifRes = await request(app)
+            .get('/api/notifications')
+            .set('Authorization', `Bearer ${userToken}`);
+        
+        const notification = notifRes.body.data.find(n => 
+            n.type === 'INCIDENT' && 
+            n.metadata && 
+            n.metadata.incidentId === rejectId &&
+            n.metadata.status === 'DISMISSED'
+        );
+
+        expect(notification).toBeDefined();
+        if (notification) {
+             expect(notification.title).toContain('ปฏิเสธ');
+        }
+
+        // Cleanup this incident
+        await prisma.incident.delete({ where: { id: rejectId } });
+    });
+
+    it('User should be able to get unread count', async () => {
+        const res = await request(app)
+            .get('/api/notifications/unread-count')
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.data).toHaveProperty('unread');
+        expect(typeof res.body.data.unread).toBe('number');
+    });
+
+    it('User should be able to delete a notification', async () => {
+         // Get a notification to delete
+        const listRes = await request(app)
+            .get('/api/notifications')
+            .set('Authorization', `Bearer ${userToken}`);
+        
+        const notification = listRes.body.data[0];
+        if (!notification) return;
+
+        const delRes = await request(app)
+            .delete(`/api/notifications/${notification.id}`)
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(delRes.status).toBe(200);
+
+        // Verify it's gone
+        const verifyRes = await request(app)
+            .get(`/api/notifications/${notification.id}`)
+            .set('Authorization', `Bearer ${userToken}`);
+        
+        expect(verifyRes.status).toBe(404);
+    });
+
+    it('User should be able to mark all as read', async () => {
+        const res = await request(app)
+            .patch('/api/notifications/read-all')
+            .set('Authorization', `Bearer ${userToken}`);
+
+        expect(res.status).toBe(200);
+
+        const countRes = await request(app)
+            .get('/api/notifications/unread-count')
+            .set('Authorization', `Bearer ${userToken}`);
+        
+        expect(countRes.body.data.unread).toBe(0);
+    });
 });
