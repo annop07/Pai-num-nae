@@ -1,0 +1,1894 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-02-18T23:00:49.182012" rpa="false" schemaversion="5">
+<suite id="s1" name="Admin Tests" source="C:\SoftwareEngineer\Pai-num-nae\test\uat\admin_tests.robot">
+<kw name="Open Browser To Site" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:49.445066" level="INFO">Opening browser 'Chrome' to base url 'about:blank'.</msg>
+<msg time="2026-02-18T23:00:49.556924" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>about:blank</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:49.444866" elapsed="1.419028"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T23:00:50.864148" elapsed="0.053723"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:00:49.444375" elapsed="1.473624"/>
+</kw>
+<test id="s1-t1" name="TC_ADMIN_01 Login Admin และเปิดหน้า Incident Management" line="17">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:50.919615" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:50.919484" elapsed="1.066370"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:00:51.986098" elapsed="0.049559"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:52.036462" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:00:52.035929" elapsed="0.061045"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:00:50.919209" elapsed="1.178034"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:52.099886" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:52.099429" elapsed="0.479181"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:52.578961" elapsed="0.035774"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:52.615485" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:52.615028" elapsed="0.319334"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:52.934916" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:52.934588" elapsed="0.140775"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:53.076029" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:53.075664" elapsed="0.089312"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:53.174420" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:53.167048" elapsed="0.007493"/>
+</kw>
+<msg time="2026-02-18T23:00:53.174683" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:00:53.166598" elapsed="0.008112"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:00:53.175628" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:00:53.175317" elapsed="0.000479">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:00:53.174885" elapsed="0.001008">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:00:53.166302" elapsed="0.009729">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:54.387517" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-24.png"&gt;&lt;img src="selenium-screenshot-24.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:00:54.387713" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:00:54.177215" elapsed="0.212910">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:00:54.390330" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.176902" elapsed="0.213459"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.390541" elapsed="0.000435"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:00:54.176573" elapsed="0.214512"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:00:53.165401" elapsed="1.225931"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:00:52.098659" elapsed="2.292769"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:54.391904" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.391734" elapsed="0.355799"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.748080" elapsed="0.050886"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.799479" elapsed="0.082265"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:54.882673" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:54.882188" elapsed="0.240880"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.123400" elapsed="0.014575"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:55.139112" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.138485" elapsed="0.162904"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.301881" elapsed="0.041739"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.344294" elapsed="0.018644"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:55.364034" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.363635" elapsed="0.182664"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.546672" elapsed="0.058439"/>
+</kw>
+<doc>ทดสอบการเข้าสู่ระบบ Admin และเข้าเมนู Incident Management</doc>
+<status status="PASS" start="2026-02-18T23:00:50.918089" elapsed="4.687436"/>
+</test>
+<test id="s1-t2" name="TC_ADMIN_02 Incident Management - อัปเดตสถานะจากตาราง" line="36">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:55.608880" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:55.608700" elapsed="0.605963"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.215166" elapsed="0.063558"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:56.279535" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.278985" elapsed="0.027798"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:00:55.608249" elapsed="0.698646"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:56.307720" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.307600" elapsed="0.330342"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.638287" elapsed="0.022565"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:56.661423" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.661083" elapsed="0.221455"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:56.883088" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.882804" elapsed="0.104143"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:56.987386" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:56.987156" elapsed="0.074883"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:57.069994" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:57.063423" elapsed="0.006661"/>
+</kw>
+<msg time="2026-02-18T23:00:57.070211" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:00:57.063115" elapsed="0.007140"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:00:57.071832" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:00:57.071320" elapsed="0.000670">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:00:57.070581" elapsed="0.001556">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:00:57.062859" elapsed="0.009469">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:58.083379" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:58.074063" elapsed="0.009401"/>
+</kw>
+<msg time="2026-02-18T23:00:58.083581" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:00:58.073741" elapsed="0.009859"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:00:58.084220" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:00:58.084014" elapsed="0.000269">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:00:58.083722" elapsed="0.000620">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:00:58.073367" elapsed="0.011075">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:59.290299" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-25.png"&gt;&lt;img src="selenium-screenshot-25.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:00:59.290509" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:00:59.086284" elapsed="0.204952">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:00:59.291371" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.085755" elapsed="0.205638"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.291528" elapsed="0.000317"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:00:59.085239" elapsed="0.206684"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:00:57.062286" elapsed="2.229672"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:00:56.307334" elapsed="2.984667"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:59.292644" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.292530" elapsed="0.268078"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.560928" elapsed="0.022767"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.584017" elapsed="0.022852"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:59.607842" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.607351" elapsed="0.093129"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.700647" elapsed="0.012184"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:59.713171" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.712998" elapsed="0.064005"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.777253" elapsed="0.059669"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.837187" elapsed="0.008950"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:00:59.846477" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:00:59.846301" elapsed="0.157206"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.003709" elapsed="0.268738"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T23:00:59.292332" elapsed="0.980252"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.273338" elapsed="0.009340"/>
+</kw>
+<msg time="2026-02-18T23:01:00.282816" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.272983" elapsed="0.009858"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:00.283115" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:00.283077" elapsed="0.001064"/>
+</kw>
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:00.345761" level="INFO">${current} = PENDING</msg>
+<var>${current}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.285035" elapsed="0.061320"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Set Test Variable" owner="BuiltIn">
+<msg time="2026-02-18T23:01:00.348697" level="INFO">${new_status} = INVESTIGATING</msg>
+<arg>${new_status}</arg>
+<arg>INVESTIGATING</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.347869" elapsed="0.000905"/>
+</kw>
+<arg>'${current}'=='INVESTIGATING'</arg>
+<arg>Set Test Variable</arg>
+<arg>${new_status}</arg>
+<arg>RESOLVED</arg>
+<arg>ELSE</arg>
+<arg>Set Test Variable</arg>
+<arg>${new_status}</arg>
+<arg>INVESTIGATING</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.346970" elapsed="0.001899"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:00.349423" level="INFO">Selecting options from selection list 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]' by label INVESTIGATING.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<arg>${new_status}</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.349164" elapsed="0.091280"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Incident Status Should Be">
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:00.562568" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-26.png"&gt;&lt;img src="selenium-screenshot-26.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:00.562859" level="FAIL">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7567f88e5
+	0x7ff7567f8940
+	0x7ff7565d165d
+	0x7ff7565d92cc
+	0x7ff7565dc3b4
+	0x7ff7565dc47f
+	0x7ff7566292e5
+	0x7ff756629d3c
+	0x7ff75661cd6c
+	0x7ff75661c746
+	0x7ff75667ac97
+	0x7ff75661ac29
+	0x7ff75661ba93
+	0x7ff756b10640
+	0x7ff756b0af80
+	0x7ff756b296e6
+	0x7ff756815de4
+	0x7ff75681ed8c
+	0x7ff756802004
+	0x7ff7568021b5
+	0x7ff7567e7ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<var>${label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="FAIL" start="2026-02-18T23:01:00.441806" elapsed="0.124601">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7567f88e5
+	0x7ff7567f8940
+	0x7ff7565d165d
+	0x7ff7565d92cc
+	0x7ff7565dc3b4
+	0x7ff7565dc47f
+	0x7ff7566292e5
+	0x7ff756629d3c
+	0x7ff75661cd6c
+	0x7ff75661c746
+	0x7ff75667ac97
+	0x7ff75661ac29
+	0x7ff75661ba93
+	0x7ff756b10640
+	0x7ff756b0af80
+	0x7ff756b296e6
+	0x7ff756815de4
+	0x7ff75681ed8c
+	0x7ff756802004
+	0x7ff7568021b5
+	0x7ff7567e7ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${label}</arg>
+<arg>${expected}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="NOT RUN" start="2026-02-18T23:01:00.566612" elapsed="0.000033"/>
+</kw>
+<arg>${new_status}</arg>
+<status status="FAIL" start="2026-02-18T23:01:00.441541" elapsed="0.125209">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff7567f88e5
+	0x7ff7567f8940
+	0x7ff7565d165d
+	0x7ff7565d92cc
+	0x7ff7565dc3b4
+	0x7ff7565dc47f
+	0x7ff7566292e5
+	0x7ff756629d3c
+	0x7ff75661cd6c
+	0x7ff75661c746
+	0x7ff75667ac97
+	0x7ff75661ac29
+	0x7ff75661ba93
+	0x7ff756b10640
+	0x7ff756b0af80
+	0x7ff756b296e6
+	0x7ff756815de4
+	0x7ff75681ed8c
+	0x7ff756802004
+	0x7ff7568021b5
+	0x7ff7567e7ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Incident Status Should Be">
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:02.611801" level="INFO">${label} = INVESTIGATING</msg>
+<var>${label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:02.567926" elapsed="0.043918"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${label}</arg>
+<arg>${expected}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T23:01:02.611987" elapsed="0.000417"/>
+</kw>
+<arg>${new_status}</arg>
+<status status="PASS" start="2026-02-18T23:01:02.567412" elapsed="0.045072"/>
+</kw>
+<arg>5x</arg>
+<arg>2s</arg>
+<arg>Incident Status Should Be</arg>
+<arg>${new_status}</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:00.440931" elapsed="2.171595"/>
+</kw>
+<doc>ทดสอบการเปลี่ยนค่า Status ของ Incident แถวแรกผ่าน dropdown แล้วต้องบันทึกสำเร็จ</doc>
+<status status="PASS" start="2026-02-18T23:00:55.606303" elapsed="7.006645"/>
+</test>
+<test id="s1-t3" name="TC_ADMIN_03 Incident Management - View &amp; Take Action (Cancel ไม่บันทึก)" line="50">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:02.614081" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:02.613983" elapsed="0.445512"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.059876" elapsed="0.092601"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:03.154641" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.153521" elapsed="0.008602"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:01:02.613809" elapsed="0.548427"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:03.163022" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.162853" elapsed="0.361703"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.524882" elapsed="0.044620"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:03.570201" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.569789" elapsed="0.237746"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:03.808433" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.807840" elapsed="0.099502"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:03.908080" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.907674" elapsed="0.076241"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:04.013011" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.985642" elapsed="0.027458"/>
+</kw>
+<msg time="2026-02-18T23:01:04.013218" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.985330" elapsed="0.027908"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:01:04.013857" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:01:04.013662" elapsed="0.000251">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:01:04.013366" elapsed="0.000596">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:03.984915" elapsed="0.029129">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:05.210350" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-27.png"&gt;&lt;img src="selenium-screenshot-27.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:05.210503" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:05.015240" elapsed="0.195960">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:05.211334" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.015003" elapsed="0.196352"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.211481" elapsed="0.000251"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:05.014726" elapsed="0.197081"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:03.984197" elapsed="1.227646"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:01:03.162585" elapsed="2.049303"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:05.212611" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.212510" elapsed="0.268917"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.481633" elapsed="0.019850"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.501795" elapsed="0.034824"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:05.537036" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.536817" elapsed="0.091374"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.628359" elapsed="0.014302"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:05.643408" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.642847" elapsed="0.068233"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.711367" elapsed="0.244116"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.956098" elapsed="0.010646"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:05.967098" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:05.966925" elapsed="0.056544"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.023641" elapsed="0.040274"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T23:01:05.212255" elapsed="0.851774"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.065197" elapsed="0.022616"/>
+</kw>
+<msg time="2026-02-18T23:01:06.088191" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.064374" elapsed="0.023895"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:06.088869" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:06.088790" elapsed="0.000919"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:06.090457" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.090090" elapsed="0.148163"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.239162" elapsed="0.026314"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:06.299967" level="INFO">${original} = </msg>
+<var>${original}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.265949" elapsed="0.034078"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:06.301419" level="INFO">Typing text 'ทดสอบ Cancel ไม่บันทึก' into text field 'xpath=//div[contains(@class,"modal-sheet")]//textarea'.</msg>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<arg>ทดสอบ Cancel ไม่บันทึก</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.300648" elapsed="0.223065"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:06.526917" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.525886" elapsed="0.210753"/>
+</kw>
+<kw name="Wait Until Page Does Not Contain Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,"modal-sheet")]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` disappears from the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:06.738000" elapsed="0.447066"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:07.185720" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.185447" elapsed="0.062647"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.248433" elapsed="0.030475"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:07.313487" level="INFO">${after} = </msg>
+<var>${after}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.280235" elapsed="0.033414"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${after}</arg>
+<arg>${original}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.315324" elapsed="0.001836"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:07.319167" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.318394" elapsed="0.152456"/>
+</kw>
+<doc>ทดสอบเปิดโมดัล View &amp; Take Action พิมพ์ Admin Resolution Note แล้วกด Cancel ต้องไม่บันทึกค่าใหม่</doc>
+<status status="PASS" start="2026-02-18T23:01:02.613356" elapsed="4.858218"/>
+</test>
+<test id="s1-t4" name="TC_ADMIN_04 Incident Management - View &amp; Take Action (Confirm บันทึกสำเร็จ)" line="71">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:07.475471" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:07.475262" elapsed="0.528092"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.003569" elapsed="0.083464"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.088575" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.087472" elapsed="0.009309"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:01:07.474715" elapsed="0.622178"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.097799" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.097643" elapsed="0.278639"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.376465" elapsed="0.020919"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.398150" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.397628" elapsed="0.118038"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.516247" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.515918" elapsed="0.076013"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.592378" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.592145" elapsed="0.080945"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:08.680427" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.674162" elapsed="0.006389"/>
+</kw>
+<msg time="2026-02-18T23:01:08.680795" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.673942" elapsed="0.006900"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:01:08.681833" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:01:08.681556" elapsed="0.000350">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:01:08.681051" elapsed="0.000913">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:08.673727" elapsed="0.008329">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:09.886948" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-28.png"&gt;&lt;img src="selenium-screenshot-28.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:09.887079" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:09.684534" elapsed="0.203378">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:09.888115" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:09.683498" elapsed="0.204654"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:09.888403" elapsed="0.000382"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:09.682722" elapsed="0.206223"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:08.673270" elapsed="1.215743"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:01:08.097294" elapsed="1.791857"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:09.890397" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:09.890010" elapsed="0.251747"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.141948" elapsed="0.023512"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.165771" elapsed="0.021244"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:10.187708" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.187371" elapsed="0.106863"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.294474" elapsed="0.009959"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:10.305584" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.305040" elapsed="0.065495"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.370735" elapsed="0.042741"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.413655" elapsed="0.018917"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:10.432928" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.432748" elapsed="0.093928"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.526915" elapsed="0.257868"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T23:01:09.889582" elapsed="0.895309"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.785583" elapsed="0.009714"/>
+</kw>
+<msg time="2026-02-18T23:01:10.795949" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.785220" elapsed="0.010850"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:10.796997" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:10.796915" elapsed="0.000788"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:10.798205" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.797984" elapsed="0.070479"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.868823" elapsed="0.015951"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-02-18T23:01:10.887755" level="INFO">${note} = ทดสอบ Confirm บันทึกโดย Robot</msg>
+<var>${note}</var>
+<arg>ทดสอบ Confirm บันทึกโดย Robot</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.885864" elapsed="0.002118"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:10.889775" level="INFO">Typing text 'ทดสอบ Confirm บันทึกโดย Robot' into text field 'xpath=//div[contains(@class,"modal-sheet")]//textarea'.</msg>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<arg>${note}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:10.889360" elapsed="0.237335"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:11.130801" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-submit") or contains(., "Confirm Resolved")]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-submit") or contains(., "Confirm Resolved")]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.128996" elapsed="0.249211"/>
+</kw>
+<kw name="Wait Until Page Does Not Contain Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,"modal-sheet")]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` disappears from the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.379864" elapsed="0.473261"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.853599" elapsed="0.011452"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:11.865910" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.865489" elapsed="0.063703"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.929657" elapsed="0.029309"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.001008" level="INFO">${after_note} = ทดสอบ Confirm บันทึกโดย Robot</msg>
+<var>${after_note}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:11.959499" elapsed="0.041703"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${after_note}</arg>
+<arg>ทดสอบ Confirm บันทึกโดย Robot</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.002468" elapsed="0.003030"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.006826" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.006237" elapsed="0.147523"/>
+</kw>
+<doc>ทดสอบกรอก Admin Resolution Note แล้วกด Confirm Resolved ต้องบันทึกข้อความสำเร็จ</doc>
+<status status="PASS" start="2026-02-18T23:01:07.472912" elapsed="4.681848"/>
+</test>
+<test id="s1-t5" name="TC_ADMIN_05 Incident Management - Filter Status เป็น PENDING" line="92">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.159816" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.159377" elapsed="0.438770"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.598373" elapsed="0.075637"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.674708" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.674241" elapsed="0.008077"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:01:12.158068" elapsed="0.524360"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.683229" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.683109" elapsed="0.264460"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.947906" elapsed="0.020996"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:12.970119" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:12.969297" elapsed="0.121625"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:13.091697" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:13.091300" elapsed="0.074564"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:13.166475" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:13.166174" elapsed="0.070694"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:13.245492" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:13.238120" elapsed="0.007467"/>
+</kw>
+<msg time="2026-02-18T23:01:13.245716" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:13.237886" elapsed="0.007850"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:01:13.246984" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:01:13.246618" elapsed="0.000546">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:01:13.245887" elapsed="0.001413">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:13.237592" elapsed="0.009864">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:14.436430" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-29.png"&gt;&lt;img src="selenium-screenshot-29.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:14.436577" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:14.248726" elapsed="0.188691">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:14.437685" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.248490" elapsed="0.189232"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.437917" elapsed="0.000351"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:14.248242" elapsed="0.190127"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:13.237057" elapsed="1.201362"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:01:12.682853" elapsed="1.755637"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:14.439366" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.439256" elapsed="0.253539"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.693052" elapsed="0.024328"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.717602" elapsed="0.019460"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:14.737612" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.737330" elapsed="0.105415"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.842967" elapsed="0.007217"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:14.850537" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.850357" elapsed="0.057014"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.907592" elapsed="0.053966"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.961794" elapsed="0.011644"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:14.973795" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:14.973609" elapsed="0.092111"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.065964" elapsed="0.045353"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T23:01:14.439042" elapsed="0.672454"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//label[normalize-space(.)="Status"]/following::select[1]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.111831" elapsed="0.029537"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:15.142039" level="INFO">Selecting options from selection list 'xpath=//label[normalize-space(.)="Status"]/following::select[1]' by label PENDING.</msg>
+<arg>xpath=//label[normalize-space(.)="Status"]/following::select[1]</arg>
+<arg>PENDING</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.141762" elapsed="0.144976"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.287602" elapsed="0.220510"/>
+</kw>
+<msg time="2026-02-18T23:01:15.508278" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.287102" elapsed="0.221208"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:15.508737" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ในสถานะ PENDING ให้ทดสอบ</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:15.508686" elapsed="0.000685"/>
+</kw>
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:15.540102" level="INFO">${status_label} = PENDING</msg>
+<var>${status_label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.509600" elapsed="0.030559"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${status_label}</arg>
+<arg>PENDING</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.540490" elapsed="0.000390"/>
+</kw>
+<doc>ทดสอบ Filter Status ที่ด้านบนว่าใช้ได้และ incident แถวแรกต้องมีสถานะตรงกับที่เลือก</doc>
+<status status="PASS" start="2026-02-18T23:01:12.155973" elapsed="3.385108"/>
+</test>
+<test id="s1-t6" name="TC_ADMIN_06 Incident Management - Filter Priority เป็น HIGH" line="104">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:15.542565" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.542465" elapsed="0.400612"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.943372" elapsed="0.050101"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:15.993989" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:01:15.993653" elapsed="0.007474"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:01:15.542291" elapsed="0.458951"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:16.002935" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.002313" elapsed="0.276369"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.279185" elapsed="0.029533"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:16.309124" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.308900" elapsed="0.120290"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:16.429578" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.429356" elapsed="0.071761"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:16.502158" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.501606" elapsed="0.072958"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:16.582755" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.575581" elapsed="0.007264"/>
+</kw>
+<msg time="2026-02-18T23:01:16.582973" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.575337" elapsed="0.007657"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:01:16.583743" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:01:16.583427" elapsed="0.000455">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:01:16.583122" elapsed="0.000855">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:16.575138" elapsed="0.008993">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:17.791742" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-30.png"&gt;&lt;img src="selenium-screenshot-30.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:17.791988" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:17.587936" elapsed="0.204806">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:17.792889" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:17.586615" elapsed="0.206297"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:17.793039" elapsed="0.000258"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:17.585621" elapsed="0.207748"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:16.574743" elapsed="1.218662"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T23:01:16.001643" elapsed="1.791805"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:17.794771" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:17.794560" elapsed="0.246183"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.040984" elapsed="0.019263"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.060523" elapsed="0.021678"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.082841" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.082544" elapsed="0.090376"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.173130" elapsed="0.008371"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.181870" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.181681" elapsed="0.063903"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.246135" elapsed="0.047120"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.293435" elapsed="0.013090"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.306873" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.306696" elapsed="0.082420"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.389357" elapsed="0.047969"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T23:01:17.794052" elapsed="0.643385"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//label[normalize-space(.)="Priority"]/following::select[1]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.437743" elapsed="0.030920"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.469739" level="INFO">Selecting options from selection list 'xpath=//label[normalize-space(.)="Priority"]/following::select[1]' by label HIGH.</msg>
+<arg>xpath=//label[normalize-space(.)="Priority"]/following::select[1]</arg>
+<arg>HIGH</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.469297" elapsed="0.174321"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.644598" elapsed="0.229599"/>
+</kw>
+<msg time="2026-02-18T23:01:18.874697" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.644120" elapsed="0.230691"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:18.876262" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ใน Priority HIGH ให้ทดสอบ</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:18.875979" elapsed="0.002768"/>
+</kw>
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.937894" level="INFO">${priority_label} = HIGH</msg>
+<var>${priority_label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//span[contains(@class,"badge")])[1]</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.879742" elapsed="0.058385"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${priority_label}</arg>
+<arg>HIGH</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.939282" elapsed="0.001494"/>
+</kw>
+<doc>ทดสอบ Filter Priority ที่ด้านบนเป็น HIGH แล้ว incident แถวแรกต้องมี Priority HIGH</doc>
+<status status="PASS" start="2026-02-18T23:01:15.541550" elapsed="3.399989"/>
+</test>
+<test id="s1-t7" name="TC_ADMIN_07 Non-admin ไม่สามารถเข้า /admin/incidents ได้" line="116">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:18.944639" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:18.944480" elapsed="0.413441"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.358405" elapsed="0.088620"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:19.447542" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.447213" elapsed="0.006855"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T23:01:18.944195" elapsed="0.509995"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:19.455115" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.454976" elapsed="0.258194"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.713811" elapsed="0.018199"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:19.732438" level="INFO">Typing text 'test1234@gmail.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.732188" elapsed="0.133009"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:19.866170" level="INFO">Typing text '11111111Dd' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${USER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.865545" elapsed="0.082174"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:19.948064" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T23:01:19.947885" elapsed="0.069995"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Passenger Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:20.029003" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T23:01:20.022553" elapsed="0.006543"/>
+</kw>
+<msg time="2026-02-18T23:01:20.029223" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:20.020742" elapsed="0.008501"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T23:01:20.029877" level="FAIL">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T23:01:20.029667" elapsed="0.000278">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T23:01:20.029369" elapsed="0.000630">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:20.019698" elapsed="0.010386">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Passenger Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:21.228674" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-31.png"&gt;&lt;img src="selenium-screenshot-31.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:21.228838" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:21.031804" elapsed="0.197732">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:21.229665" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:21.031255" elapsed="0.198434"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T23:01:21.229877" elapsed="0.000370"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:21.030812" elapsed="0.199548"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Passenger Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:20.018407" elapsed="1.212010"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชีผู้ใช้ธรรมดา</doc>
+<status status="PASS" start="2026-02-18T23:01:19.454622" elapsed="1.775853"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:21.231063" level="INFO">Opening url 'http://localhost:3001/admin/incidents'</msg>
+<arg>${URL}/admin/incidents</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T23:01:21.230866" elapsed="0.255435"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Should Be Redirected Away From Admin Incidents">
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:21.496684" level="INFO">${loc} = http://localhost:3001/admin/incidents</msg>
+<var>${loc}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-02-18T23:01:21.489874" elapsed="0.006886"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<msg time="2026-02-18T23:01:21.498259" level="FAIL">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</msg>
+<arg>${loc}</arg>
+<arg>/admin/incidents</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="FAIL" start="2026-02-18T23:01:21.497031" elapsed="0.001452">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</status>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${at_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-02-18T23:01:21.498872" elapsed="0.000069"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${at_home}</var>
+<arg>Page Should Contain</arg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-02-18T23:01:21.499170" elapsed="0.000259"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:21.502718" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${at_login} or ${at_home}</arg>
+<arg>Fail</arg>
+<arg>ถูก redirect ออกแล้ว แต่ไม่อยู่หน้า home/login (location=${loc})</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="NOT RUN" start="2026-02-18T23:01:21.499806" elapsed="0.004056"/>
+</kw>
+<status status="FAIL" start="2026-02-18T23:01:21.489100" elapsed="0.015173">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</status>
+</kw>
+<kw name="Should Be Redirected Away From Admin Incidents">
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:22.011700" level="INFO">${loc} = http://localhost:3001/</msg>
+<var>${loc}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.005231" elapsed="0.006514"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${loc}</arg>
+<arg>/admin/incidents</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.011892" elapsed="0.000321"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:22.271955" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-32.png"&gt;&lt;img src="selenium-screenshot-32.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T23:01:22.272111" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T23:01:22.012916" elapsed="0.259967">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T23:01:22.273059" level="INFO">${at_login} = False</msg>
+<var>${at_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.012369" elapsed="0.260721"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-02-18T23:01:22.288221" level="INFO">Current page contains text 'เดินทางร่วมกัน'.</msg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.273721" elapsed="0.014590"/>
+</kw>
+<msg time="2026-02-18T23:01:22.288432" level="INFO">${at_home} = True</msg>
+<var>${at_home}</var>
+<arg>Page Should Contain</arg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.273296" elapsed="0.015157"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T23:01:22.288600" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${at_login} or ${at_home}</arg>
+<arg>Fail</arg>
+<arg>ถูก redirect ออกแล้ว แต่ไม่อยู่หน้า home/login (location=${loc})</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T23:01:22.288571" elapsed="0.000720"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:01:22.004968" elapsed="0.284434"/>
+</kw>
+<arg>20x</arg>
+<arg>0.5s</arg>
+<arg>Should Be Redirected Away From Admin Incidents</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T23:01:21.487476" elapsed="0.801968"/>
+</kw>
+<doc>ทดสอบว่าผู้ใช้ธรรมดา (Passenger) จะถูก redirect ออกจากหน้า Admin Incident Management</doc>
+<status status="PASS" start="2026-02-18T23:01:18.942543" elapsed="3.347079"/>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-02-18T23:01:22.290445" elapsed="2.620905"/>
+</kw>
+<status status="PASS" start="2026-02-18T23:00:49.183247" elapsed="35.728220"/>
+</suite>
+<statistics>
+<total>
+<stat pass="7" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Admin Tests" id="s1" pass="7" fail="0" skip="0">Admin Tests</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-02-18T23:00:49.556924" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T23:01:00.283115" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:06.088869" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:10.796997" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:15.508737" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:18.876262" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:21.502718" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T23:01:22.288600" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+</errors>
+</robot>
