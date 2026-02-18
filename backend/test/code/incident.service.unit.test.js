@@ -1,10 +1,10 @@
-const incidentService = require('../src/services/incident.service');
-const prisma = require('../src/utils/prisma');
-const notificationService = require('../src/services/notification.service');
-const ApiError = require('../src/utils/ApiError');
+const incidentService = require('../../src/services/incident.service');
+const prisma = require('../../src/utils/prisma');
+const notificationService = require('../../src/services/notification.service');
+const ApiError = require('../../src/utils/ApiError');
 
 // Mock external dependencies
-jest.mock('../src/utils/prisma', () => ({
+jest.mock('../../src/utils/prisma', () => ({
     incident: {
         create: jest.fn(),
         findMany: jest.fn(),
@@ -28,7 +28,7 @@ jest.mock('../src/utils/prisma', () => ({
     $transaction: jest.fn(),
 }));
 
-jest.mock('../src/services/notification.service', () => ({
+jest.mock('../../src/services/notification.service', () => ({
     createNotificationByAdmin: jest.fn(),
 }));
 

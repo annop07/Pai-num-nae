@@ -1,9 +1,9 @@
-const chatService = require('../src/services/chat.service');
-const prisma = require('../src/utils/prisma');
-const ApiError = require('../src/utils/ApiError');
+const chatService = require('../../src/services/chat.service');
+const prisma = require('../../src/utils/prisma');
+const ApiError = require('../../src/utils/ApiError');
 
 // Mock Prisma
-jest.mock('../src/utils/prisma', () => ({
+jest.mock('../../src/utils/prisma', () => ({
     chatRoom: {
         findMany: jest.fn(),
         findUnique: jest.fn(),

@@ -1,8 +1,8 @@
 const request = require('supertest');
-const app = require('../server');
-const prisma = require('../src/utils/prisma');
+const app = require('../../server');
+const prisma = require('../../src/utils/prisma');
 const bcrypt = require('bcrypt');
-const { signToken } = require('../src/utils/jwt');
+const { signToken } = require('../../src/utils/jwt');
 
 let userToken;
 let adminToken;

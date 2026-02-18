@@ -1,9 +1,9 @@
-const notificationService = require('../src/services/notification.service');
-const prisma = require('../src/utils/prisma');
-const ApiError = require('../src/utils/ApiError');
+const notificationService = require('../../src/services/notification.service');
+const prisma = require('../../src/utils/prisma');
+const ApiError = require('../../src/utils/ApiError');
 
 // Mock Prisma
-jest.mock('../src/utils/prisma', () => ({
+jest.mock('../../src/utils/prisma', () => ({
     notification: {
         create: jest.fn(),
         findMany: jest.fn(),
