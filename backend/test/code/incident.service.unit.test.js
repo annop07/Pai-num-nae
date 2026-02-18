@@ -69,7 +69,8 @@ describe('การทดสอบ Unit Test ของ Incident Service', () => 
             expect(prisma.chatRoom.create).toHaveBeenCalledWith(expect.objectContaining({
                 data: { incidentId: 'inc-1' }
             }));
-            expect(result).toEqual(mockIncident);
+            expect(result).toMatchObject(mockIncident);
+            expect(result).toHaveProperty('chatRoom');
         });
 
         it('ควรแจ้ง error 404 ถ้าไม่พบผู้ใช้ที่ถูกรายงาน', async () => {

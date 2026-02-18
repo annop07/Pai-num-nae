@@ -1,5 +1,6 @@
 *** Settings ***
 Library           SeleniumLibrary
+Library           OperatingSystem
 
 Suite Setup       Open Browser To Site
 Suite Teardown    Close All Browsers
@@ -205,6 +206,7 @@ TC11 ติดตามเหตุการณ์ - ปุ่ม "แชทก�
     Should Contain    ${chat_loc}    /chat
 
 TC12 Driver - เปิด "คำขอจองเส้นทางของฉัน" และฟอร์มแจ้งเหตุจากคำขอที่ยืนยันแล้ว
+    [Tags]    DRIVER
     [Documentation]    ทดสอบ flow ฝั่ง Driver: Login → เมนู การเดินทางทั้งหมด → คำขอจองเส้นทางของฉัน → แท็บ ยืนยันแล้ว → เลือกคำขอ → กด แจ้งเหตุ → เข้า formIncident
     Login As Driver
     Go To    ${URL}
@@ -231,7 +233,7 @@ TC12 Driver - เปิด "คำขอจองเส้นทางของ�
     # คลิกการ์ดคำขอแรก (เพื่อให้รายละเอียดขึ้น)
     Scroll Element Into View            xpath=(//div[contains(@class,"trip-card")])[1]
     Click Element                       xpath=(//div[contains(@class,"trip-card")])[1]
-    # คลิกปุ่ม "แจ้งเหตุ" ของคำขอ status confirmed (ต้องเลื่อน + ซ่อน Nuxt DevTools ที่บัง)
+    # คลิกปุ่ม "แจ้งเหตุ" (ต้องเลื่อน + ซ่อน Nuxt DevTools ที่บัง)
     Wait Until Page Contains Element    xpath=//button[normalize-space(.)="แจ้งเหตุ"]    10s
     Scroll Element Into View            xpath=(//button[normalize-space(.)="แจ้งเหตุ"])[1]
     Hide Nuxt Devtools
@@ -240,6 +242,7 @@ TC12 Driver - เปิด "คำขอจองเส้นทางของ�
     Wait Until Page Contains    แจ้งเหตุการณ์    15s
 
 TC13 Driver - ฟอร์มแจ้งเหตุจากฝั่งคนขับ (กรอกครบและส่งสำเร็จ)
+    [Tags]    DRIVER
     [Documentation]    ทดสอบการกรอกฟอร์มแจ้งเหตุจาก flow คนขับให้ครบ และส่งสำเร็จจนขึ้น Success Modal
     Login As Driver
     Go To    ${URL}/formIncident
@@ -260,6 +263,7 @@ TC13 Driver - ฟอร์มแจ้งเหตุจากฝั่งคน
     Wait Until Page Contains    ส่งข้อมูลเรียบร้อยแล้ว    20s
 
 TC14 Driver - เปิดหน้าติดตามเหตุการณ์จากเมนู
+    [Tags]    DRIVER
     [Documentation]    ทดสอบปุ่มเมนู "ติดตามเหตุการณ์" สำหรับ Driver แล้วต้องพาไปหน้า /myIncidents
     Login As Driver
     Go To    ${URL}
@@ -272,6 +276,7 @@ TC14 Driver - เปิดหน้าติดตามเหตุการณ
     Should Contain    ${driver_inc_loc}    /myIncidents
 
 TC15 Driver - ปุ่ม "แชทกับ Admin" จากหน้าติดตามเหตุการณ์
+    [Tags]    DRIVER
     [Documentation]    ทดสอบปุ่ม "แชทกับ Admin" สำหรับ Driver บนหน้า /myIncidents ว่าสามารถเปิดหน้าระบบแชทได้
     Login As Driver
     Go To    ${URL}/myIncidents
@@ -301,10 +306,15 @@ Login With Credentials
 
 Login As Driver
     [Documentation]    ล็อกอินด้วยบัญชี Driver
+    ${email}=       Get Environment Variable    DRIVER_EMAIL       ${DRIVER_EMAIL}
+    ${password}=    Get Environment Variable    DRIVER_PASSWORD    ${DRIVER_PASSWORD}
+    IF    '${email}' == '' or '${password}' == ''
+        Skip    กรุณาตั้งค่า environment variables: DRIVER_EMAIL และ DRIVER_PASSWORD ก่อนรันเทส Driver
+    END
     Go To    ${URL}/login
     Wait Until Page Contains Element    id=loginForm    15s
-    Input Text    id=identifier    ${DRIVER_EMAIL}
-    Input Text    id=password      ${DRIVER_PASSWORD}
+    Input Text    id=identifier    ${email}
+    Input Text    id=password      ${password}
     Click Button    xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]
     Wait Until Page Contains Element    xpath=(//*[self::button or self::a][normalize-space(.)="การเดินทางทั้งหมด"])[1]    15s
 
