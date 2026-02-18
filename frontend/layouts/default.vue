@@ -62,6 +62,13 @@
                             </div>
                         </div>
 
+                        <NuxtLink v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
+                            to="/myIncidents"
+                            class="font-medium text-gray-600 transition-colors duration-200 hover:text-blue-700"
+                            :class="{ 'text-blue-600': $route.path.startsWith('/myIncidents') }">
+                            ติดตามเหตุการณ์
+                        </NuxtLink>
+
                         <div v-if="!token" class="flex items-center space-x-3 ">
                             <NuxtLink to="/register"
                                 class="text-gray-600 transition-colors duration-200 hover:text-blue-600">สมัครสมาชิก
@@ -321,6 +328,14 @@
                             </div>
                         </div>
 
+                        <NuxtLink 
+                            v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
+                            to="/myIncidents"
+                            class="block px-3 py-2 transition-colors duration-200 rounded-md"
+                            :class="$route.path.startsWith('/myIncidents') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
+                            @click="closeMobileMenu">
+                            ติดตามเหตุการณ์
+                        </NuxtLink>
                         <NuxtLink 
                             v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
                             to="/chat"

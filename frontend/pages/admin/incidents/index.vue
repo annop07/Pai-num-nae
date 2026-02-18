@@ -203,11 +203,13 @@
                 <p class="desc-text">{{ selectedIncident.description }}</p>
               </div>
 
-              <div class="evidence-section" v-if="selectedIncident.attachments?.length">
+              <div class="evidence-section" v-if="selectedIncident.evidenceUrls?.length">
                 <label>Media Evidence</label>
                 <div class="gallery-grid">
-                  <div v-for="(img, idx) in selectedIncident.attachments" :key="idx" class="img-wrapper">
-                    <img :src="img" alt="evidence">
+                  <div v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx" class="img-wrapper">
+                    <a :href="url" target="_blank" rel="noopener noreferrer">
+                      <img :src="url" :alt="`หลักฐาน ${idx + 1}`">
+                    </a>
                   </div>
                 </div>
               </div>

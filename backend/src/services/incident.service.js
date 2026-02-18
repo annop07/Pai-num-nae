@@ -62,13 +62,13 @@ async function createIncident(data, reporterId) {
         });
 
         // Auto-create ChatRoom
-        await tx.chatRoom.create({
+        const chatRoom = await tx.chatRoom.create({
             data: {
                 incidentId: incident.id
             }
         });
 
-        return incident;
+        return { ...incident, chatRoom: { id: chatRoom.id } };
     });
 }
 

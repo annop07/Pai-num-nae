@@ -221,6 +221,7 @@ const isMapOpen = ref(false)
 const mapContainer = ref(null)
 const locationName = ref('')
 const isSuccessModalOpen = ref(false)
+const lastCreatedIncident = ref(null)
 
 let gmap = null
 let marker = null
@@ -228,7 +229,12 @@ let tempLocation = null
 
 function goToAdminChat() {
   isSuccessModalOpen.value = false
-  navigateTo('/chat/admin')
+  const chatRoomId = lastCreatedIncident.value?.chatRoom?.id
+  if (chatRoomId) {
+    navigateTo(`/chat?room=${chatRoomId}`)
+  } else {
+    navigateTo('/chat')
+  }
 }
 
 function openMapPicker() {
@@ -450,11 +456,12 @@ async function handleSubmit() {
       formData.append('evidences', f.file)
     })
 
-    await $api('/incidents', {
+    const res = await $api('/incidents', {
       method: 'POST',
       body: formData,
     })
 
+    lastCreatedIncident.value = res || null
     isSuccessModalOpen.value = true
   } catch (err) {
     alert(err?.statusMessage || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
