@@ -87,7 +87,7 @@ As a Passenger or Driver, I want to communicate with the admin and report incide
 
 - แจ้งเหตุการณ์หรือปัญหาผ่าน Form Incident ได้อย่างเป็นระบบ พร้อมแนบหลักฐานและตำแหน่งที่เกิดเหตุ
 - สื่อสารกับผู้ดูแลระบบแบบ Real-time ผ่านระบบ Chat
-- ตรวจสอบสถานะของ Incident และรับการแจ้งเตือน (Notification) เมื่อมีการอัปเดต
+- ตรวจสอบสถานะของ Incident/Case Status และรับการแจ้งเตือน (Notification) เมื่อมีการอัปเดต
 - รับข้อมูลการแก้ไขปัญหา (Resolution Note) จากผู้ดูแลระบบโดยตรง
 - ติดตามประวัติการรายงานและการสนทนาได้อย่างต่อเนื่องในระบบ
 
