@@ -1,54 +1,52 @@
 <template>
-  <div class="admin-container">
-    <div class="page-header">
-      <h1 class="page-title">Incident Management</h1>
+  <div class="admin-wrapper">
+    <header class="page-header">
+      <div class="title-group">
+        <h1 class="main-title">Incident Management</h1>
+        <p class="subtitle">จัดการและติดตามสถานะเหตุการณ์ที่ได้รับแจ้ง</p>
+      </div>
       <button class="btn-refresh" @click="fetchData">
-        <i class="fas fa-sync"></i> Refresh Data
+        <i class="fas fa-sync-alt"></i> Refresh Data
       </button>
-    </div>
+    </header>
 
-    <div class="summary-grid">
-      <div class="stat-card">
-        <div class="stat-info">
-          <span class="stat-label">Total Incidents</span>
-          <span class="stat-value">{{ incidents.length }}</span>
+    <section class="stats-container">
+      <div class="kpi-card">
+        <div class="kpi-content">
+          <span class="kpi-label">Total Incidents</span>
+          <span class="kpi-value">{{ incidents.length }}</span>
         </div>
-        <div class="stat-icon total"><i class="fas fa-clipboard-list"></i></div>
+        <div class="kpi-icon blue"><i class="fas fa-file-invoice"></i></div>
       </div>
-      
-      <div class="stat-card border-pending">
-        <div class="stat-info">
-          <span class="stat-label">Pending</span>
-          <span class="stat-value text-pending">{{ pendingCount }}</span>
+      <div class="kpi-card border-amber">
+        <div class="kpi-content">
+          <span class="kpi-label">Pending</span>
+          <span class="kpi-value text-amber">{{ pendingCount }}</span>
         </div>
-        <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
+        <div class="kpi-icon amber"><i class="fas fa-clock"></i></div>
       </div>
+      <div class="kpi-card border-red">
+        <div class="kpi-content">
+          <span class="kpi-label">Urgent</span>
+          <span class="kpi-value text-red">{{ urgentCount }}</span>
+        </div>
+        <div class="kpi-icon red"><i class="fas fa-exclamation-circle"></i></div>
+      </div>
+    </section>
 
-      <div class="stat-card border-urgent">
-        <div class="stat-info">
-          <span class="stat-label">Urgent</span>
-          <span class="stat-value text-urgent">{{ urgentCount }}</span>
-        </div>
-        <div class="stat-icon urgent"><i class="fas fa-exclamation-triangle"></i></div>
-      </div>
-    </div>
-
-    <div class="content-card filter-bar">
-      <div class="filter-group">
+    <div class="content-card filter-section">
+      <div class="input-group">
         <label>Status</label>
-        <select v-model="filterStatus" class="custom-select">
+        <select v-model="filterStatus" class="smooth-select">
           <option value="">All Status</option>
           <option>PENDING</option>
           <option>INVESTIGATING</option>
           <option>RESOLVED</option>
-          <option>DISMISSED</option>
-          <option>ESCALATED</option>
         </select>
       </div>
-
-      <div class="filter-group">
+      <div class="input-group">
         <label>Priority</label>
-        <select v-model="filterPriority" class="custom-select">
+        <select v-model="filterPriority" class="smooth-select">
           <option value="">All Priority</option>
           <option>LOW</option>
           <option>NORMAL</option>
@@ -56,329 +54,308 @@
           <option>URGENT</option>
         </select>
       </div>
-      
-      <button class="btn-clear" @click="filterStatus=''; filterPriority=''">Clear Filter</button>
+      <button class="btn-link" @click="filterStatus=''; filterPriority=''">Clear Filters</button>
     </div>
 
-    <div class="content-card table-wrapper">
-      <table class="modern-table">
+    <div class="content-card table-container">
+      <table class="smooth-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Reporter</th>
-            <th>Reported User</th>
-            <th>Type</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Created At</th>
+            <th width="120">ID</th>
+            <th>Reporter & Target</th>
+            <th>Issue Type</th>
+            <th width="100">Priority</th>
+            <th width="150">Status</th>
             <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="incident in filteredIncidents" :key="incident.id">
-            <td class="font-bold">{{ incident.id }}</td>
-            <td>{{ incident.reporter }}</td>
-            <td>{{ incident.reportedUser }}</td>
-            <td><span class="type-text">{{ incident.type }}</span></td>
+          <tr v-for="incident in filteredIncidents" :key="incident.id" class="table-row">
+            <td class="id-cell">{{ incident.id }}</td>
             <td>
-              <span :class="['badge-priority', incident.priority.toLowerCase()]">
-                {{ incident.priority }}
-              </span>
+              <div class="user-info">
+                <strong>{{ incident.reporter }}</strong>
+                <span class="target-text">Target: {{ incident.reportedUser }}</span>
+              </div>
+            </td>
+            <td><span class="type-tag">{{ incident.type.replace('_', ' ') }}</span></td>
+            <td>
+              <span :class="['badge', incident.priority.toLowerCase()]">{{ incident.priority }}</span>
             </td>
             <td>
-              <select 
-                v-model="incident.status" 
-                @change="updateStatus(incident)"
-                class="status-select"
-              >
+              <select v-model="incident.status" @change="updateStatus(incident)" class="status-pill">
                 <option>PENDING</option>
                 <option>INVESTIGATING</option>
                 <option>RESOLVED</option>
                 <option>DISMISSED</option>
-                <option>ESCALATED</option>
               </select>
             </td>
-            <td class="text-muted">{{ incident.createdAt }}</td>
             <td class="text-center">
-              <button class="btn-view" @click="openDetail(incident)">
-                View Detail
-              </button>
+              <button class="btn-action" @click="openDetail(incident)">View & Take Action</button>
             </td>
-          </tr>
-          <tr v-if="filteredIncidents.length === 0">
-            <td colspan="8" class="empty-state">No incidents found.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <transition name="fade">
-      <div v-if="selectedIncident" class="modal-overlay" @click.self="closeDetail">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Incident Detail</h2>
-            <button class="close-btn" @click="closeDetail">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="detail-row">
-                <label>Title</label>
-                <p>{{ selectedIncident.title }}</p>
-            </div>
+    <transition name="modal-fade">
+  <div
+    v-if="selectedIncident"
+    class="modal-backdrop"
+    @click.self="closeDetail"
+  >
+    <div class="modal-sheet">
+      
+      <div class="modal-head">
+        <div class="head-info">
+          <span
+            :class="['mini-badge', selectedIncident.priority.toLowerCase()]"
+          >
+            {{ selectedIncident.priority }}
+          </span>
+          <h3 class="modal-title">
+            {{ selectedIncident.title }}
+          </h3>
+        </div>
+        <button class="close-icon" @click="closeDetail">×</button>
+      </div>
 
-            <div class="detail-row">
-                <label>Description</label>
-                <p>{{ selectedIncident.description }}</p>
-            </div>
+      <div class="modal-scroll-area">
+        <div class="desc-section">
+          <label>Description</label>
+          <p class="desc-text">
+            {{ selectedIncident.description }}
+          </p>
+        </div>
 
-            <div class="detail-row">
-                <label>Resolution Note</label>
-                <textarea 
-                v-model="selectedIncident.resolution" 
-                placeholder="Enter resolution details..."
-                rows="4"
-                ></textarea>
-            </div>
-
-            <div 
-                class="detail-row" 
-                v-if="selectedIncident?.location"
+        <div
+          class="evidence-section"
+          v-if="selectedIncident.attachments?.length"
+        >
+          <label>Media Evidence</label>
+          <div class="gallery-grid">
+            <div
+              v-for="(img, idx) in selectedIncident.attachments"
+              :key="idx"
+              class="img-wrapper"
             >
-                <label>Incident Location</label>
-
-                <iframe
-                width="100%"
-                height="250"
-                style="border-radius:12px; border:0"
-                loading="lazy"
-                allowfullscreen
-                :src="`https://www.google.com/maps?q=${selectedIncident.location.lat},${selectedIncident.location.lng}&z=15&output=embed`">
-                </iframe>
+              <img :src="img" alt="evidence" />
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn-secondary" @click="closeDetail">Cancel</button>
-            <button class="btn-primary" @click="resolveIncident">Mark as Resolved</button>
+        </div>
+
+        <div
+          class="map-section"
+          v-if="selectedIncident.location"
+        >
+          <label>
+            <i class="fas fa-map-marker-alt"></i> Location
+          </label>
+          <div class="map-box">
+            <iframe
+              width="100%"
+              height="180"
+              frameborder="0"
+              loading="lazy"
+              :src="`https://maps.google.com/maps?q=${selectedIncident.location.lat},${selectedIncident.location.lng}&z=15&output=embed`"
+            >
+            </iframe>
+          </div>
+        </div>
+
+        <div class="note-section">
+          <label>Admin Resolution Note</label>
+          <textarea
+            v-model="selectedIncident.resolution"
+            placeholder="พิมพ์หมายเหตุการจัดการเหตุการณ์..."
+          ></textarea>
+        </div>
+
+        <div
+          v-if="selectedIncident.newAttachments?.length"
+          class="preview-grid"
+        >
+          <div
+            v-for="(file, idx) in selectedIncident.newAttachments"
+            :key="idx"
+            class="preview-box"
+          >
+            <img
+              v-if="file.type.startsWith('image')"
+              :src="file.preview"
+            />
+            <video
+              v-else
+              :src="file.preview"
+              controls
+            ></video>
           </div>
         </div>
       </div>
-    </transition>
+
+      <!-- footer ต้องอยู่ใน modal-sheet -->
+      <div class="modal-foot">
+        <button
+          class="btn-chat-alt"
+          @click="startChat(selectedIncident)"
+        >
+          <i class="far fa-comments"></i>
+          Chat with Reporter
+        </button>
+
+        <div class="foot-rights">
+          <button
+            class="btn-ghost"
+            @click="closeDetail"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn-submit"
+            @click="resolveIncident"
+          >
+            Confirm Resolved
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</transition>
+
   </div>
 </template>
 
 <style scoped>
-/* Base Styles */
-.admin-container {
-  padding: 24px;
-  background-color: #f8fafc;
-  min-height: 100vh;
-  font-family: 'Inter', 'Kanit', sans-serif;
-  color: #334155;
+/* --- Core Layout & Typography --- */
+.admin-wrapper { padding: 32px; background: #f4f7fa; min-height: 100vh; font-family: 'Kanit', sans-serif; color: #334155; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+.main-title { font-size: 26px; font-weight: 700; color: #1e293b; margin: 0; }
+.subtitle { color: #64748b; font-size: 14px; margin-top: 4px; }
+
+/* --- KPI Cards --- */
+.stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
+.kpi-card { 
+  background: white; padding: 24px; border-radius: 16px; display: flex; 
+  justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  transition: all 0.3s ease; border: 1px solid #e2e8f0;
 }
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
+.kpi-value { font-size: 28px; font-weight: 700; display: block; margin-top: 4px; }
+.kpi-label { font-size: 14px; color: #64748b; font-weight: 500; }
+.kpi-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.kpi-icon.blue { background: #eff6ff; color: #3b82f6; }
+.kpi-icon.amber { background: #fff7ed; color: #f59e0b; }
+.kpi-icon.red { background: #fef2f2; color: #ef4444; }
+.text-amber { color: #f59e0b; }
+.text-red { color: #ef4444; }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
+/* --- Filters & Table --- */
+.content-card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; border: 1px solid #e2e8f0; overflow: hidden; }
+.filter-section { padding: 20px 24px; display: flex; gap: 20px; align-items: flex-end; background: #fff; }
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.input-group label { font-size: 13px; font-weight: 600; color: #64748b; }
+.smooth-select, .status-pill { padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; background: #fff; outline: none; transition: 0.2s; font-size: 14px; min-width: 160px; }
+.smooth-select:focus { border-color: #3b82f6; ring: 2px solid #bfdbfe; }
+.btn-link { color: #3b82f6; background: none; border: none; font-weight: 500; cursor: pointer; padding-bottom: 10px; }
 
-.page-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1e293b;
-}
+.smooth-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.smooth-table th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e2e8f0; }
+.smooth-table td { padding: 18px 20px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.table-row:hover { background-color: #f8fafc; }
+.user-info { display: flex; flex-direction: column; }
+.target-text { font-size: 13px; color: #94a3b8; margin-top: 2px; }
+.id-cell { font-weight: 600; color: #3b82f6; }
+.type-tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; color: #475569; }
 
-/* Summary Cards */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-left: 4px solid #cbd5e1;
-}
-
-.stat-label { color: #64748b; font-size: 14px; display: block; }
-.stat-value { font-size: 24px; font-weight: 700; margin-top: 4px; display: block; }
-
-.border-pending { border-left-color: #f59e0b; }
-.border-urgent { border-left-color: #ef4444; }
-.text-pending { color: #d97706; }
-.text-urgent { color: #dc2626; }
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-.stat-icon.total { background: #f1f5f9; color: #475569; }
-.stat-icon.pending { background: #fffbeb; color: #d97706; }
-.stat-icon.urgent { background: #fef2f2; color: #dc2626; }
-
-/* Content Cards */
-.content-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 24px;
-}
-
-.filter-bar {
-  padding: 20px;
-  display: flex;
-  gap: 20px;
-  align-items: flex-end;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-group label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.custom-select, .status-select {
-  padding: 8px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: #fff;
-  min-width: 160px;
-  outline: none;
-}
-
-.custom-select:focus { border-color: #2563eb; }
-
-/* Table Style */
-.table-wrapper { overflow: hidden; }
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.modern-table th {
-  background: #f8fafc;
-  padding: 16px;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.modern-table td {
-  padding: 16px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-}
-
-.modern-table tr:hover { background-color: #fbfcfd; }
-
-.badge-priority {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.low { background: #f1f5f9; color: #475569; }
-.normal { background: #e0f2fe; color: #0369a1; }
-.high { background: #ffedd5; color: #c2410c; }
+/* --- Status & Badges --- */
+.status-pill { border: none; background: #f1f5f9; font-weight: 600; font-size: 12px; cursor: pointer; padding: 6px 12px; border-radius: 20px; text-align: center; }
+.badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 .urgent { background: #fee2e2; color: #b91c1c; }
+.high { background: #ffedd5; color: #c2410c; }
+.normal { background: #e0f2fe; color: #0369a1; }
+.mini-badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-right: 8px; }
 
-/* Buttons */
-.btn-view {
-  color: #2563eb;
-  background: transparent;
-  border: 1px solid #2563eb;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-view:hover { background: #2563eb; color: white; }
+/* --- Buttons --- */
+.btn-refresh { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: white; border: 1px solid #cbd5e1; border-radius: 10px; color: #475569; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-refresh:hover { background: #f8fafc; border-color: #94a3b8; color: #334155; }
+.btn-action { color: #3b82f6; background: transparent; border: none; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: 0.2s; }
+.btn-action:hover { background: #eff6ff; }
 
-.btn-primary {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-}
+/* --- Modal --- */
+.modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-sheet { background: white; width: 600px; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; max-height: 90vh; }
+.modal-head { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+.head-info { display: flex; align-items: center; }
+.modal-title { margin: 0; font-size: 18px; font-weight: 700; color: #1e293b; }
+.close-icon { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; padding: 0; line-height: 1; }
+.close-icon:hover { color: #64748b; }
 
-/* Modal Style */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(15, 23, 42, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-}
+.modal-scroll-area { padding: 24px; overflow-y: auto; flex-grow: 1; }
+.desc-section label, .evidence-section label, .map-section label, .note-section label { display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+.desc-text { background: #f8fafc; padding: 16px; border-radius: 12px; line-height: 1.6; color: #334155; border: 1px solid #e2e8f0; }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; }
+.img-wrapper img { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; border: 1px solid #e2e8f0; transition: 0.2s; cursor: zoom-in; }
+.img-wrapper img:hover { filter: brightness(0.9); border-color: #cbd5e1; }
+.map-box { border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; }
+textarea { width: 100%; border-radius: 12px; border: 1px solid #cbd5e1; padding: 12px; resize: none; font-family: inherit; font-size: 14px; transition: 0.2s; }
+textarea:focus { border-color: #3b82f6; outline: none; }
 
-.modal-content {
-  background: white;
-  width: 500px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+.modal-foot { padding: 20px 24px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+.foot-rights { display: flex; gap: 12px; }
+.btn-submit { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-submit:hover { background: #2563eb; }
+.btn-chat-alt { background: #0ea5e9; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+.btn-chat-alt:hover { background: #0284c7; }
+
+.upload-section {
+  margin-top: 20px;
 }
 
-.modal-header {
-  padding: 20px;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.error-text {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 6px;
 }
 
-.modal-body { padding: 20px; }
-.detail-row { margin-bottom: 16px; }
-.detail-row label { display: block; font-weight: 600; margin-bottom: 4px; color: #64748b; }
-.detail-row p { color: #1e293b; line-height: 1.5; }
-
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  resize: none;
-}
-
-.modal-footer {
-  padding: 16px 20px;
-  background: #f8fafc;
-  display: flex;
-  justify-content: flex-end;
+.preview-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 12px;
 }
 
-/* Transitions */
-.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-</style>
+.preview-box img,
+.preview-box video {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
 
+
+/* --- FIX: Cancel Button Style --- */
+.btn-ghost {
+  background: white;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-ghost:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+/* --- Transitions --- */
+.modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.3s ease; }
+.modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
+</style>
 <script setup>
 import { ref, computed } from 'vue'
 
@@ -397,16 +374,21 @@ const incidents = ref([
     type: "SAFETY_CONCERN",
     priority: "HIGH",
     status: "PENDING",
-    title: "Speeding",
-    description: "Driver was driving over speed limit.",
+    title: "Driver speeding aggressively",
+    description: "คนขับขับเร็วมากและเบรกกะทันหันหลายครั้ง ทำให้รู้สึกไม่ปลอดภัย",
     resolution: "",
     createdAt: "2026-02-16 10:30",
     location: {
       lat: 13.7563,
       lng: 100.5018
-    }
+    },
+    attachments: [
+      "https://images.unsplash.com/photo-1502877338535-766e1452684a",
+      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c"
+    ]
   }
 ])
+
 
 
 /* ---------------------------
@@ -456,6 +438,7 @@ const resolveIncident = () => {
     incidents.value[index].status = "RESOLVED"
     incidents.value[index].resolution =
       selectedIncident.value.resolution
+
   }
 
   closeDetail()
@@ -464,4 +447,6 @@ const resolveIncident = () => {
 const fetchData = () => {
   console.log("Mock refresh triggered")
 }
+
+
 </script>
