@@ -29,7 +29,4 @@ Success Modal
 
 #### การปรับปรุงโครงสร้างไฟล์โปรเจค
 -เพิ่มไฟล์ pages/admin/incidents/index.vue
--เพิ่มไฟล์ pages/admin/incidents/create.vue
--เพิ่มไฟล์ pages/admin/incidents/[id]/edit.vue
--เพิ่มไฟล์ pages/admin/incidents/[id]/index.vue
 -เพิ่ม mock data structure ให้สอดคล้องกับ Form Incicdent (รองรับ role, location, media, resolution) 
