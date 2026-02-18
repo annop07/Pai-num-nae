@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-02-18T19:39:48.210327" rpa="false" schemaversion="5">
+<suite id="s1" name="Tests" source="c:\SoftwareEngineer\Pai-num-nae\test\uat\tests.robot">
+<test id="s1-t1" name="UAT-S1-001 Driver Report Incident Success" line="26">
+<kw name="Open Browser To Login Page" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:39:48.631586" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
+<msg time="2026-02-18T19:39:48.854938" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:39:48.631209" elapsed="1.814838"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T19:39:50.446367" elapsed="0.055832"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:39:55.836442" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-3.png"&gt;&lt;img src="selenium-screenshot-3.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T19:39:55.836672" level="FAIL">Element 'id=email' not visible after 5 seconds.</msg>
+<arg>${INPUT_USERNAME}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-02-18T19:39:50.502410" elapsed="5.338456">Element 'id=email' not visible after 5 seconds.</status>
+</kw>
+<status status="FAIL" start="2026-02-18T19:39:48.629677" elapsed="7.211370">Element 'id=email' not visible after 5 seconds.</status>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:39:55.841429" elapsed="2.399550"/>
+</kw>
+<doc>ทดสอบ Driver แจ้งเหตุสำเร็จ [Ref: Source 44-46]</doc>
+<status status="FAIL" start="2026-02-18T19:39:48.627319" elapsed="9.613772">Setup failed:
+Element 'id=email' not visible after 5 seconds.</status>
+</test>
+<test id="s1-t2" name="UAT-S1-002 Driver Report Validation (Negative)" line="41">
+<kw name="Open Browser To Login Page" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:39:58.242363" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
+<msg time="2026-02-18T19:39:58.323161" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:39:58.242195" elapsed="1.452828"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T19:39:59.695567" elapsed="0.052082"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:03.553052" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:03.553388" level="FAIL">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<arg>${INPUT_USERNAME}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-02-18T19:39:59.748045" elapsed="3.812980">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<status status="FAIL" start="2026-02-18T19:39:58.241963" elapsed="5.319257">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:40:03.561442" elapsed="2.128163"/>
+</kw>
+<doc>ทดสอบ Driver กรอกข้อมูลไม่ครบ [Ref: Source 47-48]</doc>
+<status status="FAIL" start="2026-02-18T19:39:58.241419" elapsed="7.448295">Setup failed:
+NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</test>
+<test id="s1-t3" name="UAT-S1-003 Passenger Report Driver Behavior" line="55">
+<kw name="Open Browser To Login Page" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:05.690889" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
+<msg time="2026-02-18T19:40:05.775270" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:05.690711" elapsed="1.398993"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T19:40:07.090086" elapsed="0.049608"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:09.216358" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:09.216585" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<arg>${INPUT_USERNAME}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-02-18T19:40:07.140130" elapsed="2.078128">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<status status="FAIL" start="2026-02-18T19:40:05.690495" elapsed="3.527909">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:40:09.218592" elapsed="2.009306"/>
+</kw>
+<doc>ทดสอบ Passenger รายงานพฤติกรรม Driver [Ref: Source 50-52]</doc>
+<status status="FAIL" start="2026-02-18T19:40:05.690011" elapsed="5.538034">Setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</test>
+<test id="s1-t4" name="UAT-S1-003-N Passenger Validation (Negative)" line="80">
+<kw name="Open Browser To Login Page" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:11.229885" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
+<msg time="2026-02-18T19:40:11.315240" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:11.229597" elapsed="1.411986"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T19:40:12.641809" elapsed="0.048305"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:14.119243" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:14.119520" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<arg>${INPUT_USERNAME}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-02-18T19:40:12.690325" elapsed="1.431561">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<status status="FAIL" start="2026-02-18T19:40:11.229075" elapsed="2.893104">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:40:14.123299" elapsed="2.011210"/>
+</kw>
+<doc>ทดสอบ Passenger กรอกข้อมูลไม่ครบ/ผิดเงื่อนไข [Ref: Source 54-56]</doc>
+<status status="FAIL" start="2026-02-18T19:40:11.228399" elapsed="4.906233">Setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</test>
+<test id="s1-t5" name="UAT-S1-004 Admin Update Status" line="103">
+<kw name="Open Browser To Login Page" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:16.136241" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
+<msg time="2026-02-18T19:40:16.232697" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:16.135849" elapsed="1.436279"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-18T19:40:17.572434" elapsed="0.038616"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-02-18T19:40:19.156104" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:19.156363" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<arg>${INPUT_USERNAME}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-02-18T19:40:17.611424" elapsed="1.546747">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<status status="FAIL" start="2026-02-18T19:40:16.135631" elapsed="3.022695">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:40:19.158523" elapsed="2.018109"/>
+</kw>
+<doc>ทดสอบ Admin อัปเดตสถานะ Incident [Ref: Source 57-59]</doc>
+<status status="FAIL" start="2026-02-18T19:40:16.134945" elapsed="5.041831">Setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e16d202
+	0x7ff79e1927af
+	0x7ff79e209a29
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</status>
+</test>
+<status status="FAIL" start="2026-02-18T19:39:48.212107" elapsed="32.965527"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="5" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Tests" id="s1" pass="0" fail="5" skip="0">Tests</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-02-18T19:39:48.854938" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T19:39:58.323161" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T19:40:03.553052" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=144.0.7559.133)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e18165d
+	0x7ff79e1591b1
+	0x7ff79e2097e6
+	0x7ff79e22a5c2
+	0x7ff79e1cac29
+	0x7ff79e1cba93
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e3b2004
+	0x7ff79e3b21b5
+	0x7ff79e397ee2
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:05.775270" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T19:40:09.216358" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:11.315240" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T19:40:14.119243" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+<msg time="2026-02-18T19:40:16.232697" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T19:40:19.156104" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff79e3a88e5
+	0x7ff79e3a8940
+	0x7ff79e181465
+	0x7ff79e1c9d83
+	0x7ff79e201ee2
+	0x7ff79e1fc500
+	0x7ff79e1fb6f0
+	0x7ff79e14b325
+	0x7ff79e6c0640
+	0x7ff79e6baf80
+	0x7ff79e6d96e6
+	0x7ff79e3c5de4
+	0x7ff79e3ced8c
+	0x7ff79e149cb8
+	0x7ff79e81f008
+	0x7ffcc117e8d7
+	0x7ffcc216c40c
+</msg>
+</errors>
+</robot>
