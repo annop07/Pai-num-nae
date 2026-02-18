@@ -15,7 +15,10 @@
       <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <h2 class="text-xl font-bold text-gray-800">Inbox</h2>
-          <span class="px-2 py-0.5 text-xs font-medium text-blue-600 bg-blue-100 rounded-full">2 New</span>
+          <span v-if="totalChatUnread > 0"
+            class="px-2 py-0.5 text-xs font-medium text-white bg-red-500 rounded-full">
+            {{ totalChatUnread }} ข้อความใหม่
+          </span>
         </div>
         <!-- Settings Icon (Optional) -->
         <button class="text-gray-400 hover:text-gray-600">
@@ -84,15 +87,16 @@
             <p class="text-xs text-gray-500 font-medium mb-1">
               {{ chat.role }}
             </p>
-            <p class="text-sm text-gray-600 truncate" :class="{ 'font-medium text-gray-900': chat.unread > 0 }">
+            <p class="text-sm text-gray-600 truncate" :class="{ 'font-medium text-gray-900': getRoomUnread(chat) > 0 }">
               {{ chat.lastMessage }}
             </p>
           </div>
 
-          <div v-if="chat.unread > 0" class="flex-shrink-0 self-center ml-2">
+          <div v-if="getRoomUnread(chat) > 0" class="flex-shrink-0 self-center ml-2">
             <span
-              class="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-sm">
-              {{ chat.unread }}
+              class="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full shadow-sm"
+              title="ข้อความใหม่">
+              {{ getRoomUnread(chat) }}
             </span>
           </div>
         </div>
@@ -209,6 +213,19 @@
           <!-- Loading Messages -->
           <div v-if="messagesLoading" class="flex justify-center items-center py-12">
             <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+
+          <!-- ข้อความต้อนรับเมื่อยังไม่มีข้อความ -->
+          <div v-else-if="messages.length === 0"
+            class="flex flex-col items-center justify-center py-12 px-4 text-center">
+            <div class="max-w-sm px-6 py-5 bg-blue-50 border border-blue-100 rounded-2xl">
+              <p class="text-gray-700 leading-relaxed">
+                ยินดีต้อนรับเข้าสู่แชทแอดมิน แอดมินจะรีบตอบกลับให้คุณโดยเร็วที่สุด
+              </p>
+              <p class="mt-2 text-sm text-gray-500">
+                ส่งข้อความหรือแนบไฟล์เพื่อเริ่มสนทนา
+              </p>
+            </div>
           </div>
 
           <!-- Date Divider (แสดงเมื่อมี messages และไม่ใช่ loading) -->
@@ -408,7 +425,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick, computed, watch } from "vue";
-import { useRoute } from "#app";
+import { useRoute, useRuntimeConfig, useCookie } from "#app";
 import { useChat } from "@/composables/useChat";
 import { useSocket } from "@/composables/useSocket";
 import { useToast } from "@/composables/useToast";
@@ -459,6 +476,63 @@ const toastVisible = ref(false);
 
 // ใช้ chatRooms เป็น chatList ใน template
 const chatList = computed(() => chatRooms.value);
+
+// การแจ้งเตือนแชท - แสดง badge แดงว่าห้องไหนมีข้อความใหม่
+const chatNotifications = ref([]);
+const config = useRuntimeConfig();
+async function fetchChatNotifications() {
+  try {
+    const apiBase = config.public?.apiBase || "http://localhost:3000/api";
+    const token = useCookie("token")?.value || (process.client ? localStorage.getItem("token") : "");
+    const res = await $fetch("/notifications", {
+      baseURL: apiBase,
+      headers: { Accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      query: { page: 1, limit: 50 },
+    });
+    const raw = Array.isArray(res?.data) ? res.data : [];
+    chatNotifications.value = raw.filter((n) => n.metadata?.chatRoomId);
+  } catch {
+    chatNotifications.value = [];
+  }
+}
+
+const unreadByRoomId = computed(() => {
+  const m = {};
+  for (const n of chatNotifications.value) {
+    if (!n.readAt && n.metadata?.chatRoomId) {
+      const rid = n.metadata.chatRoomId;
+      m[rid] = (m[rid] || 0) + 1;
+    }
+  }
+  return m;
+});
+
+const totalChatUnread = computed(() =>
+  Object.values(unreadByRoomId.value).reduce((a, b) => a + b, 0)
+);
+
+function getRoomUnread(chat) {
+  return unreadByRoomId.value[chat.id] ?? chat.unread ?? 0;
+}
+
+async function markRoomNotificationsRead(roomId) {
+  const toMark = chatNotifications.value.filter(
+    (n) => !n.readAt && n.metadata?.chatRoomId === roomId
+  );
+  if (toMark.length === 0) return;
+  const apiBase = config.public?.apiBase || "http://localhost:3000/api";
+  const token = useCookie("token")?.value || (process.client ? localStorage.getItem("token") : "");
+  for (const n of toMark) {
+    try {
+      await $fetch(`/notifications/${n.id}/read`, {
+        baseURL: apiBase,
+        method: "PATCH",
+        headers: { Accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      n.readAt = new Date().toISOString();
+    } catch { /* ignore */ }
+  }
+}
 
 //toast
 const showToast = (message, duration = 3000) => {
@@ -538,6 +612,7 @@ const retryFetchMessages = async (roomId, maxRetries = 3) => {
 const selectChat = async (chat) => {
   activeChatId.value = chat.id;
   chat.unread = 0;
+  await markRoomNotificationsRead(chat.id);
 
   try {
     // ใช้ retry mechanism
@@ -722,6 +797,7 @@ watch(activeChatId, (newChatId, oldChatId) => {
 onMounted(async () => {
   scrollToBottom();
   await fetchChatRooms();
+  await fetchChatNotifications();
   checkMobile();
   window.addEventListener("resize", checkMobile);
 
@@ -744,6 +820,9 @@ onMounted(async () => {
     if (message.chatRoomId === activeChatId.value) {
       messages.value.push(uiMessage);
       scrollToBottom();
+    } else {
+      // ข้อความมาห้องอื่น → refetch notifications เพื่ออัปเดต badge แดง
+      fetchChatNotifications();
     }
 
     // อัปเดต lastMessage ใน sidebar

@@ -115,6 +115,9 @@
                   <strong>
                     {{ incident.reporter?.email || '—' }}
                   </strong>
+                  <span v-if="incident.reporter?.role" :class="['role-badge', incident.reporter.role.toLowerCase()]">
+                    {{ incident.reporter.role }}
+                  </span>
                   <span class="target-text">
                     Target: {{ incident.reportedUser?.email || '—' }}
                   </span>
@@ -442,6 +445,33 @@
 .user-info {
   display: flex;
   flex-direction: column;
+}
+
+.role-badge {
+  display: inline-block;
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+.role-badge.passenger {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.role-badge.driver {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.role-badge.admin {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .target-text {

@@ -25,21 +25,34 @@ const INCIDENT_INCLUDE = {
 
 // User Functions
 async function createIncident(data, reporterId) {
-    // Validation
-    if (data.reportedUserId) {
-        const user = await prisma.user.findUnique({ where: { id: data.reportedUserId } });
-        if (!user) throw new ApiError(404, 'ไม่พบผู้ใช้ที่ถูกรายงาน');
-        if (user.id === reporterId) throw new ApiError(400, 'ไม่สามารถรายงานตัวเองได้');
+    let routeIdToUse = data.routeId || null;
+    let reportedUserIdToUse = data.reportedUserId || null;
+
+    if (data.bookingId) {
+        const booking = await prisma.booking.findUnique({
+            where: { id: data.bookingId },
+            select: { id: true, routeId: true, passengerId: true, route: { select: { driverId: true } } },
+        });
+        if (!booking) throw new ApiError(404, 'ไม่พบการจอง');
+        // ดึง routeId จาก booking อัตโนมัติเมื่อไม่ได้ส่งมา
+        if (!routeIdToUse) routeIdToUse = booking.routeId;
+        // ดึง reportedUserId จากฝั่งตรงข้ามของ booking (ผู้รายงานเป็นคนขับ → target เป็นผู้โดยสาร, และในทางกลับกัน)
+        if (!reportedUserIdToUse && reporterId === booking.route?.driverId) {
+            reportedUserIdToUse = booking.passengerId;
+        } else if (!reportedUserIdToUse && reporterId === booking.passengerId) {
+            reportedUserIdToUse = booking.route?.driverId || null;
+        }
     }
 
-    if (data.routeId) {
-        const route = await prisma.route.findUnique({ where: { id: data.routeId } });
+    if (routeIdToUse) {
+        const route = await prisma.route.findUnique({ where: { id: routeIdToUse } });
         if (!route) throw new ApiError(404, 'ไม่พบเส้นทาง');
     }
 
-    if (data.bookingId) {
-        const booking = await prisma.booking.findUnique({ where: { id: data.bookingId } });
-        if (!booking) throw new ApiError(404, 'ไม่พบการจอง');
+    if (reportedUserIdToUse) {
+        const user = await prisma.user.findUnique({ where: { id: reportedUserIdToUse } });
+        if (!user) throw new ApiError(404, 'ไม่พบผู้ใช้ที่ถูกรายงาน');
+        if (user.id === reporterId) throw new ApiError(400, 'ไม่สามารถรายงานตัวเองได้');
     }
 
     // Create incident with auto-create ChatRoom
@@ -47,8 +60,8 @@ async function createIncident(data, reporterId) {
         const incident = await tx.incident.create({
             data: {
                 reporterId,
-                reportedUserId: data.reportedUserId || null,
-                routeId: data.routeId || null,
+                reportedUserId: reportedUserIdToUse,
+                routeId: routeIdToUse,
                 bookingId: data.bookingId || null,
                 type: data.type,
                 priority: data.priority || 'NORMAL',
@@ -69,7 +82,34 @@ async function createIncident(data, reporterId) {
         });
 
         return { ...incident, chatRoom: { id: chatRoom.id } };
+    }).then((result) => {
+        // แจ้งเตือน Admin ทุกคนเมื่อมี Incident ใหม่ (ทำงานในพื้นหลัง ไม่หน่วง response)
+        notifyAdminsNewIncident(result).catch((err) =>
+            console.error('Failed to notify admins of new incident:', err)
+        );
+        return result;
     });
+}
+
+async function notifyAdminsNewIncident(incident) {
+    const admins = await prisma.user.findMany({
+        where: { role: 'ADMIN' },
+        select: { id: true },
+    });
+    const reporter = incident.reporter;
+    const reporterName = reporter
+        ? `${reporter.firstName || ''} ${reporter.lastName || ''}`.trim() || reporter.email
+        : 'ผู้ใช้';
+    for (const admin of admins) {
+        await notificationService.createNotificationByAdmin({
+            userId: admin.id,
+            type: 'INCIDENT',
+            title: `แจ้งเหตุการณ์ใหม่: ${incident.title}`,
+            body: `${reporterName} แจ้งเหตุการณ์ "${incident.title}" กรุณาตรวจสอบและดำเนินการ`,
+            link: `/admin/incidents/${incident.id}`,
+            metadata: { incidentId: incident.id, chatRoomId: incident.chatRoom?.id },
+        });
+    }
 }
 
 async function getMyIncidents(userId) {
