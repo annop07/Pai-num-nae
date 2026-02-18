@@ -49,7 +49,7 @@
           <input 
             v-model="searchQuery" 
             type="text" 
-            placeholder="ค้นหา ID, ชื่อผู้รายงาน, รายละเอียด..." 
+            placeholder="ค้นหา Email, ชื่อผู้รายงาน, รายละเอียด..." 
             class="smooth-select"
           />
         </div>
@@ -99,7 +99,7 @@
         <table class="smooth-table">
           <thead>
             <tr>
-              <th width="120">ID</th>
+              <th width="120">Username</th>
               <th>Reporter & Target</th>
               <th width="160">Issue Type</th>
               <th width="110">Priority</th>
@@ -109,18 +109,14 @@
           </thead>
           <tbody>
             <tr v-for="incident in filteredIncidents" :key="incident.id" class="table-row">
-              <td class="id-cell">{{ incident.id }}</td>
+              <td class="id-cell">{{ incident.reporter?.username || '—' }}</td>
               <td>
                 <div class="user-info">
                   <strong>
-                    {{ incident.reporter 
-                      ? `${incident.reporter.firstName || ''} ${incident.reporter.lastName || ''}`.trim() 
-                      : '—' }}
+                    {{ incident.reporter?.email || '—' }}
                   </strong>
                   <span class="target-text">
-                    Target: {{ incident.reportedUser 
-                      ? `${incident.reportedUser.firstName || ''} ${incident.reportedUser.lastName || ''}`.trim() 
-                      : '—' }}
+                    Target: {{ incident.reportedUser?.email || '—' }}
                   </span>
                 </div>
               </td>

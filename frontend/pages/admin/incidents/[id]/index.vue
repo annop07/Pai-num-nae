@@ -100,9 +100,11 @@
                     </div>
                     <div>
                       <div class="font-medium text-gray-800">
-                        {{ incident.reporter ? `${incident.reporter.firstName || ''} ${incident.reporter.lastName || ''}`.trim() : '—' }}
+                        {{ incident.reporter?.email || '—' }}
                       </div>
-                      <div class="text-xs text-gray-500">{{ incident.reporter?.email || '—' }}</div>
+                      <div class="text-xs text-gray-500">
+                        {{ incident.reporter ? `${incident.reporter.firstName || ''} ${incident.reporter.lastName || ''}`.trim() || '—' : '—' }}
+                      </div>
                       <span class="inline-block text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 mt-1">
                         {{ incident.reporter?.role || '—' }}
                       </span>
@@ -120,9 +122,11 @@
                     </div>
                     <div>
                       <div class="font-medium text-gray-800">
-                        {{ incident.reportedUser ? `${incident.reportedUser.firstName || ''} ${incident.reportedUser.lastName || ''}`.trim() : '—' }}
+                        {{ incident.reportedUser?.email || '—' }}
                       </div>
-                      <div class="text-xs text-gray-500">{{ incident.reportedUser?.email || '—' }}</div>
+                      <div class="text-xs text-gray-500">
+                        {{ incident.reportedUser ? `${incident.reportedUser.firstName || ''} ${incident.reportedUser.lastName || ''}`.trim() || '—' : '—' }}
+                      </div>
                       <span v-if="incident.reportedUser?.role"
                         class="inline-block text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 mt-1">
                         {{ incident.reportedUser.role }}

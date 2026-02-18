@@ -4,10 +4,10 @@ const notificationService = require('./notification.service');
 
 const INCIDENT_INCLUDE = {
     reporter: {
-        select: { id: true, firstName: true, lastName: true, email: true, role: true },
+        select: { id: true, username: true, firstName: true, lastName: true, email: true, role: true },
     },
     reportedUser: {
-        select: { id: true, firstName: true, lastName: true, email: true, role: true },
+        select: { id: true, username: true, firstName: true, lastName: true, email: true, role: true },
     },
     resolver: {
         select: { id: true, firstName: true, lastName: true, email: true },
