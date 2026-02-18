@@ -64,7 +64,7 @@ As a Passenger or Driver, I want to communicate with the admin and report incide
 
 ### 4. Chat กับ Admin
 
-1. เมื่อผู้ใช้งานส่ง Incident หรือมี Notification จาก Admin ให้กดเข้า **Mini-Chat**  
+1. เมื่อผู้ใช้งานส่ง Incident ไปแล้วจะมี **Start Chat** เด้งมาหลังจากส่ง Formไป หรือมี Notification จาก Admin ให้กดเข้า **Mini-Chat**  
 2. ระบบจะแสดงหน้าต่าง Chat กับ Admin
 3. ผู้ใช้งานสามารถพิมพ์ข้อความและกด **Send** เพื่อสื่อสารกับ Admin  
 4. ข้อความตอบกลับจาก Admin จะแสดงทันทีแบบ Real-time  
