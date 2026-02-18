@@ -92,17 +92,19 @@ app.use(errorHandler);
 
 // --- Start Server ---
 const PORT = process.env.PORT || 3000;
-(async () => {
-    try {
-        await ensureAdmin();
-    } catch (e) {
-        console.error('Admin bootstrap failed:', e);
-    }
+if (require.main === module) {
+    (async () => {
+        try {
+            await ensureAdmin();
+        } catch (e) {
+            console.error('Admin bootstrap failed:', e);
+        }
 
-    server.listen(PORT, () => {
-        console.log(`🚀 Server + Socket.IO running on port ${PORT}`);
-    });
-})();
+        server.listen(PORT, () => {
+            console.log(`🚀 Server + Socket.IO running on port ${PORT}`);
+        });
+    })();
+}
 
 // Graceful Shutdown
 process.on('unhandledRejection', (err) => {

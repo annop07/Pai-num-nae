@@ -106,9 +106,9 @@
                                                 <li class="mt-1">
                                                     • จุดปลายทาง:
                                                     <span class="font-medium text-gray-900">{{ trip.destination
-                                                    }}</span>
+                                                        }}</span>
                                                     <span v-if="trip.destinationAddress"> — {{ trip.destinationAddress
-                                                    }}</span>
+                                                        }}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -153,6 +153,11 @@
                                         <button @click.stop="openCancelModal(trip)"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
+                                        </button>
+                                        <!-- ปุ่มแจ้งเหตุ -->
+                                        <button @click.stop="goToIncidentForm(trip)"
+                                            class="px-4 py-2 text-sm text-yellow-600 transition duration-200 border border-yellow-300 rounded-md hover:bg-yellow-50">
+                                            แจ้งเหตุ
                                         </button>
                                         <button
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
@@ -229,6 +234,7 @@ import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
+import { navigateTo } from '#app'
 
 // Setup dayjs for Thai locale
 dayjs.locale('th')
@@ -419,6 +425,10 @@ async function fetchMyTrips() {
     } finally {
         isLoading.value = false
     }
+}
+
+function goToIncidentForm(trip) {
+    navigateTo(`/formIncident?bookingId=${trip.id}`)
 }
 
 function waitMapReady() {

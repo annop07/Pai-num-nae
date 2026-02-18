@@ -1,5 +1,6 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
+const notificationService = require('./notification.service');
 
 const INCIDENT_INCLUDE = {
     reporter: {
@@ -41,7 +42,7 @@ async function createIncident(data, reporterId) {
         if (!booking) throw new ApiError(404, 'ไม่พบการจอง');
     }
 
-    // Create incident with auto-create ChatRoom in transaction
+    // Create incident with auto-create ChatRoom
     return prisma.$transaction(async (tx) => {
         const incident = await tx.incident.create({
             data: {
@@ -172,6 +173,37 @@ async function updateIncidentStatus(id, data, adminId) {
         data: updateData,
         include: INCIDENT_INCLUDE,
     });
+
+    // Notify user if status is updated by admin
+    if (data.status && incident.reporterId) {
+        let title = `อัปเดตสถานะ: ${updated.title}`;
+        let body = `สถานะรายงานของคุณเปลี่ยนเป็น ${data.status}`;
+        
+        if (data.status === 'INVESTIGATING') {
+            body = `เจ้าหน้าที่กำลังตรวจสอบรายงานเหตุการณ์ "${updated.title}" ของคุณ`;
+        } else if (data.status === 'RESOLVED') {
+            title = `รายงานได้รับการแก้ไขแล้ว: ${updated.title}`;
+            body = `รายงานเหตุการณ์ "${updated.title}" ได้รับการแก้ไขแล้ว`;
+            if (updated.resolution) {
+                body += `\nผลการดำเนินการ: ${updated.resolution}`;
+            }
+        } else if (data.status === 'DISMISSED') {
+            title = `รายงานถูกปฏิเสธ: ${updated.title}`;
+            body = `รายงานเหตุการณ์ "${updated.title}" ถูกปฏิเสธ`;
+             if (updated.resolution) {
+                body += `\nเหตุผล: ${updated.resolution}`;
+            }
+        }
+
+        await notificationService.createNotificationByAdmin({
+            userId: incident.reporterId,
+            type: 'INCIDENT',
+            title,
+            body,
+            link: `/incidents/${updated.id}`,
+            metadata: { incidentId: updated.id, status: data.status }
+        });
+    }
 
     return updated;
 }

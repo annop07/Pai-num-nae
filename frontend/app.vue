@@ -10,3 +10,4 @@
 <script setup>
 import ToastWrapper from '~/components/ToastWrapper.vue';
 </script>
+

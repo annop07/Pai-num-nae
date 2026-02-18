@@ -1,9 +1,28 @@
 const asyncHandler = require("express-async-handler");
 const incidentService = require("../services/incident.service");
+const { uploadToCloudinary } = require("../utils/cloudinary");
 const ApiError = require("../utils/ApiError");
 
 const createIncident = asyncHandler(async (req, res) => {
     const reporterId = req.user.sub;
+
+    // อัปโหลดไฟล์หลักฐานไปยัง Cloudinary 
+    if (req.files && req.files.length > 0) {
+        const uploadResults = await Promise.all(
+            req.files.map(file => uploadToCloudinary(file.buffer, 'painamnae/incidents'))
+        );
+        req.body.evidenceUrls = uploadResults.map(r => r.url);
+    }
+
+    // แปลง location จาก JSON string กลับเป็น object 
+    if (req.body.location && typeof req.body.location === 'string') {
+        try {
+            req.body.location = JSON.parse(req.body.location);
+        } catch (e) {
+            throw new ApiError(400, 'รูปแบบข้อมูลตำแหน่งไม่ถูกต้อง');
+        }
+    }
+
     const incident = await incidentService.createIncident(req.body, reporterId);
     res.status(201).json({ success: true, data: incident });
 });
@@ -29,7 +48,7 @@ const getIncidentById = asyncHandler(async (req, res) => {
 
 const adminListIncidents = asyncHandler(async (req, res) => {
     const result = await incidentService.searchIncidentsAdmin(req.query);
-    res.status(200).json({ success: true, message: 'Incidents retrieved', ...result });
+    res.status(200).json({ success: true, message: 'ดึงข้อมูลรายการเหตุการณ์สำเร็จ', ...result });
 });
 
 const adminGetIncidentById = asyncHandler(async (req, res) => {

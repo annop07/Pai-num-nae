@@ -161,7 +161,6 @@ describe('GET /api/incidents/:id - ดูรายละเอียด', () => 
 });
 
 //Task 2.2 Admin incident
-
 //GET /api/incidents/admin
 describe('GET /api/incidents/admin - Admin ดูรายการทั้งหมด', () => {
     it('ควรดึงรายการทั้งหมดได้ (200)', async () => {
@@ -235,7 +234,7 @@ describe('PATCH /api/incidents/admin/:id - Admin อัปเดตสถาน�
 
     it('ควร 404 ถ้า id ไม่มีจริง', async () => {
         const res = await request(app)
-            .patch('/api/incidents/admin/clxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .patch('/api/incidents/admin/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
             .set('Authorization', `Bearer ${adminToken}`)
             .send({ status: 'INVESTIGATING' });
 
@@ -267,20 +266,12 @@ describe('DELETE /api/incidents/admin/:id - Admin ลบ', () => {
 
     it('ควรแสดง 404 ถ้า id ไม่มีจริง', async () => {
         const res = await request(app)
-            .delete('/api/incidents/admin/clxxxxxxxxxxxxxxxxxxxxxxxxx')
+            .delete('/api/incidents/admin/cmlxxxxxxxxxxxxxxxxxxxxxxxxx')
             .set('Authorization', `Bearer ${adminToken}`);
 
         expect(res.status).toBe(404);
     });
 });
 
-//DELETE โดย user ธรรมดา
-/*
-*
-*
-*
-*
-*
-*/
-//PATCH โดย user ธรรมดา
+
 

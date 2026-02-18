@@ -9,23 +9,23 @@ const createIncidentSchema = z.object({
     priority: z.nativeEnum(IncidentPriority).optional().default('NORMAL'),
     title: z.string().trim().min(1, 'กรุณาระบุหัวข้อ').max(100),
     description: z.string().trim().min(1, 'กรุณาระบุรายละเอียด'),
-    reportedUserId: z.string().cuid({ message: 'Invalid user ID format' }).optional(),
-    routeId: z.string().cuid({ message: 'Invalid route ID format' }).optional(),
-    bookingId: z.string().cuid({ message: 'Invalid booking ID format' }).optional(),
+    reportedUserId: z.string().cuid({ message: 'รูปแบบรหัสผู้ใช้ไม่ถูกต้อง' }).optional(),
+    routeId: z.string().cuid({ message: 'รูปแบบรหัสเส้นทางไม่ถูกต้อง' }).optional(),
+    bookingId: z.string().cuid({ message: 'รูปแบบรหัสการจองไม่ถูกต้อง' }).optional(),
     location: z.any().optional(),
     evidenceUrls: z.array(z.string().url()).optional().default([]),
     metadata: z.any().optional(),
 });
 
 const idParamSchema = z.object({
-    id: z.string().cuid({ message: 'Invalid incident ID format' }),
+    id: z.string().cuid({ message: 'รูปแบบรหัสรายงานไม่ถูกต้อง' }),
 });
 
 const updateIncidentSchema = z.object({
     status: z.nativeEnum(IncidentStatus).optional(),
     priority: z.nativeEnum(IncidentPriority).optional(),
     resolution: z.string().trim().min(1).optional(),
-}).refine(obj => Object.keys(obj).length > 0, { message: 'No fields to update' });
+}).refine(obj => Object.keys(obj).length > 0, { message: 'กรุณาระบุข้อมูลที่ต้องการแก้ไข' });
 
 const listIncidentsQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),

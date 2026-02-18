@@ -361,18 +361,14 @@ async function postForm(url, formData, token = '') {
     body: formData,
     credentials: 'include',
   });
-  // อ่าน body เป็น text ก่อน แล้วค่อย parse เป็น JSON
-  const text = await res.text();
   let body;
   try {
-    body = JSON.parse(text);
+    body = await res.json();
   } catch {
-    if (!res.ok) {
-      const err = new Error(text || 'Unexpected response from server');
-      err.status = res.status;
-      throw err;
-    }
-    body = text;
+    const text = await res.text();
+    const err = new Error(text || 'Unexpected response from server');
+    err.status = res.status;
+    throw err;
   }
   if (!res.ok) {
     const msg = body?.message || `Request failed with status ${res.status}`;
