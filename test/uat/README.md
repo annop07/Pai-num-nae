@@ -17,22 +17,28 @@ pip install -r requirements.txt
 
 มีการแยกไฟล์เทสออกเป็น 2 ส่วนหลัก:
 
-- ฝั่งผู้โดยสาร/ฟอร์มแจ้งเหตุ ใช้ไฟล์ `tests.robot`
+- ฝั่งผู้โดยสาร/ฟอร์มแจ้งเหตุ/Driver ใช้ไฟล์ `tests.robot`
 - ฝั่ง Admin Incident Management ใช้ไฟล์ `admin_tests.robot`
 
-ตัวอย่างคำสั่งรัน:
+> หมายเหตุ: ค่าเริ่มต้นของ Robot จะสร้าง `report.html` / `log.html` **ในโฟลเดอร์ที่สั่งรันคำสั่งอยู่**  
+> ถ้าต้องการให้ผลลัพธ์ไปอยู่ที่ `test\results` ทุกครั้ง ให้ใช้ option `-d` ตามตัวอย่างด้านล่าง
+
+ตัวอย่างคำสั่งรัน (แนะนำให้รันจากโฟลเดอร์ `test\uat`):
 
 ```bash
-# รันเทสฝั่งผู้โดยสาร
-robot tests.robot
+cd C:\SoftwareEngineer\Pai-num-nae\test\uat
 
-# รันเทสฝั่ง Admin
-robot admin_tests.robot
+# รันเทสฝั่งผู้โดยสาร + Driver แล้วเก็บผลที่โฟลเดอร์ ..\results
+robot -d ..\results tests.robot
 
-# หรือจะรันทั้งหมดในโฟลเดอร์นี้
-robot .
+# รันเทสฝั่ง Admin แล้วเก็บผลที่โฟลเดอร์ ..\results
+robot -d ..\results admin_tests.robot
+
+# หรือจะรันทั้งหมดในโฟลเดอร์นี้ แล้วผลไปเก็บที่ ..\results
+robot -d ..\results .
 ```
 
 ## 4. ผลลัพธ์
 
-- หลังจากรันจบ จะได้ไฟล์ `report.html` และ `log.html` สำหรับดูผลการทดสอบ
+- หลังจากรันจบ แล้วใช้ `-d ..\results` ตามตัวอย่างด้านบน  
+  จะได้ไฟล์ `report.html` และ `log.html` อยู่ที่ `C:\SoftwareEngineer\Pai-num-nae\test\results` สำหรับดูผลการทดสอบ

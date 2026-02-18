@@ -1,728 +1,1861 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-02-18T19:39:48.210327" rpa="false" schemaversion="5">
-<suite id="s1" name="Tests" source="c:\SoftwareEngineer\Pai-num-nae\test\uat\tests.robot">
-<test id="s1-t1" name="UAT-S1-001 Driver Report Incident Success" line="26">
-<kw name="Open Browser To Login Page" type="SETUP">
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-02-18T22:18:22.180162" rpa="false" schemaversion="5">
+<suite id="s1" name="Admin Tests" source="C:\SoftwareEngineer\Pai-num-nae\test\uat\admin_tests.robot">
+<kw name="Open Browser To Site" type="SETUP">
 <kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:39:48.631586" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
-<msg time="2026-02-18T19:39:48.854938" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<arg>${URL}</arg>
+<msg time="2026-02-18T22:18:22.423682" level="INFO">Opening browser 'Chrome' to base url 'about:blank'.</msg>
+<msg time="2026-02-18T22:18:22.508131" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<arg>about:blank</arg>
 <arg>${BROWSER}</arg>
 <doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2026-02-18T19:39:48.631209" elapsed="1.814838"/>
+<status status="PASS" start="2026-02-18T22:18:22.423294" elapsed="1.427284"/>
 </kw>
 <kw name="Maximize Browser Window" owner="SeleniumLibrary">
 <doc>Maximizes current browser window.</doc>
-<status status="PASS" start="2026-02-18T19:39:50.446367" elapsed="0.055832"/>
+<status status="PASS" start="2026-02-18T22:18:23.850942" elapsed="0.039964"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:39:55.836442" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-3.png"&gt;&lt;img src="selenium-screenshot-3.png" width="800px"&gt;&lt;/a&gt;</msg>
-<msg time="2026-02-18T19:39:55.836672" level="FAIL">Element 'id=email' not visible after 5 seconds.</msg>
-<arg>${INPUT_USERNAME}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="FAIL" start="2026-02-18T19:39:50.502410" elapsed="5.338456">Element 'id=email' not visible after 5 seconds.</status>
+<status status="PASS" start="2026-02-18T22:18:22.422506" elapsed="1.468621"/>
 </kw>
-<status status="FAIL" start="2026-02-18T19:39:48.629677" elapsed="7.211370">Element 'id=email' not visible after 5 seconds.</status>
-</kw>
-<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2026-02-18T19:39:55.841429" elapsed="2.399550"/>
-</kw>
-<doc>ทดสอบ Driver แจ้งเหตุสำเร็จ [Ref: Source 44-46]</doc>
-<status status="FAIL" start="2026-02-18T19:39:48.627319" elapsed="9.613772">Setup failed:
-Element 'id=email' not visible after 5 seconds.</status>
-</test>
-<test id="s1-t2" name="UAT-S1-002 Driver Report Validation (Negative)" line="41">
-<kw name="Open Browser To Login Page" type="SETUP">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:39:58.242363" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
-<msg time="2026-02-18T19:39:58.323161" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<test id="s1-t1" name="TC_ADMIN_01 Login Admin และเปิดหน้า Incident Management" line="17">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:23.893490" level="INFO">Opening url 'http://localhost:3001'</msg>
 <arg>${URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2026-02-18T19:39:58.242195" elapsed="1.452828"/>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:23.893302" elapsed="1.055160"/>
 </kw>
-<kw name="Maximize Browser Window" owner="SeleniumLibrary">
-<doc>Maximizes current browser window.</doc>
-<status status="PASS" start="2026-02-18T19:39:59.695567" elapsed="0.052082"/>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:24.948714" elapsed="0.053614"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:03.553052" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:03.553388" level="FAIL">NoSuchWindowException: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<arg>${INPUT_USERNAME}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="FAIL" start="2026-02-18T19:39:59.748045" elapsed="3.812980">NoSuchWindowException: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:25.003213" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:25.002644" elapsed="0.028950"/>
 </kw>
-<status status="FAIL" start="2026-02-18T19:39:58.241963" elapsed="5.319257">NoSuchWindowException: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:23.892952" elapsed="1.138880"/>
 </kw>
-<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2026-02-18T19:40:03.561442" elapsed="2.128163"/>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:25.034015" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:25.033618" elapsed="1.927183"/>
 </kw>
-<doc>ทดสอบ Driver กรอกข้อมูลไม่ครบ [Ref: Source 47-48]</doc>
-<status status="FAIL" start="2026-02-18T19:39:58.241419" elapsed="7.448295">Setup failed:
-NoSuchWindowException: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
-</test>
-<test id="s1-t3" name="UAT-S1-003 Passenger Report Driver Behavior" line="55">
-<kw name="Open Browser To Login Page" type="SETUP">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:05.690889" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
-<msg time="2026-02-18T19:40:05.775270" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:26.962143" elapsed="0.036838"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:26.999818" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:26.999357" elapsed="0.578533"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:27.578451" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:27.578114" elapsed="0.174818"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:27.753292" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:27.753096" elapsed="0.114946"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:27.876709" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:27.869616" elapsed="0.007183"/>
+</kw>
+<msg time="2026-02-18T22:18:27.876942" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:27.869259" elapsed="0.007708"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:27.877693" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:27.877426" elapsed="0.000443">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:27.877109" elapsed="0.000848">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:27.868926" elapsed="0.009173">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:29.170033" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-4.png"&gt;&lt;img src="selenium-screenshot-4.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:29.170181" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:28.879098" elapsed="0.325822">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:29.205081" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:28.878854" elapsed="0.326252"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:29.205240" elapsed="0.000251"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:28.878597" elapsed="0.326955"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:27.868230" elapsed="1.337499"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:25.033018" elapsed="4.172780"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:29.206223" level="INFO">Opening url 'http://localhost:3001'</msg>
 <arg>${URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2026-02-18T19:40:05.690711" elapsed="1.398993"/>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:29.206044" elapsed="1.149343"/>
 </kw>
-<kw name="Maximize Browser Window" owner="SeleniumLibrary">
-<doc>Maximizes current browser window.</doc>
-<status status="PASS" start="2026-02-18T19:40:07.090086" elapsed="0.049608"/>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.355861" elapsed="0.029424"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:09.216358" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:09.216585" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<arg>${INPUT_USERNAME}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="FAIL" start="2026-02-18T19:40:07.140130" elapsed="2.078128">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.385759" elapsed="0.062056"/>
 </kw>
-<status status="FAIL" start="2026-02-18T19:40:05.690495" elapsed="3.527909">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:30.448952" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.448550" elapsed="0.092045"/>
 </kw>
-<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2026-02-18T19:40:09.218592" elapsed="2.009306"/>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.540929" elapsed="0.010428"/>
 </kw>
-<doc>ทดสอบ Passenger รายงานพฤติกรรม Driver [Ref: Source 50-52]</doc>
-<status status="FAIL" start="2026-02-18T19:40:05.690011" elapsed="5.538034">Setup failed:
-InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:30.552549" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.552019" elapsed="0.356348"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:30.909680" elapsed="2.156655"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:33.066976" elapsed="0.011691"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:33.079354" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:33.079128" elapsed="0.070477"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:33.150353" elapsed="0.688836"/>
+</kw>
+<doc>ทดสอบการเข้าสู่ระบบ Admin และเข้าเมนู Incident Management</doc>
+<status status="PASS" start="2026-02-18T22:18:23.891338" elapsed="9.948202"/>
 </test>
-<test id="s1-t4" name="UAT-S1-003-N Passenger Validation (Negative)" line="80">
-<kw name="Open Browser To Login Page" type="SETUP">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:11.229885" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
-<msg time="2026-02-18T19:40:11.315240" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<test id="s1-t2" name="TC_ADMIN_02 Incident Management - อัปเดตสถานะจากตาราง" line="36">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:33.842801" level="INFO">Opening url 'http://localhost:3001'</msg>
 <arg>${URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2026-02-18T19:40:11.229597" elapsed="1.411986"/>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:33.842656" elapsed="0.627138"/>
 </kw>
-<kw name="Maximize Browser Window" owner="SeleniumLibrary">
-<doc>Maximizes current browser window.</doc>
-<status status="PASS" start="2026-02-18T19:40:12.641809" elapsed="0.048305"/>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.470149" elapsed="0.067204"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:14.119243" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:14.119520" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<arg>${INPUT_USERNAME}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="FAIL" start="2026-02-18T19:40:12.690325" elapsed="1.431561">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:34.537889" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.537541" elapsed="0.006227"/>
 </kw>
-<status status="FAIL" start="2026-02-18T19:40:11.229075" elapsed="2.893104">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:33.841917" elapsed="0.701954"/>
 </kw>
-<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2026-02-18T19:40:14.123299" elapsed="2.011210"/>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:34.544728" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.544607" elapsed="0.243645"/>
 </kw>
-<doc>ทดสอบ Passenger กรอกข้อมูลไม่ครบ/ผิดเงื่อนไข [Ref: Source 54-56]</doc>
-<status status="FAIL" start="2026-02-18T19:40:11.228399" elapsed="4.906233">Setup failed:
-InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
-</test>
-<test id="s1-t5" name="UAT-S1-004 Admin Update Status" line="103">
-<kw name="Open Browser To Login Page" type="SETUP">
-<kw name="Open Browser" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:16.136241" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000'.</msg>
-<msg time="2026-02-18T19:40:16.232697" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.788495" elapsed="0.029066"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:34.817987" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.817734" elapsed="0.102217"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:34.920500" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:34.920187" elapsed="0.081827"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:35.002402" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:35.002211" elapsed="0.067968"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:35.078454" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:35.071608" elapsed="0.006934"/>
+</kw>
+<msg time="2026-02-18T22:18:35.078666" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:35.071330" elapsed="0.007356"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:35.079499" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:35.079289" elapsed="0.000272">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:35.078933" elapsed="0.000679">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:35.071038" elapsed="0.008665">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:36.318485" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-5.png"&gt;&lt;img src="selenium-screenshot-5.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:36.318636" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:36.082355" elapsed="0.237319">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:36.319874" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.081955" elapsed="0.237945"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.320101" elapsed="0.000258"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:36.080956" elapsed="0.239476"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:35.070430" elapsed="1.250041"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:34.544274" elapsed="1.776242"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:36.321215" level="INFO">Opening url 'http://localhost:3001'</msg>
 <arg>${URL}</arg>
-<arg>${BROWSER}</arg>
-<doc>Opens a new browser instance to the optional ``url``.</doc>
-<status status="PASS" start="2026-02-18T19:40:16.135849" elapsed="1.436279"/>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.321101" elapsed="0.257633"/>
 </kw>
-<kw name="Maximize Browser Window" owner="SeleniumLibrary">
-<doc>Maximizes current browser window.</doc>
-<status status="PASS" start="2026-02-18T19:40:17.572434" elapsed="0.038616"/>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.578981" elapsed="0.020667"/>
 </kw>
-<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
-<msg time="2026-02-18T19:40:19.156104" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.599937" elapsed="0.023357"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:36.624541" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.623671" elapsed="0.088121"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.711960" elapsed="0.008674"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:36.721051" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.720808" elapsed="0.073687"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.794789" elapsed="0.039652"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.834665" elapsed="0.016248"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:36.851435" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:36.851186" elapsed="0.153752"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.005389" elapsed="0.068639"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T22:18:36.320884" elapsed="0.753388"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.075896" elapsed="0.031875"/>
+</kw>
+<msg time="2026-02-18T22:18:37.107918" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.074971" elapsed="0.032971"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:37.108238" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:37.108194" elapsed="0.001037"/>
+</kw>
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:37.194920" level="INFO">${current} = PENDING</msg>
+<var>${current}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.109906" elapsed="0.085068"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Set Test Variable" owner="BuiltIn">
+<msg time="2026-02-18T22:18:37.197564" level="INFO">${new_status} = INVESTIGATING</msg>
+<arg>${new_status}</arg>
+<arg>INVESTIGATING</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.196649" elapsed="0.001014"/>
+</kw>
+<arg>'${current}'=='INVESTIGATING'</arg>
+<arg>Set Test Variable</arg>
+<arg>${new_status}</arg>
+<arg>RESOLVED</arg>
+<arg>ELSE</arg>
+<arg>Set Test Variable</arg>
+<arg>${new_status}</arg>
+<arg>INVESTIGATING</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.195404" elapsed="0.002355"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:37.198314" level="INFO">Selecting options from selection list 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]' by label INVESTIGATING.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<arg>${new_status}</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.198067" elapsed="0.132713"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Incident Status Should Be">
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:37.466532" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-6.png"&gt;&lt;img src="selenium-screenshot-6.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:37.466694" level="FAIL">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
 Stacktrace:
 Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
+	0x7ff66b5988e5
+	0x7ff66b598940
+	0x7ff66b37165d
+	0x7ff66b3792cc
+	0x7ff66b37c3b4
+	0x7ff66b37c47f
+	0x7ff66b3c3d9c
+	0x7ff66b3f1fda
+	0x7ff66b3bc746
+	0x7ff66b41ac97
+	0x7ff66b3bac29
+	0x7ff66b3bba93
+	0x7ff66b8b0640
+	0x7ff66b8aaf80
+	0x7ff66b8c96e6
+	0x7ff66b5b5de4
+	0x7ff66b5bed8c
+	0x7ff66b5a2004
+	0x7ff66b5a21b5
+	0x7ff66b587ee2
 	0x7ffcc117e8d7
 	0x7ffcc216c40c
 </msg>
-<msg time="2026-02-18T19:40:19.156363" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+<var>${label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="FAIL" start="2026-02-18T22:18:37.333200" elapsed="0.168791">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
 Stacktrace:
 Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<arg>${INPUT_USERNAME}</arg>
-<doc>Waits until the element ``locator`` is visible.</doc>
-<status status="FAIL" start="2026-02-18T19:40:17.611424" elapsed="1.546747">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
+	0x7ff66b5988e5
+	0x7ff66b598940
+	0x7ff66b37165d
+	0x7ff66b3792cc
+	0x7ff66b37c3b4
+	0x7ff66b37c47f
+	0x7ff66b3c3d9c
+	0x7ff66b3f1fda
+	0x7ff66b3bc746
+	0x7ff66b41ac97
+	0x7ff66b3bac29
+	0x7ff66b3bba93
+	0x7ff66b8b0640
+	0x7ff66b8aaf80
+	0x7ff66b8c96e6
+	0x7ff66b5b5de4
+	0x7ff66b5bed8c
+	0x7ff66b5a2004
+	0x7ff66b5a21b5
+	0x7ff66b587ee2
 	0x7ffcc117e8d7
 	0x7ffcc216c40c
 </status>
 </kw>
-<status status="FAIL" start="2026-02-18T19:40:16.135631" elapsed="3.022695">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${label}</arg>
+<arg>${expected}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="NOT RUN" start="2026-02-18T22:18:37.502176" elapsed="0.000031"/>
+</kw>
+<arg>${new_status}</arg>
+<status status="FAIL" start="2026-02-18T22:18:37.332281" elapsed="0.170029">StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#staleelementreferenceexception
 Stacktrace:
 Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
+	0x7ff66b5988e5
+	0x7ff66b598940
+	0x7ff66b37165d
+	0x7ff66b3792cc
+	0x7ff66b37c3b4
+	0x7ff66b37c47f
+	0x7ff66b3c3d9c
+	0x7ff66b3f1fda
+	0x7ff66b3bc746
+	0x7ff66b41ac97
+	0x7ff66b3bac29
+	0x7ff66b3bba93
+	0x7ff66b8b0640
+	0x7ff66b8aaf80
+	0x7ff66b8c96e6
+	0x7ff66b5b5de4
+	0x7ff66b5bed8c
+	0x7ff66b5a2004
+	0x7ff66b5a21b5
+	0x7ff66b587ee2
 	0x7ffcc117e8d7
 	0x7ffcc216c40c
 </status>
 </kw>
-<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
-<doc>Closes the current browser.</doc>
-<status status="PASS" start="2026-02-18T19:40:19.158523" elapsed="2.018109"/>
+<kw name="Incident Status Should Be">
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:39.545606" level="INFO">${label} = INVESTIGATING</msg>
+<var>${label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.503296" elapsed="0.042350"/>
 </kw>
-<doc>ทดสอบ Admin อัปเดตสถานะ Incident [Ref: Source 57-59]</doc>
-<status status="FAIL" start="2026-02-18T19:40:16.134945" elapsed="5.041831">Setup failed:
-InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
-from disconnected: not connected to DevTools
-  (Session info: chrome=144.0.7559.133); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e16d202
-	0x7ff79e1927af
-	0x7ff79e209a29
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</status>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${label}</arg>
+<arg>${expected}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.545785" elapsed="0.000367"/>
+</kw>
+<arg>${new_status}</arg>
+<status status="PASS" start="2026-02-18T22:18:39.503002" elapsed="0.043247"/>
+</kw>
+<arg>5x</arg>
+<arg>2s</arg>
+<arg>Incident Status Should Be</arg>
+<arg>${new_status}</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:37.331331" elapsed="2.214969"/>
+</kw>
+<doc>ทดสอบการเปลี่ยนค่า Status ของ Incident แถวแรกผ่าน dropdown แล้วต้องบันทึกสำเร็จ</doc>
+<status status="PASS" start="2026-02-18T22:18:33.840044" elapsed="5.706527"/>
 </test>
-<status status="FAIL" start="2026-02-18T19:39:48.212107" elapsed="32.965527"/>
+<test id="s1-t3" name="TC_ADMIN_03 Incident Management - View &amp; Take Action (Cancel ไม่บันทึก)" line="50">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:39.547972" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.547833" elapsed="0.279876"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.828119" elapsed="0.064142"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:39.893212" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.892572" elapsed="0.007113"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:39.547645" elapsed="0.352229"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:39.900746" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:39.900593" elapsed="0.242468"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.143869" elapsed="0.017478"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:40.162099" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.161627" elapsed="0.110465"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:40.272590" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.272273" elapsed="0.083723"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:40.356362" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.356160" elapsed="0.062181"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:40.426362" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.420022" elapsed="0.006444"/>
+</kw>
+<msg time="2026-02-18T22:18:40.426608" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.419717" elapsed="0.006912"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:40.427429" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:40.427188" elapsed="0.000305">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:40.426771" elapsed="0.000777">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:40.419420" elapsed="0.008223">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:41.637928" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-7.png"&gt;&lt;img src="selenium-screenshot-7.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:41.638078" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:41.429369" elapsed="0.209502">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:41.639001" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.428730" elapsed="0.210293"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.639157" elapsed="0.000254"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:41.428294" elapsed="0.211183"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:40.418528" elapsed="1.220984"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:39.900312" elapsed="1.739242"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:41.640237" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.640141" elapsed="0.249008"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.889404" elapsed="0.041930"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.931651" elapsed="0.019803"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:41.951992" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:41.951705" elapsed="0.078279"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.030160" elapsed="0.007184"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.037684" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.037509" elapsed="0.060691"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.098908" elapsed="0.050767"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.149974" elapsed="0.018991"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.169379" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.169201" elapsed="0.077553"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.247140" elapsed="0.059071"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T22:18:41.639942" elapsed="0.666435"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.307212" elapsed="0.048033"/>
+</kw>
+<msg time="2026-02-18T22:18:42.355478" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.306751" elapsed="0.048769"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:42.356101" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:42.356009" elapsed="0.001064"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.358370" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.357443" elapsed="0.165564"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.523312" elapsed="0.027929"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.584633" level="INFO">${original} = </msg>
+<var>${original}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.551670" elapsed="0.033023"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.585296" level="INFO">Typing text 'ทดสอบ Cancel ไม่บันทึก' into text field 'xpath=//div[contains(@class,"modal-sheet")]//textarea'.</msg>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<arg>ทดสอบ Cancel ไม่บันทึก</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.585046" elapsed="0.230381"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:42.817814" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.816454" elapsed="0.170626"/>
+</kw>
+<kw name="Wait Until Page Does Not Contain Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,"modal-sheet")]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` disappears from the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:42.987441" elapsed="0.446809"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:43.434893" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.434630" elapsed="0.055319"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.490334" elapsed="0.024570"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:43.549410" level="INFO">${after} = </msg>
+<var>${after}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.516430" elapsed="0.033111"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${after}</arg>
+<arg>${original}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.551001" elapsed="0.001610"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:43.554643" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.553997" elapsed="0.161697"/>
+</kw>
+<doc>ทดสอบเปิดโมดัล View &amp; Take Action พิมพ์ Admin Resolution Note แล้วกด Cancel ต้องไม่บันทึกค่าใหม่</doc>
+<status status="PASS" start="2026-02-18T22:18:39.547028" elapsed="4.169618"/>
+</test>
+<test id="s1-t4" name="TC_ADMIN_04 Incident Management - View &amp; Take Action (Confirm บันทึกสำเร็จ)" line="71">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:43.720961" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:43.720717" elapsed="0.455381"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.176294" elapsed="0.062450"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.239426" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.238960" elapsed="0.006790"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:43.720254" elapsed="0.525749"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.246828" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.246715" elapsed="0.264441"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.511620" elapsed="0.030865"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.542994" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.542701" elapsed="0.133347"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.676706" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.676321" elapsed="0.106006"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.783027" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.782646" elapsed="0.071775"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:44.867126" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.855908" elapsed="0.011324"/>
+</kw>
+<msg time="2026-02-18T22:18:44.867365" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.855591" elapsed="0.011799"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:44.868050" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:44.867842" elapsed="0.000271">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:44.867525" elapsed="0.000637">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:44.855296" elapsed="0.012954">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:46.065820" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-8.png"&gt;&lt;img src="selenium-screenshot-8.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:46.065980" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:45.870084" elapsed="0.196639">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:46.066855" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:45.869734" elapsed="0.197144"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.066997" elapsed="0.000257"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:45.869351" elapsed="0.197976"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:44.854685" elapsed="1.212679"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:44.246441" elapsed="1.820968"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:46.068101" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.068005" elapsed="0.259851"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.328625" elapsed="0.021400"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.350244" elapsed="0.023851"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:46.374682" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.374365" elapsed="0.101072"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.475611" elapsed="0.006288"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:46.482385" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.482066" elapsed="0.055961"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.538249" elapsed="0.257932"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.796758" elapsed="0.013625"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:46.811432" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.810951" elapsed="0.058865"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:46.869985" elapsed="0.247460"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T22:18:46.067818" elapsed="1.049735"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.118211" elapsed="0.007617"/>
+</kw>
+<msg time="2026-02-18T22:18:47.125983" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.117896" elapsed="0.008115"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:47.126283" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ให้ทดสอบในตาราง</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:47.126248" elapsed="0.000626"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:47.127360" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.127161" elapsed="0.067598"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.195123" elapsed="0.015640"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-02-18T22:18:47.212218" level="INFO">${note} = ทดสอบ Confirm บันทึกโดย Robot</msg>
+<var>${note}</var>
+<arg>ทดสอบ Confirm บันทึกโดย Robot</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.211326" elapsed="0.001052"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:47.213603" level="INFO">Typing text 'ทดสอบ Confirm บันทึกโดย Robot' into text field 'xpath=//div[contains(@class,"modal-sheet")]//textarea'.</msg>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<arg>${note}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.213043" elapsed="0.208388"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:47.423946" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-submit") or contains(., "Confirm Resolved")]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-submit") or contains(., "Confirm Resolved")]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.422873" elapsed="0.159113"/>
+</kw>
+<kw name="Wait Until Page Does Not Contain Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,"modal-sheet")]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` disappears from the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:47.582849" elapsed="0.440882"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.024566" elapsed="0.005807"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.030816" level="INFO">Clicking button 'xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]'.</msg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//button[contains(@class,"btn-action") or contains(., "View &amp; Take Action")])[1]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.030635" elapsed="0.053778"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Admin Resolution Note</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.084930" elapsed="0.017427"/>
+</kw>
+<kw name="Get Value" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.124101" level="INFO">${after_note} = ทดสอบ Confirm บันทึกโดย Robot</msg>
+<var>${after_note}</var>
+<arg>xpath=//div[contains(@class,"modal-sheet")]//textarea</arg>
+<doc>Returns the value attribute of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.103059" elapsed="0.021089"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${after_note}</arg>
+<arg>ทดสอบ Confirm บันทึกโดย Robot</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.124476" elapsed="0.000611"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.125537" level="INFO">Clicking button 'xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]'.</msg>
+<arg>xpath=//div[contains(@class,"modal-foot")]//button[contains(@class,"btn-ghost") or normalize-space(.)="Cancel"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.125330" elapsed="0.109017"/>
+</kw>
+<doc>ทดสอบกรอก Admin Resolution Note แล้วกด Confirm Resolved ต้องบันทึกข้อความสำเร็จ</doc>
+<status status="PASS" start="2026-02-18T22:18:43.717974" elapsed="4.516735"/>
+</test>
+<test id="s1-t5" name="TC_ADMIN_05 Incident Management - Filter Status เป็น PENDING" line="92">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.237471" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.237166" elapsed="0.393623"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.631038" elapsed="0.060501"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.692043" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.691710" elapsed="0.007158"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:48.236230" elapsed="0.462747"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:48.699654" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.699541" elapsed="0.285689"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:48.985667" elapsed="0.017837"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:49.003955" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.003688" elapsed="0.104207"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:49.108434" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.108127" elapsed="0.069224"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:49.177686" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.177513" elapsed="0.067278"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:49.254392" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.246096" elapsed="0.008548"/>
+</kw>
+<msg time="2026-02-18T22:18:49.254902" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.245802" elapsed="0.009132"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:49.255834" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:49.255600" elapsed="0.000306">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:49.255158" elapsed="0.000808">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:49.245543" elapsed="0.010520">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:50.446133" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-9.png"&gt;&lt;img src="selenium-screenshot-9.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:50.446304" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:50.257230" elapsed="0.189842">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:50.447206" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.256986" elapsed="0.190242"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.447348" elapsed="0.000258"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:50.256728" elapsed="0.190941"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:49.244970" elapsed="1.202732"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:48.699279" elapsed="1.748467"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:50.448498" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.448390" elapsed="0.258065"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.706648" elapsed="0.024431"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.731351" elapsed="0.021263"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:50.753285" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.752958" elapsed="0.103349"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.856607" elapsed="0.014409"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:50.871690" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.871353" elapsed="0.082902"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:50.954869" elapsed="0.260622"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.215779" elapsed="0.009925"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:51.226054" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.225878" elapsed="0.050707"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.276845" elapsed="0.245683"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T22:18:50.448149" elapsed="1.074490"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//label[normalize-space(.)="Status"]/following::select[1]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.522950" elapsed="0.011412"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:51.535225" level="INFO">Selecting options from selection list 'xpath=//label[normalize-space(.)="Status"]/following::select[1]' by label PENDING.</msg>
+<arg>xpath=//label[normalize-space(.)="Status"]/following::select[1]</arg>
+<arg>PENDING</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.534935" elapsed="0.081217"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.618185" elapsed="0.031480"/>
+</kw>
+<msg time="2026-02-18T22:18:51.649826" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.617386" elapsed="0.032464"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:51.650156" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ในสถานะ PENDING ให้ทดสอบ</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:51.650111" elapsed="0.001307"/>
+</kw>
+<kw name="Get Selected List Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:51.698848" level="INFO">${status_label} = PENDING</msg>
+<var>${status_label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//select[@class="status-pill"])[1]</arg>
+<doc>Returns the label of selected option from selection list ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.651933" elapsed="0.046966"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${status_label}</arg>
+<arg>PENDING</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.699541" elapsed="0.000416"/>
+</kw>
+<doc>ทดสอบ Filter Status ที่ด้านบนว่าใช้ได้และ incident แถวแรกต้องมีสถานะตรงกับที่เลือก</doc>
+<status status="PASS" start="2026-02-18T22:18:48.235291" elapsed="3.464878"/>
+</test>
+<test id="s1-t6" name="TC_ADMIN_06 Incident Management - Filter Priority เป็น HIGH" line="104">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:51.701667" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.701564" elapsed="0.269441"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:51.971365" elapsed="0.064088"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.035974" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.035629" elapsed="0.005492"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:51.701384" elapsed="0.339853"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.042086" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.041955" elapsed="0.239083"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.281351" elapsed="0.032344"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.314090" level="INFO">Typing text 'admin@example.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.313868" elapsed="0.095093"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.409598" level="INFO">Typing text '123456789' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.409301" elapsed="0.076055"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.485706" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.485523" elapsed="0.062321"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:52.555946" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.548927" elapsed="0.007109"/>
+</kw>
+<msg time="2026-02-18T22:18:52.556155" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.548660" elapsed="0.007516"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:52.556802" level="FAIL">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:52.556593" elapsed="0.000269">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:52.556300" elapsed="0.000610">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:52.548467" elapsed="0.008524">ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Admin Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:53.753522" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-10.png"&gt;&lt;img src="selenium-screenshot-10.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:53.753687" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:53.558291" elapsed="0.196048">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:53.754472" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:53.558048" elapsed="0.196445"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Admin ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:53.754614" elapsed="0.000241"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:53.557802" elapsed="0.197111"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Admin Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:52.548063" elapsed="1.206885"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชี Admin แล้วตรวจว่าหลุดจากหน้า login เรียบร้อย</doc>
+<status status="PASS" start="2026-02-18T22:18:52.041637" elapsed="1.713370"/>
+</kw>
+<kw name="Open Admin Incident Management">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:53.756029" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:53.755835" elapsed="0.275159"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เดินทางร่วมกัน</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.031196" elapsed="0.025811"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.057199" elapsed="0.022218"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:54.079990" level="INFO">Clicking element 'xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]'.</msg>
+<arg>xpath=(//div[contains(@class,"dropdown-trigger")]//span[contains(@class,"font-medium")])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.079729" elapsed="0.096818"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.176711" elapsed="0.008023"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:54.185349" level="INFO">Clicking element 'xpath=//a[normalize-space(.)="Dashboard"]'.</msg>
+<arg>xpath=//a[normalize-space(.)="Dashboard"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.185029" elapsed="0.059261"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>User Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.244550" elapsed="0.257186"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.501918" elapsed="0.009632"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:54.512102" level="INFO">Clicking element 'xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]'.</msg>
+<arg>xpath=//aside[@id="sidebar"]//span[normalize-space(.)="Incidents Management"]/ancestor::a[1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.511800" elapsed="0.046200"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.558240" elapsed="0.248736"/>
+</kw>
+<doc>ไปยังหน้า Incident Management สำหรับ Admin ผ่าน Dashboard เหมือนผู้ใช้จริง</doc>
+<status status="PASS" start="2026-02-18T22:18:53.755469" elapsed="1.051607"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=//label[normalize-space(.)="Priority"]/following::select[1]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.807408" elapsed="0.010383"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:54.818346" level="INFO">Selecting options from selection list 'xpath=//label[normalize-space(.)="Priority"]/following::select[1]' by label HIGH.</msg>
+<arg>xpath=//label[normalize-space(.)="Priority"]/following::select[1]</arg>
+<arg>HIGH</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.818145" elapsed="0.092228"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.911386" elapsed="0.220149"/>
+</kw>
+<msg time="2026-02-18T22:18:55.131673" level="INFO">${has_rows} = True</msg>
+<var>${has_rows}</var>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr)[1]</arg>
+<arg>20s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:54.910819" elapsed="0.220878"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:55.132062" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${has_rows}</arg>
+<arg>Pass Execution</arg>
+<arg>ไม่มี Incident ใน Priority HIGH ให้ทดสอบ</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:55.132003" elapsed="0.000571"/>
+</kw>
+<kw name="Get Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.147659" level="INFO">${priority_label} = HIGH</msg>
+<var>${priority_label}</var>
+<arg>xpath=(//table[contains(@class,"smooth-table")]//tbody/tr[1]//span[contains(@class,"badge")])[1]</arg>
+<doc>Returns the text value of the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.132735" elapsed="0.014966"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${priority_label}</arg>
+<arg>HIGH</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.147959" elapsed="0.000375"/>
+</kw>
+<doc>ทดสอบ Filter Priority ที่ด้านบนเป็น HIGH แล้ว incident แถวแรกต้องมี Priority HIGH</doc>
+<status status="PASS" start="2026-02-18T22:18:51.700621" elapsed="3.447953"/>
+</test>
+<test id="s1-t7" name="TC_ADMIN_07 Non-admin ไม่สามารถเข้า /admin/incidents ได้" line="116">
+<kw name="Reset Auth State" type="SETUP">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.150615" level="INFO">Opening url 'http://localhost:3001'</msg>
+<arg>${URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.150516" elapsed="0.263682"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.414438" elapsed="0.045909"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.462309" level="INFO">Executing JavaScript:
+try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}
+Without any arguments.</msg>
+<arg>try { window.localStorage.clear(); window.sessionStorage.clear(); } catch(e) {}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.461321" elapsed="0.008282"/>
+</kw>
+<doc>ล้างสถานะ auth ให้สะอาดก่อนเริ่มแต่ละเทส (กัน session จากเทสก่อนหน้าค้าง)</doc>
+<status status="PASS" start="2026-02-18T22:18:55.150326" elapsed="0.319383"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.470552" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.470422" elapsed="0.257605"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>id=loginForm</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.728323" elapsed="0.027552"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.756856" level="INFO">Typing text 'test1234@gmail.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.756199" elapsed="0.093491"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.850297" level="INFO">Typing text '11111111Dd' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${USER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.849942" elapsed="0.064182"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.914464" level="INFO">Clicking button 'xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]'.</msg>
+<arg>xpath=//button[normalize-space(.)="เข้าสู่ระบบ"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.914288" elapsed="0.067077"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Passenger Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:55.989173" level="INFO">Current page contains element 'id=loginForm'.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.982808" elapsed="0.006528"/>
+</kw>
+<msg time="2026-02-18T22:18:55.989493" level="INFO">${on_login} = True</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.982482" elapsed="0.007038"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-02-18T22:18:55.990291" level="FAIL">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</msg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-02-18T22:18:55.990050" elapsed="0.000312">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="FAIL" start="2026-02-18T22:18:55.989686" elapsed="0.000815">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:55.982194" elapsed="0.008424">ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</status>
+</kw>
+<kw name="Passenger Should Be Logged In">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:57.195868" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-11.png"&gt;&lt;img src="selenium-screenshot-11.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:57.196024" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:56.992507" elapsed="0.204186">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:57.196829" level="INFO">${on_login} = False</msg>
+<var>${on_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:56.991831" elapsed="0.205023"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${on_login}</arg>
+<arg>Fail</arg>
+<arg>ล็อกอิน Passenger ไม่สำเร็จ ยังอยู่หน้า login</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-02-18T22:18:57.197045" elapsed="0.000522"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:56.991310" elapsed="0.206363"/>
+</kw>
+<arg>10x</arg>
+<arg>1s</arg>
+<arg>Passenger Should Be Logged In</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:55.981613" elapsed="1.216099"/>
+</kw>
+<doc>ล็อกอินด้วยบัญชีผู้ใช้ธรรมดา</doc>
+<status status="PASS" start="2026-02-18T22:18:55.470120" elapsed="1.727637"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:57.198188" level="INFO">Opening url 'http://localhost:3001/admin/incidents'</msg>
+<arg>${URL}/admin/incidents</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-18T22:18:57.198005" elapsed="0.475288"/>
+</kw>
+<kw name="Wait Until Keyword Succeeds" owner="BuiltIn">
+<kw name="Should Be Redirected Away From Admin Incidents">
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:57.681673" level="INFO">${loc} = http://localhost:3001/admin/incidents</msg>
+<var>${loc}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-02-18T22:18:57.675193" elapsed="0.006612"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<msg time="2026-02-18T22:18:57.683833" level="FAIL">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</msg>
+<arg>${loc}</arg>
+<arg>/admin/incidents</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="FAIL" start="2026-02-18T22:18:57.682909" elapsed="0.001063">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</status>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${at_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-02-18T22:18:57.684235" elapsed="0.000054"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${at_home}</var>
+<arg>Page Should Contain</arg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-02-18T22:18:57.684465" elapsed="0.000034"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:57.684674" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${at_login} or ${at_home}</arg>
+<arg>Fail</arg>
+<arg>ถูก redirect ออกแล้ว แต่ไม่อยู่หน้า home/login (location=${loc})</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="NOT RUN" start="2026-02-18T22:18:57.684638" elapsed="0.000435"/>
+</kw>
+<status status="FAIL" start="2026-02-18T22:18:57.674437" elapsed="0.010846">'http://localhost:3001/admin/incidents' contains '/admin/incidents'</status>
+</kw>
+<kw name="Should Be Redirected Away From Admin Incidents">
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:58.194634" level="INFO">${loc} = http://localhost:3001/</msg>
+<var>${loc}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.186486" elapsed="0.008223"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${loc}</arg>
+<arg>/admin/incidents</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.194940" elapsed="0.000579"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:58.420539" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-12.png"&gt;&lt;img src="selenium-screenshot-12.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-18T22:18:58.420687" level="FAIL">Page should have contained element 'id=loginForm' but did not.</msg>
+<arg>id=loginForm</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-02-18T22:18:58.196165" elapsed="0.225173">Page should have contained element 'id=loginForm' but did not.</status>
+</kw>
+<msg time="2026-02-18T22:18:58.421465" level="INFO">${at_login} = False</msg>
+<var>${at_login}</var>
+<arg>Page Should Contain Element</arg>
+<arg>id=loginForm</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.195745" elapsed="0.225743"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-02-18T22:18:58.437628" level="INFO">Current page contains text 'เดินทางร่วมกัน'.</msg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.421842" elapsed="0.015912"/>
+</kw>
+<msg time="2026-02-18T22:18:58.437927" level="INFO">${at_home} = True</msg>
+<var>${at_home}</var>
+<arg>Page Should Contain</arg>
+<arg>เดินทางร่วมกัน</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.421600" elapsed="0.016368"/>
+</kw>
+<kw name="Run Keyword Unless" owner="BuiltIn">
+<msg time="2026-02-18T22:18:58.438197" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<arg>${at_login} or ${at_home}</arg>
+<arg>Fail</arg>
+<arg>ถูก redirect ออกแล้ว แต่ไม่อยู่หน้า home/login (location=${loc})</arg>
+<doc>*DEPRECATED since RF 5.0. Use native IF/ELSE or `Run Keyword If` instead.*</doc>
+<status status="PASS" start="2026-02-18T22:18:58.438154" elapsed="0.000689"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:58.186205" elapsed="0.252791"/>
+</kw>
+<arg>20x</arg>
+<arg>0.5s</arg>
+<arg>Should Be Redirected Away From Admin Incidents</arg>
+<doc>Runs the specified keyword and retries if it fails.</doc>
+<status status="PASS" start="2026-02-18T22:18:57.673750" elapsed="0.765289"/>
+</kw>
+<doc>ทดสอบว่าผู้ใช้ธรรมดา (Passenger) จะถูก redirect ออกจากหน้า Admin Incident Management</doc>
+<status status="PASS" start="2026-02-18T22:18:55.148954" elapsed="3.290239"/>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-02-18T22:18:58.439832" elapsed="2.432258"/>
+</kw>
+<status status="PASS" start="2026-02-18T22:18:22.181404" elapsed="38.690775"/>
 </suite>
 <statistics>
 <total>
-<stat pass="0" fail="5" skip="0">All Tests</stat>
+<stat pass="7" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
 </tag>
 <suite>
-<stat name="Tests" id="s1" pass="0" fail="5" skip="0">Tests</stat>
+<stat name="Admin Tests" id="s1" pass="7" fail="0" skip="0">Admin Tests</stat>
 </suite>
 </statistics>
 <errors>
-<msg time="2026-02-18T19:39:48.854938" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<msg time="2026-02-18T19:39:58.323161" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<msg time="2026-02-18T19:40:03.553052" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
-from unknown error: web view not found
-  (Session info: chrome=144.0.7559.133)
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e18165d
-	0x7ff79e1591b1
-	0x7ff79e2097e6
-	0x7ff79e22a5c2
-	0x7ff79e1cac29
-	0x7ff79e1cba93
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e3b2004
-	0x7ff79e3b21b5
-	0x7ff79e397ee2
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:05.775270" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<msg time="2026-02-18T19:40:09.216358" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:11.315240" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<msg time="2026-02-18T19:40:14.119243" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
-<msg time="2026-02-18T19:40:16.232697" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
-<msg time="2026-02-18T19:40:19.156104" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
-Stacktrace:
-Symbols not available. Dumping unresolved backtrace:
-	0x7ff79e3a88e5
-	0x7ff79e3a8940
-	0x7ff79e181465
-	0x7ff79e1c9d83
-	0x7ff79e201ee2
-	0x7ff79e1fc500
-	0x7ff79e1fb6f0
-	0x7ff79e14b325
-	0x7ff79e6c0640
-	0x7ff79e6baf80
-	0x7ff79e6d96e6
-	0x7ff79e3c5de4
-	0x7ff79e3ced8c
-	0x7ff79e149cb8
-	0x7ff79e81f008
-	0x7ffcc117e8d7
-	0x7ffcc216c40c
-</msg>
+<msg time="2026-02-18T22:18:22.508131" level="WARN">The chromedriver version (143.0.7499.169) detected in PATH at C:\ChromeForTesting\chromedriver.exe might not be compatible with the detected chrome version (144.0.7559.133); currently, chromedriver 144.0.7559.133 is recommended for chrome 144.*, so it is advised to delete the driver in PATH and retry</msg>
+<msg time="2026-02-18T22:18:37.108238" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:42.356101" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:47.126283" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:51.650156" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:55.132062" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:57.684674" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
+<msg time="2026-02-18T22:18:58.438197" level="WARN">Keyword 'BuiltIn.Run Keyword Unless' is deprecated. </msg>
 </errors>
 </robot>
