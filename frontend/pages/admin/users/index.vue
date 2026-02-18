@@ -278,7 +278,7 @@
             confirmText="ลบถาวร" cancelText="ยกเลิก" variant="danger" @confirm="confirmDelete" @cancel="cancelDelete" />
     </div>
 </template>
-
+q
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
