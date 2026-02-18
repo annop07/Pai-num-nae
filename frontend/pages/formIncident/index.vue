@@ -87,14 +87,33 @@
             สถานที่เกิดเหตุ
           </label>
 
-          <div @click="openMapPicker" class="border-2 border-dashed rounded-xl p-4 cursor-pointer transition" :class="location
-            ? 'border-blue-500 bg-blue-50 text-gray-800'
-            : 'border-gray-300 text-blue-600 hover:bg-blue-50'">
+          <div
+            class="border-2 border-dashed rounded-xl p-4 cursor-pointer transition"
+            :class="location
+              ? 'border-blue-500 bg-blue-50 text-gray-800'
+              : 'border-gray-300 text-blue-600 hover:bg-blue-50'">
             <div v-if="!location" class="text-center">
-              📍 เลือกตำแหน่งจากแผนที่
+              <button
+                type="button"
+                @click="getCurrentLocation"
+                :disabled="getLocationLoading"
+                class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 disabled:opacity-60 disabled:cursor-not-allowed">
+                <svg v-if="getLocationLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                <span v-else>📍</span>
+                {{ getLocationLoading ? 'กำลังรับตำแหน่ง...' : 'รับตำแหน่งปัจจุบัน' }}
+              </button>
+              <span class="text-gray-400 mx-1">หรือ</span>
+              <button type="button" @click.stop="openMapPicker"
+                class="text-blue-600 hover:text-blue-700 underline">
+                เลือกตำแหน่งจากแผนที่
+              </button>
             </div>
 
-            <div v-else class="flex justify-between items-center">
+            <div v-else @click="openMapPicker" class="flex justify-between items-center">
               <span class="truncate">
                 {{ locationName }}
               </span>
@@ -220,6 +239,7 @@ const location = ref(null)
 const isMapOpen = ref(false)
 const mapContainer = ref(null)
 const locationName = ref('')
+const getLocationLoading = ref(false)
 const isSuccessModalOpen = ref(false)
 const lastCreatedIncident = ref(null)
 
@@ -306,23 +326,47 @@ async function confirmLocation() {
   closeMapPicker()
 }
 
-function getCurrentLocation() {
+async function getCurrentLocation() {
   if (!navigator.geolocation) {
     alert('เบราว์เซอร์ไม่รองรับการระบุตำแหน่ง')
     return
   }
 
+  getLocationLoading.value = true
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      location.value = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
+    async (position) => {
+      const lat = position.coords.latitude
+      const lng = position.coords.longitude
+
+      location.value = { lat, lng }
+
+      // ดึงชื่อสถานที่จาก Nominatim (เหมือนระบบ Chat)
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=th`,
+          { headers: { Accept: 'application/json' } }
+        )
+        const data = await res.json()
+        locationName.value = data?.display_name || 'ตำแหน่งปัจจุบัน'
+      } catch {
+        locationName.value = 'ตำแหน่งปัจจุบัน'
+      } finally {
+        getLocationLoading.value = false
       }
     },
     (error) => {
-      alert('ไม่สามารถดึงตำแหน่งได้')
-      console.error(error)
-    }
+      getLocationLoading.value = false
+      if (error.code === 1) {
+        alert('คุณไม่อนุญาตให้เข้าถึงตำแหน่ง กรุณาเปิดสิทธิ์ในเบราว์เซอร์')
+      } else if (error.code === 2) {
+        alert('ไม่สามารถระบุตำแหน่งได้ กรุณาลองใหม่')
+      } else if (error.code === 3) {
+        alert('การรอตำแหน่งใช้เวลานานเกินไป')
+      } else {
+        alert('เกิดข้อผิดพลาดในการรับตำแหน่ง')
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   )
 }
 

@@ -102,26 +102,41 @@
     <!-- Chat Area (Right) -->
     <div class="flex-1 flex flex-col bg-gray-50 relative" :class="{ 'hidden md:flex': !activeChatId && isMobile }">
       <!-- Mobile Back Button Header (Only visible on mobile when chat is active) -->
-      <div class="md:hidden flex items-center px-4 py-3 bg-white shadow-sm border-b border-gray-200 z-10">
-        <button @click="activeChatId = null" class="mr-3 p-1 rounded-full hover:bg-gray-100 text-gray-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <div class="flex items-center space-x-3">
-          <div class="relative">
-            <img :src="activeChat?.avatar ||
-              'https://ui-avatars.com/api/?name=Admin&background=EBF4FF&color=2563EB'
-              " class="w-8 h-8 rounded-full shadow-sm" />
-            <span v-if="activeChat?.online"
-              class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
-          </div>
-          <div>
-            <h1 class="text-base font-semibold text-gray-800">
-              {{ activeChat?.name || "เลือกแชท" }}
-            </h1>
+      <div class="md:hidden flex items-center justify-between px-4 py-3 bg-white shadow-sm border-b border-gray-200 z-10">
+        <div class="flex items-center min-w-0 flex-1">
+          <button @click="activeChatId = null" class="mr-3 p-1 rounded-full hover:bg-gray-100 text-gray-600 flex-shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div class="flex items-center space-x-3 min-w-0">
+            <div class="relative flex-shrink-0">
+              <img :src="activeChat?.avatar ||
+                'https://ui-avatars.com/api/?name=Admin&background=EBF4FF&color=2563EB'
+                " class="w-8 h-8 rounded-full shadow-sm" />
+              <span v-if="activeChat?.online"
+                class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+            </div>
+            <div class="min-w-0">
+              <h1 class="text-base font-semibold text-gray-800 truncate">
+                {{ activeChat?.name || "เลือกแชท" }}
+              </h1>
+            </div>
           </div>
         </div>
+        <button v-if="isAdmin && activeChat && activeChat.status !== 'CLOSED'"
+          @click="handleCloseChat"
+          :disabled="closeChatLoading"
+          class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg text-sm font-medium flex-shrink-0 disabled:opacity-50"
+          title="ปิดการสนทนา">
+          <svg v-if="closeChatLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <!-- Desktop Header -->
@@ -145,11 +160,18 @@
             </p>
           </div>
         </div>
-        <button class="text-gray-400 hover:text-gray-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+        <button v-if="isAdmin && activeChat && activeChat.status !== 'CLOSED'"
+          @click="handleCloseChat"
+          :disabled="closeChatLoading"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50 hover:border-red-300 transition shadow-sm disabled:opacity-50">
+          <svg v-if="closeChatLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
           </svg>
+          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          {{ closeChatLoading ? 'กำลังปิด...' : 'ปิดการสนทนา' }}
         </button>
       </div>
 
@@ -393,6 +415,9 @@ import { useToast } from "@/composables/useToast";
 
 let typingTimeout = null;
 
+const { user } = useAuth();
+const isAdmin = computed(() => user.value?.role === 'ADMIN');
+
 const {
   chatRooms,
   messages,
@@ -400,6 +425,7 @@ const {
   messagesLoading,
   fetchChatRooms,
   fetchMessages,
+  closeChatRoom,
   formatDate,
   transformMessageToUI,
   getLastMessagePreview,
@@ -426,6 +452,7 @@ const isMobile = ref(false);
 const sendMessageLoading = ref(false);
 const fileInput = ref(null);
 const uploadLoading = ref(false);
+const closeChatLoading = ref(false);
 const { toast } = useToast();
 const toastMessage = ref("");
 const toastVisible = ref(false);
@@ -459,6 +486,24 @@ const socketStatus = computed(() => {
 const isChatClosed = computed(() => {
   return activeChat.value?.status === 'CLOSED';
 });
+
+const handleCloseChat = async () => {
+  if (!activeChatId.value || !isAdmin.value) return;
+  if (!confirm('ต้องการปิดการสนทนานี้หรือไม่? หลังปิดแล้วจะไม่สามารถส่งข้อความได้')) return;
+
+  closeChatLoading.value = true;
+  try {
+    await closeChatRoom(activeChatId.value);
+    const room = chatRooms.value.find((c) => c.id === activeChatId.value);
+    if (room) room.status = 'CLOSED';
+    showToast('ปิดการสนทนาแล้ว');
+  } catch (err) {
+    console.error('Close chat error:', err);
+    showToast(err?.data?.message || err?.statusMessage || 'ปิดการสนทนาไม่สำเร็จ');
+  } finally {
+    closeChatLoading.value = false;
+  }
+};
 
 const scrollToBottom = () => {
   nextTick(() => {

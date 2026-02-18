@@ -160,6 +160,10 @@ export function useChat() {
     return res?.urls || []
   }
 
+  const closeChatRoom = async (roomId) => {
+    await $api(`/chat/rooms/${roomId}/close`, { method: 'PATCH' })
+  }
+
   return {
     chatRooms,
     messages,
@@ -169,6 +173,7 @@ export function useChat() {
     fetchMessages,
     sendMessageAPI,
     uploadFiles,
+    closeChatRoom,
     formatTime,
     formatRelativeTime,
     formatDate,
