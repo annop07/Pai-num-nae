@@ -18,15 +18,23 @@ As a Passenger or Driver, I want to communicate with the admin and report incide
 1. ไปที่หน้า **Login**  
 2. กรอกข้อมูล **User/Email** และ **Password**  
 3. กดปุ่ม **เข้าสู่ระบบ (Login)**  
-4. ระบบจะแสดงหน้าเว็บไซต์หลักและ Notification  
 
 ![incidentDetail](Incident_UserLogin.png)
 
 ---
 
-### 2. Form Incidents
+### 2. ระบบแจ้งเตือน (Notification)
 
-#### 2.1 สำหรับผู้โดยสาร (Passenger)
+1. ไปที่หน้า Dashboard User
+2. กดปุ่ม แจ้งเตือน Notification ด้านขวาบน เพื่อดูข้อมูลและการแจ้งเตือนจาก Admin
+
+![incidentDetail](Incident_UserNotfication.png)
+
+--
+
+### 3. Form Incidents
+
+#### 3.1 สำหรับผู้โดยสาร (Passenger)
 1. เข้าสู่เมนู: เข้าสู่ระบบและเลือกเมนู "Form Incident"
 2. ระบุรายละเอียดเหตุการณ์: กรอกข้อมูลในแบบฟอร์มให้ครบถ้วน
 3. ประเภทปัญหา: เลือกหมวดหมู่ของปัญหาจากรายการ
@@ -38,7 +46,7 @@ As a Passenger or Driver, I want to communicate with the admin and report incide
 9. ส่งข้อมูล: ตรวจสอบความถูกต้องแล้วกดปุ่ม "รายงาน" (ปุ่มสีน้ำเงินด้านล่าง)
 10. ยืนยันผล: ระบบจะแสดงข้อความยืนยันเมื่อส่งข้อมูลสำเร็จ
 
-#### 2.2 สำหรับคนขับ (Driver)
+#### 3.2 สำหรับคนขับ (Driver)
 1. เข้าสู่เมนู: เข้าสู่ระบบและไปที่หน้า "Form Incident"
 2. ระบุรายละเอียดเหตุการณ์: กรอกข้อมูลในแบบฟอร์มให้ครบถ้วน
 3. ประเภทปัญหา: เลือกหมวดหมู่ของปัญหาจากรายการ
@@ -54,7 +62,7 @@ As a Passenger or Driver, I want to communicate with the admin and report incide
 
 --
 
-### 3. Chat กับ Admin
+### 4. Chat กับ Admin
 
 1. เมื่อผู้ใช้งานส่ง Incident หรือมี Notification จาก Admin ให้กดเข้า **Mini-Chat**  
 2. ระบบจะแสดงหน้าต่าง Chat กับ Admin
