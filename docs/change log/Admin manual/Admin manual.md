@@ -96,8 +96,8 @@ As an admin, I want to keep the users updated on their reported incidents
 ### 8. การส่งข้อความ
 
 8.1 ในหน้าChat จะมีlist ของuserที่ติดต่อเข้ามา 
-8.2 ในแต่ละChat room แอดมินจะสามารถส่ง ไฟล์ โลเคชั่น ข้อความแก่userได้
-
+8.2 ในแต่ละChat room แอดมินจะสามารถส่ง ข้อวาม ไฟล์ โลเคชั่น แก่userได้
+8.3 Admin สามารถ End conversation เมื่อต้องการ
 ![IncidentChat](img-adminChat.png)
 
 ---
