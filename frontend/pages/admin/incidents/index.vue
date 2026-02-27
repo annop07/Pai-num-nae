@@ -230,9 +230,6 @@
             </div>
 
             <div class="modal-foot">
-              <button class="btn-chat-alt" @click="startChat(selectedIncident)">
-                <i class="far fa-comments"></i> Chat with Reporter
-              </button>
               <div class="foot-rights">
                 <button class="btn-ghost" @click="closeDetail">Cancel</button>
                 <button class="btn-submit" @click="resolveIncident">Confirm Resolved</button>
@@ -737,24 +734,6 @@ textarea:focus {
   background: #2563eb;
 }
 
-.btn-chat-alt {
-  background: #0ea5e9;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: 0.2s;
-}
-
-.btn-chat-alt:hover {
-  background: #0284c7;
-}
-
 /* --- FIX: Cancel Button Style --- */
 .btn-ghost {
   background: white;
@@ -901,7 +880,7 @@ textarea:focus {
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRuntimeConfig, useCookie, navigateTo } from '#app'
+import { useRuntimeConfig, useCookie } from '#app'
 import AdminHeader from '~/components/admin/AdminHeader.vue'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
 
@@ -1006,15 +985,6 @@ const urgentCount = computed(() => {
 
 const openDetail = (incident) => { selectedIncident.value = { ...incident } }
 const closeDetail = () => { selectedIncident.value = null }
-const startChat = (incident) => {
-  const chatRoomId = incident?.chatRoom?.id
-  if (chatRoomId) {
-    closeDetail()
-    navigateTo(`/chat?room=${chatRoomId}`)
-  } else {
-    alert('ไม่พบห้องแชทสำหรับเหตุการณ์นี้ กรุณาลองใหม่อีกครั้ง')
-  }
-}
 const updateStatus = async (incident) => {
   try {
     const token = useCookie('token')?.value || (process.client ? localStorage.getItem('token') : '')

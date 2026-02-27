@@ -38,12 +38,10 @@ model User {
   vehicles                Vehicle[]
 
   //Relations
-  reportedIncidents    Incident[] @relation("ReporterIncidents")
-  incidentsAgainst     Incident[] @relation("ReportedUserIncidents")
-  resolvedIncidents    Incident[] @relation("ResolverIncidents")
-  adminChatRooms       ChatRoom[] @relation("AdminChatRooms")
-  adminClosedChatRooms ChatRoom[] @relation("AdminClosedChatRooms")
-  messages             Message[]
+  reportedIncidents    Incident[]          @relation("ReporterIncidents")
+  incidentsAgainst     Incident[]          @relation("ReportedUserIncidents")
+  resolvedIncidents    Incident[]          @relation("ResolverIncidents")
+  incidentStatusLogs   IncidentStatusLog[] @relation("AdminStatusChanges")
 
   @@index([role])
   @@index([isActive])
@@ -186,8 +184,11 @@ model Incident {
   resolvedBy     String?
   resolvedAt     DateTime?
   resolution     String?          @db.Text
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  parentIncidentId String?
+  revisionNumber   Int              @default(1)
+  isArchived       Boolean          @default(false)
 
   //Relations
   reporter      User           @relation("ReporterIncidents", fields: [reporterId], references: [id], onDelete: Cascade)
@@ -196,7 +197,9 @@ model Incident {
   route         Route?         @relation(fields: [routeId], references: [id], onDelete: SetNull)
   booking       Booking?       @relation(fields: [bookingId], references: [id], onDelete: SetNull)
   notifications Notification[] @relation("IncidentNotifications")
-  chatRoom      ChatRoom?
+  parent        Incident?       @relation("IncidentLineage", fields: [parentIncidentId], references: [id], onDelete: SetNull)
+  children      Incident[]      @relation("IncidentLineage")
+  statusLogs    IncidentStatusLog[]
 
   @@index([reporterId])
   @@index([reportedUserId])
@@ -207,45 +210,26 @@ model Incident {
   @@index([type])
   @@index([createdAt])
   @@index([resolvedAt])
+  @@index([parentIncidentId])
+  @@index([isArchived])
 }
 
-model ChatRoom {
-  id         String     @id @default(cuid())
-  incidentId String     @unique
-  adminId    String?
-  status     ChatStatus @default(ACTIVE)
-  createdAt  DateTime   @default(now())
-  closedAt   DateTime?
-  closedBy   String? //Admin คนปิด
+model IncidentStatusLog {
+  id          String               @id @default(cuid())
+  incidentId  String
+  fromStatus  IncidentStatus?
+  toStatus    IncidentStatus
+  reason      StatusChangeReason
+  note        String?              @db.Text
+  changedById String
+  createdAt   DateTime             @default(now())
 
-  // Relation
-  incident Incident  @relation(fields: [incidentId], references: [id], onDelete: Cascade)
-  admin    User?     @relation("AdminChatRooms", fields: [adminId], references: [id], onDelete: SetNull)
-  closer   User?     @relation("AdminClosedChatRooms", fields: [closedBy], references: [id], onDelete: SetNull)
-  messages Message[]
+  incident  Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  changedBy User     @relation("AdminStatusChanges", fields: [changedById], references: [id], onDelete: Cascade)
 
   @@index([incidentId])
-  @@index([adminId])
-  @@index([status])
-}
-
-model Message {
-  id          String      @id @default(cuid())
-  chatRoomId  String
-  senderId    String
-  messageType MessageType @default(TEXT)
-  content     String?     @db.Text //เก็บข้อความtext
-  attachments String[] //เก็บ url รูปภาพ/ไฟล์
-  location    Json?       @db.Json //เก็บเป็น lat,lng,address
-  createdAt   DateTime    @default(now())
-
-  // Relation
-  chatRoom ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
-  sender   User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
-
-  @@index([chatRoomId])
-  @@index([senderId])
   @@index([createdAt])
+  @@index([changedById])
 }
 
 enum Role {
@@ -329,13 +313,14 @@ enum IncidentPriority {
   URGENT
 }
 
-enum ChatStatus {
-  ACTIVE
-  CLOSED
+enum StatusChangeReason {
+  EVIDENCE_REVIEWED
+  POLICY_VIOLATION
+  INSUFFICIENT_EVIDENCE
+  FALSE_REPORT
+  MATTER_RESOLVED
+  REQUIRES_ESCALATION
+  REOPENED
+  OTHER
 }
 
-enum MessageType {
-  TEXT // ข้อความธรรมดา
-  FILE // รูปภาพ/ไฟล์
-  LOCATION // พิกัดสถานที่
-}

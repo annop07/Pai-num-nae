@@ -358,12 +358,6 @@
                                             แจ้งเหตุ
                                         </button>
 
-                                        <!-- ปุ่มแชท -->
-                                        <button @click.stop="goToChat(trip)"
-                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
-                                            แชทกับผู้โดยสาร
-                                        </button>
-
                                     </template>
 
                                     <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"

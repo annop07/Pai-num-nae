@@ -18,9 +18,6 @@ const INCIDENT_INCLUDE = {
     booking: {
         select: { id: true, status: true, numberOfSeats: true },
     },
-    chatRoom: {
-        select: { id: true },
-    },
 };
 
 // User Functions
@@ -55,33 +52,21 @@ async function createIncident(data, reporterId) {
         if (user.id === reporterId) throw new ApiError(400, 'ไม่สามารถรายงานตัวเองได้');
     }
 
-    // Create incident with auto-create ChatRoom
-    return prisma.$transaction(async (tx) => {
-        const incident = await tx.incident.create({
-            data: {
-                reporterId,
-                reportedUserId: reportedUserIdToUse,
-                routeId: routeIdToUse,
-                bookingId: data.bookingId || null,
-                type: data.type,
-                priority: data.priority || 'NORMAL',
-                title: data.title,
-                description: data.description,
-                location: data.location || null,
-                evidenceUrls: data.evidenceUrls || [],
-                metadata: data.metadata || null,
-            },
-            include: INCIDENT_INCLUDE,
-        });
-
-        // Auto-create ChatRoom
-        const chatRoom = await tx.chatRoom.create({
-            data: {
-                incidentId: incident.id
-            }
-        });
-
-        return { ...incident, chatRoom: { id: chatRoom.id } };
+    return prisma.incident.create({
+        data: {
+            reporterId,
+            reportedUserId: reportedUserIdToUse,
+            routeId: routeIdToUse,
+            bookingId: data.bookingId || null,
+            type: data.type,
+            priority: data.priority || 'NORMAL',
+            title: data.title,
+            description: data.description,
+            location: data.location || null,
+            evidenceUrls: data.evidenceUrls || [],
+            metadata: data.metadata || null,
+        },
+        include: INCIDENT_INCLUDE,
     }).then((result) => {
         // แจ้งเตือน Admin ทุกคนเมื่อมี Incident ใหม่ (ทำงานในพื้นหลัง ไม่หน่วง response)
         notifyAdminsNewIncident(result).catch((err) =>
@@ -107,7 +92,7 @@ async function notifyAdminsNewIncident(incident) {
             title: `แจ้งเหตุการณ์ใหม่: ${incident.title}`,
             body: `${reporterName} แจ้งเหตุการณ์ "${incident.title}" กรุณาตรวจสอบและดำเนินการ`,
             link: `/admin/incidents/${incident.id}`,
-            metadata: { incidentId: incident.id, chatRoomId: incident.chatRoom?.id },
+            metadata: { incidentId: incident.id },
         });
     }
 }

@@ -13,7 +13,6 @@ const ApiError = require('./src/utils/ApiError')
 const { metricsMiddleware } = require('./src/middlewares/metrics');
 const ensureAdmin = require('./src/bootstrap/ensureAdmin');
 const http = require('http');
-const { initializeSocket } = require('./src/socket/socketServer');
 const app = express();
 const server = http.createServer(app);
 
@@ -84,9 +83,6 @@ app.use((req, res, next) => {
     next(new ApiError(404, `Cannot ${req.method} ${req.originalUrl}`));
 });
 
-// Initialize Socket.io แชทแชท
-const io = initializeSocket(server);
-
 // --- Error Handling Middleware ---
 app.use(errorHandler);
 
@@ -101,7 +97,7 @@ if (require.main === module) {
         }
 
         server.listen(PORT, () => {
-            console.log(`🚀 Server + Socket.IO running on port ${PORT}`);
+            console.log(`🚀 Server running on port ${PORT}`);
         });
     })();
 }

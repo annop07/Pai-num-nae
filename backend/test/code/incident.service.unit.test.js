@@ -13,9 +13,6 @@ jest.mock('../../src/utils/prisma', () => ({
         delete: jest.fn(),
         count: jest.fn(),
     },
-    chatRoom: {
-        create: jest.fn(),
-    },
     user: {
         findUnique: jest.fn(),
     },
@@ -25,7 +22,6 @@ jest.mock('../../src/utils/prisma', () => ({
     booking: {
         findUnique: jest.fn(),
     },
-    $transaction: jest.fn(),
 }));
 
 jest.mock('../../src/services/notification.service', () => ({
@@ -38,7 +34,7 @@ describe('การทดสอบ Unit Test ของ Incident Service', () => 
     });
 
     describe('createIncident (สร้างรายงานเหตุการณ์)', () => {
-        it('ควรสร้างรายงานเหตุการณ์และห้องแชทสำเร็จ', async () => {
+        it('ควรสร้างรายงานเหตุการณ์สำเร็จ', async () => {
             const data = {
                 type: 'SAFETY_CONCERN',
                 title: 'Test Incident',
@@ -48,17 +44,10 @@ describe('การทดสอบ Unit Test ของ Incident Service', () => 
             const reporterId = 'reporter-1';
             const mockIncident = { id: 'inc-1', ...data, reporterId };
 
-            // Mock transaction to execute callback immediately with prisma mock
-            prisma.$transaction.mockImplementation(async (callback) => {
-                return callback(prisma);
-            });
-
             prisma.incident.create.mockResolvedValue(mockIncident);
-            prisma.chatRoom.create.mockResolvedValue({ id: 'room-1', incidentId: 'inc-1' });
 
             const result = await incidentService.createIncident(data, reporterId);
 
-            expect(prisma.$transaction).toHaveBeenCalled();
             expect(prisma.incident.create).toHaveBeenCalledWith(expect.objectContaining({
                 data: expect.objectContaining({
                     reporterId,
@@ -66,11 +55,7 @@ describe('การทดสอบ Unit Test ของ Incident Service', () => 
                     priority: 'HIGH'
                 })
             }));
-            expect(prisma.chatRoom.create).toHaveBeenCalledWith(expect.objectContaining({
-                data: { incidentId: 'inc-1' }
-            }));
             expect(result).toMatchObject(mockIncident);
-            expect(result).toHaveProperty('chatRoom');
         });
 
         it('ควรแจ้ง error 404 ถ้าไม่พบผู้ใช้ที่ถูกรายงาน', async () => {

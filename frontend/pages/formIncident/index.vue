@@ -198,16 +198,10 @@
         </h3>
 
         <p class="text-gray-500 mb-6">
-          ทีมงานได้รับรายงานของคุณแล้ว หากต้องการสอบถามเพิ่มเติมสามารถติดต่อผ่านแชทได้ทันที
+          ทีมงานได้รับรายงานของคุณแล้ว จะติดต่อกลับทางอีเมลหรือระบบแจ้งเตือน
         </p>
 
         <div class="flex flex-col gap-3">
-
-          <!-- Chat Button -->
-          <button @click="goToAdminChat"
-            class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition">
-            แชทกับ Admin
-          </button>
 
           <!-- Close Button -->
           <button @click="isSuccessModalOpen = false"
@@ -226,7 +220,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { navigateTo, useRoute } from '#app'
+import { useRoute } from '#app'
 
 const { $api } = useNuxtApp()
 const route = useRoute()
@@ -246,16 +240,6 @@ const lastCreatedIncident = ref(null)
 let gmap = null
 let marker = null
 let tempLocation = null
-
-function goToAdminChat() {
-  isSuccessModalOpen.value = false
-  const chatRoomId = lastCreatedIncident.value?.chatRoom?.id
-  if (chatRoomId) {
-    navigateTo(`/chat?room=${chatRoomId}`)
-  } else {
-    navigateTo('/chat')
-  }
-}
 
 function openMapPicker() {
   isMapOpen.value = true

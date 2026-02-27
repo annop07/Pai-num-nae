@@ -59,7 +59,6 @@ beforeAll(async () => {
 afterAll(async () => {
     // Cleanup
     if (incidentId) {
-        await prisma.chatRoom.deleteMany({ where: { incidentId } }); // ChatRoom is auto-created
         await prisma.incident.delete({ where: { id: incidentId } });
     }
     await prisma.notification.deleteMany({ where: { userId } });

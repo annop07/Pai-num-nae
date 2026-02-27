@@ -336,14 +336,6 @@
                             @click="closeMobileMenu">
                             ติดตามเหตุการณ์
                         </NuxtLink>
-                        <NuxtLink 
-                            v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
-                            to="/chat"
-                            class="block px-3 py-2 transition-colors duration-200 rounded-md"
-                            :class="$route.path === '/chat' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
-                            @click="closeMobileMenu">
-                            ติดต่อแอดมิน
-                        </NuxtLink>
 
                         <div v-if="!token">
                             <NuxtLink to="/register" class="block px-3 py-2 transition-colors duration-200 rounded-md"
@@ -416,27 +408,11 @@
         <main>
             <NuxtPage />
         </main>
-
-        <!-- Floating Chat Button -->
-        <NuxtLink 
-            v-if="token && (user && (user.role === 'PASSENGER' || user.role === 'DRIVER')) && $route.path !== '/chat'"
-            to="/chat"
-            class="fixed bottom-6 right-6 z-50 p-4 text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 hover:scale-110 flex items-center justify-center"
-        >
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-            <!-- Badge แจ้งเตือนข้อความแชทใหม่ -->
-            <span v-if="chatUnreadCount > 0"
-                class="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1.5 flex items-center justify-center text-xs font-bold text-white bg-red-500 rounded-full">
-                {{ chatUnreadCount > 99 ? '99+' : chatUnreadCount }}
-            </span>
-        </NuxtLink>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie, useRoute } from '#app'
 import { useAuth } from '~/composables/useAuth'
 
@@ -475,11 +451,7 @@ const notifPanel = ref(null)
 const notifications = ref([])  // [{ id, title, body, createdAt, readAt }]
 
 const unreadCount = computed(() =>
-  notifications.value.filter(n => !n.readAt && !n.metadata?.chatRoomId).length
-)
-/** จำนวนแจ้งเตือนแชทที่ยังไม่อ่าน (แสดงที่ icon แชท) */
-const chatUnreadCount = computed(() =>
-  notifications.value.filter(n => !n.readAt && n.metadata?.chatRoomId).length
+  notifications.value.filter(n => !n.readAt).length
 )
 
 function toggleNotif() {
@@ -592,25 +564,6 @@ function timeAgo(ts) {
     return `${d} d ago`
 }
 
-/** เมื่อ User เข้าหน้าแชท ให้ mark การแจ้งเตือนแชทเป็นอ่านแล้ว */
-async function markChatNotificationsRead() {
-    const chatNotifs = notifications.value.filter(n => !n.readAt && n.metadata?.chatRoomId)
-    if (chatNotifs.length === 0) return
-    const apiBase = useRuntimeConfig().public.apiBase || 'http://localhost:3000/api'
-    const tk = useCookie('token')?.value || (process.client ? localStorage.getItem('token') : '')
-    for (const n of chatNotifs) {
-        try {
-            await $fetch(`/notifications/${n.id}/read`, {
-                baseURL: apiBase,
-                method: 'PATCH',
-                headers: { Accept: 'application/json', ...(tk ? { Authorization: `Bearer ${tk}` } : {}) }
-            })
-            const i = notifications.value.findIndex(x => x.id === n.id)
-            if (i > -1) notifications.value[i].readAt = new Date().toISOString()
-        } catch { /* ignore */ }
-    }
-}
-
 /* lifecycle */
 onMounted(() => {
     window.addEventListener('resize', handleResize)
@@ -618,14 +571,6 @@ onMounted(() => {
     document.addEventListener('keydown', onKey)
     if (token.value) fetchUserNotifications()
 })
-
-const $route = useRoute()
-watch(() => $route.path, async (path) => {
-    if (path === '/chat' && token.value && user.value && ['PASSENGER', 'DRIVER'].includes(user.value?.role)) {
-        if (notifications.value.length === 0) await fetchUserNotifications()
-        await markChatNotificationsRead()
-    }
-}, { immediate: true })
 
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
