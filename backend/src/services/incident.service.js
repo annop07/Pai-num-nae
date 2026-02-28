@@ -20,6 +20,24 @@ const INCIDENT_INCLUDE = {
     },
 };
 
+//Allowed status transitions
+const ALLOWED_TRANSITIONS = {
+    PENDING:       ['INVESTIGATING', 'DISMISSED'],
+    INVESTIGATING: ['RESOLVED', 'DISMISSED', 'ESCALATED'],
+    ESCALATED:     ['RESOLVED', 'DISMISSED'],
+    RESOLVED:      [],
+    DISMISSED:     [],
+};
+
+// Human-readable status labels for notifications
+const STATUS_LABELS = {
+    PENDING: 'รอดำเนินการ',
+    INVESTIGATING: 'กำลังตรวจสอบ',
+    RESOLVED: 'แก้ไขแล้ว',
+    DISMISSED: 'ปฏิเสธ',
+    ESCALATED: 'ส่งต่อผู้รับผิดชอบ',
+};
+
 // User Functions
 async function createIncident(data, reporterId) {
     let routeIdToUse = data.routeId || null;
@@ -98,17 +116,17 @@ async function notifyAdminsNewIncident(incident) {
 }
 
 async function getMyIncidents(userId) {
-    const incidents = await prisma.incident.findMany({
+    return prisma.incident.findMany({
         where: {
             OR: [
                 { reporterId: userId },
                 { reportedUserId: userId },
             ],
+            isArchived: false,    // ซ่อนเคสเก่าที่ถูก archive หลัง reopen
         },
         include: INCIDENT_INCLUDE,
         orderBy: { createdAt: 'desc' },
     });
-    return incidents;
 }
 
 async function getIncidentById(id) {
@@ -132,7 +150,7 @@ async function searchIncidentsAdmin(opts = {}) {
         sortOrder = 'desc',
     } = opts;
 
-    const where = {};
+    const where = { isArchived: false };
 
     if (status) where.status = status;
     if (type) where.type = type;
@@ -180,57 +198,140 @@ async function updateIncidentStatus(id, data, adminId) {
     const incident = await prisma.incident.findUnique({ where: { id } });
     if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
 
-    const updateData = {};
+    // Block archived incidents
+    if (incident.isArchived) throw new ApiError(400, 'ไม่สามารถแก้ไขเหตุการณ์ที่ถูก archive แล้ว');
 
-    if (data.status) {
-        updateData.status = data.status;
-        if (data.status === 'RESOLVED') {
-            updateData.resolvedBy = adminId;
-            updateData.resolvedAt = new Date();
-        }
+    // Validate transition
+    const allowed = ALLOWED_TRANSITIONS[incident.status] || [];
+    if (!allowed.includes(data.status)) {
+        throw new ApiError(400, `ไม่สามารถเปลี่ยนสถานะจาก ${incident.status} ไปเป็น ${data.status} ได้`);
     }
 
-    if (data.priority) updateData.priority = data.priority;
-    if (data.resolution) updateData.resolution = data.resolution;
+    const updateData = {
+        status: data.status,
+        ...(data.priority && { priority: data.priority }),
+        ...(data.resolution && { resolution: data.resolution }),
+        ...(data.status === 'RESOLVED' && { resolvedBy: adminId, resolvedAt: new Date() }),
+    };
 
-    const updated = await prisma.incident.update({
-        where: { id },
-        data: updateData,
-        include: INCIDENT_INCLUDE,
-    });
+    const [updated] = await prisma.$transaction([
+        prisma.incident.update({
+            where: { id },
+            data: updateData,
+            include: INCIDENT_INCLUDE,
+        }),
+        prisma.incidentStatusLog.create({
+            data: {
+                incidentId: id,
+                fromStatus: incident.status,
+                toStatus: data.status,
+                reason: data.reason,
+                note: data.note,
+                changedById: adminId,
+            },
+        }),
+    ]);
 
-    // Notify user if status is updated by admin
-    if (data.status && incident.reporterId) {
-        let title = `อัปเดตสถานะ: ${updated.title}`;
-        let body = `สถานะรายงานของคุณเปลี่ยนเป็น ${data.status}`;
-        
-        if (data.status === 'INVESTIGATING') {
-            body = `เจ้าหน้าที่กำลังตรวจสอบรายงานเหตุการณ์ "${updated.title}" ของคุณ`;
-        } else if (data.status === 'RESOLVED') {
-            title = `รายงานได้รับการแก้ไขแล้ว: ${updated.title}`;
-            body = `รายงานเหตุการณ์ "${updated.title}" ได้รับการแก้ไขแล้ว`;
-            if (updated.resolution) {
-                body += `\nผลการดำเนินการ: ${updated.resolution}`;
-            }
-        } else if (data.status === 'DISMISSED') {
-            title = `รายงานถูกปฏิเสธ: ${updated.title}`;
-            body = `รายงานเหตุการณ์ "${updated.title}" ถูกปฏิเสธ`;
-             if (updated.resolution) {
-                body += `\nเหตุผล: ${updated.resolution}`;
-            }
-        }
-
-        await notificationService.createNotificationByAdmin({
+    // Notify reporter (background, non-blocking)
+    if (incident.reporterId) {
+        const statusLabel = STATUS_LABELS[data.status] || data.status;
+        notificationService.createNotificationByAdmin({
             userId: incident.reporterId,
             type: 'INCIDENT',
-            title,
-            body,
-            link: `/incidents/${updated.id}`,
-            metadata: { incidentId: updated.id, status: data.status }
-        });
+            title: `อัปเดตสถานะ: ${updated.title}`,
+            body: `สถานะรายงาน "${updated.title}" เปลี่ยนเป็น "${statusLabel}"\nหมายเหตุ: ${data.note}`,
+            link: `/myIncidents`,
+            metadata: { incidentId: updated.id, status: data.status },
+        }).catch(err => console.error('Failed to notify reporter:', err));
     }
 
     return updated;
+}
+
+async function reopenIncident(id, data, adminId) {
+    const incident = await prisma.incident.findUnique({ where: { id } });
+    if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
+
+    // Only allow reopen on terminal states
+    const terminalStates = ['RESOLVED', 'DISMISSED'];
+    if (!terminalStates.includes(incident.status)) {
+        throw new ApiError(400, 'สามารถ Reopen ได้เฉพาะเหตุการณ์ที่ RESOLVED หรือ DISMISSED เท่านั้น');
+    }
+
+    const newIncident = await prisma.$transaction(async (tx) => {
+        // 1. Archive the old incident
+        await tx.incident.update({
+            where: { id },
+            data: { isArchived: true },
+        });
+
+        // 2. Create new incident (copy from old)
+        const created = await tx.incident.create({
+            data: {
+                reporterId: incident.reporterId,
+                reportedUserId: incident.reportedUserId,
+                routeId: incident.routeId,
+                bookingId: incident.bookingId,
+                type: incident.type,
+                priority: incident.priority,
+                title: incident.title,
+                description: incident.description,
+                location: incident.location,
+                evidenceUrls: incident.evidenceUrls,
+                metadata: incident.metadata,
+                status: 'PENDING',
+                parentIncidentId: id,
+                revisionNumber: incident.revisionNumber + 1,
+            },
+            include: INCIDENT_INCLUDE,
+        });
+
+        // 3. Log the reopen on the new incident
+        await tx.incidentStatusLog.create({
+            data: {
+                incidentId: created.id,
+                fromStatus: null,
+                toStatus: 'PENDING',
+                reason: data.reason,
+                note: data.note,
+                changedById: adminId,
+            },
+        });
+
+        return created;
+    });
+
+    // 4. Notify reporter (background)
+    notificationService.createNotificationByAdmin({
+        userId: incident.reporterId,
+        type: 'INCIDENT',
+        title: `เปิดรายงานใหม่: ${newIncident.title}`,
+        body: `เจ้าหน้าที่ได้เปิดรายงาน "${newIncident.title}" ใหม่อีกครั้ง (ครั้งที่ ${newIncident.revisionNumber})\nเหตุผล: ${data.note}`,
+        link: `/myIncidents`,
+        metadata: { incidentId: newIncident.id, parentIncidentId: id },
+    }).catch(err => console.error('Failed to notify reporter on reopen:', err));
+
+    return newIncident;
+}
+
+async function getIncidentLogs(id, requesterId, requesterRole) {
+    const incident = await prisma.incident.findUnique({ where: { id } });
+    if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
+
+    // Allow only reporter or admin
+    if (requesterRole !== 'ADMIN' && incident.reporterId !== requesterId) {
+        throw new ApiError(403, 'ไม่มีสิทธิ์ดู log นี้');
+    }
+
+    return prisma.incidentStatusLog.findMany({
+        where: { incidentId: id },
+        orderBy: { createdAt: 'asc' },
+        include: {
+            changedBy: {
+                select: { id: true, firstName: true, lastName: true, role: true },
+            },
+        },
+    });
 }
 
 async function deleteIncident(id) {
@@ -247,5 +348,7 @@ module.exports = {
     getIncidentById,
     searchIncidentsAdmin,
     updateIncidentStatus,
+    reopenIncident,        
+    getIncidentLogs,       
     deleteIncident,
 };

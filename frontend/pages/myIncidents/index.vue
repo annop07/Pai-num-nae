@@ -53,7 +53,8 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="filteredIncidents.length === 0" class="py-16 text-center bg-white rounded-xl border border-gray-200">
+      <div v-else-if="filteredIncidents.length === 0"
+        class="py-16 text-center bg-white rounded-xl border border-gray-200">
         <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
           <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -78,7 +79,10 @@
                 <span :class="['px-2.5 py-1 rounded-lg text-xs font-medium', getStatusClass(incident.status)]">
                   {{ getStatusLabel(incident.status) }}
                 </span>
-                <span class="text-xs text-gray-400">{{ formatDate(incident.createdAt) }}</span>
+                <span v-if="incident.revisionNumber > 1"
+                  class="px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">
+                  ครั้งที่ {{ incident.revisionNumber }}
+                </span>
               </div>
               <h3 class="text-lg font-semibold text-gray-900 truncate">{{ incident.title }}</h3>
               <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ incident.description }}</p>
@@ -100,15 +104,21 @@
                 <div class="flex items-start justify-between">
                   <div>
                     <div class="flex flex-wrap gap-2 mb-2">
-                      <span :class="['px-2.5 py-1 rounded-lg text-xs font-medium', getPriorityClass(selectedIncident.priority)]">
+                      <span
+                        :class="['px-2.5 py-1 rounded-lg text-xs font-medium', getPriorityClass(selectedIncident.priority)]">
                         {{ getPriorityLabel(selectedIncident.priority) }}
                       </span>
-                      <span :class="['px-2.5 py-1 rounded-lg text-xs font-medium', getStatusClass(selectedIncident.status)]">
+                      <span
+                        :class="['px-2.5 py-1 rounded-lg text-xs font-medium', getStatusClass(selectedIncident.status)]">
                         {{ getStatusLabel(selectedIncident.status) }}
                       </span>
                     </div>
                     <h2 class="text-xl font-bold text-gray-900">{{ selectedIncident.title }}</h2>
-                    <p class="mt-1 text-sm text-gray-500">{{ formatDate(selectedIncident.createdAt) }}</p>
+                    <p v-if="selectedIncident.revisionNumber > 1"
+                      class="mt-1 text-xs text-orange-600 font-medium">
+                      เคสนี้เปิดใหม่ครั้งที่ {{ selectedIncident.revisionNumber }}
+                      (จากเคสเดิมที่ได้รับการแก้ไขแล้ว)
+                    </p>
                   </div>
                   <button @click="closeDetail"
                     class="p-2 text-gray-400 rounded-lg hover:bg-gray-100 hover:text-gray-600">
@@ -149,6 +159,34 @@
                   </div>
                 </div>
               </div>
+              
+              <!-- Status Timeline -->
+              <div class="mt-4 pl-4">
+                <label class="block text-sm font-medium text-gray-700 mb-3">ประวัติสถานะ</label>
+
+                <div v-if="logsLoading" class="text-sm text-gray-400">กำลังโหลด...</div>
+
+                <div v-else-if="statusLogs.length === 0" class="text-sm text-gray-400">
+                  ยังไม่มีการเปลี่ยนแปลงสถานะ
+                </div>
+
+                <ol v-else class="relative border-l border-gray-200 ml-2">
+                  <li v-for="log in statusLogs" :key="log.id" class="mb-6 ml-4">
+                    <div class="absolute w-3 h-3 bg-blue-500 rounded-full -left-1.5 border border-white mt-1"></div>
+                    <time class="text-xs text-gray-400">{{ formatDate(log.createdAt) }}</time>
+                    <p class="text-sm font-medium text-gray-900 mt-1">
+                      <span v-if="log.fromStatus" class="text-gray-500">{{ log.fromStatus }}</span>
+                      <span v-if="log.fromStatus" class="mx-1 text-gray-400">→</span>
+                      <span class="text-blue-600">{{ log.toStatus }}</span>
+                    </p>
+                    <p class="text-xs text-gray-500">เหตุผล: {{ getReasonLabel(log.reason) }}</p>
+                    <p class="text-sm text-gray-600 mt-1 bg-gray-50 rounded p-2">{{ log.note }}</p>
+                    <p class="text-xs text-gray-400 mt-1">
+                      โดย {{ log.changedBy?.firstName }} {{ log.changedBy?.lastName }}
+                    </p>
+                  </li>
+                </ol>
+              </div>
               <div class="flex justify-end gap-3 p-6 border-t border-gray-200">
                 <button @click="closeDetail"
                   class="px-5 py-2.5 font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200">
@@ -176,6 +214,8 @@ const incidents = ref([])
 const isLoading = ref(false)
 const filterStatus = ref('')
 const selectedIncident = ref(null)
+const statusLogs = ref([])
+const logsLoading = ref(false)
 
 const pendingCount = computed(() => incidents.value.filter(i => i.status === 'PENDING').length)
 const investigatingCount = computed(() => incidents.value.filter(i => i.status === 'INVESTIGATING').length)
@@ -276,12 +316,36 @@ async function fetchIncidents() {
   }
 }
 
-function openDetail(incident) {
+async function openDetail(incident) {
   selectedIncident.value = { ...incident }
+  statusLogs.value = []
+  logsLoading.value = true
+  try {
+    const res = await $api(`/incidents/${incident.id}/logs`)
+    statusLogs.value = Array.isArray(res) ? res : (res?.data ?? [])
+  } catch (e) {
+    statusLogs.value = []
+  } finally {
+    logsLoading.value = false
+  }
 }
 
 function closeDetail() {
   selectedIncident.value = null
+}
+
+const REASON_LABELS = {
+  EVIDENCE_REVIEWED: 'ตรวจสอบหลักฐานแล้ว',
+  POLICY_VIOLATION: 'ละเมิดนโยบาย',
+  INSUFFICIENT_EVIDENCE: 'หลักฐานไม่เพียงพอ',
+  FALSE_REPORT: 'รายงานเท็จ',
+  MATTER_RESOLVED: 'แก้ไขปัญหาได้แล้ว',
+  REQUIRES_ESCALATION: 'ส่งต่อผู้รับผิดชอบ',
+  REOPENED: 'เปิดใหม่',
+  OTHER: 'อื่นๆ',
+}
+function getReasonLabel(reason) {
+  return REASON_LABELS[reason] || reason
 }
 
 onMounted(() => {
@@ -294,6 +358,7 @@ onMounted(() => {
 .modal-leave-active {
   transition: opacity 0.2s ease;
 }
+
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;

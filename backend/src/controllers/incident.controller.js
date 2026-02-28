@@ -71,6 +71,21 @@ const adminDeleteIncident = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: result });
 });
 
+const adminReopenIncident = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const adminId = req.user.sub;
+    const newIncident = await incidentService.reopenIncident(id, req.body, adminId);
+    res.status(201).json({ success: true, data: newIncident });
+});
+
+const getIncidentLogs = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const requesterId = req.user.sub;
+    const requesterRole = req.user.role;
+    const logs = await incidentService.getIncidentLogs(id, requesterId, requesterRole);
+    res.status(200).json({ success: true, data: logs });
+});
+
 module.exports = {
     createIncident,
     getMyIncidents,
@@ -78,5 +93,7 @@ module.exports = {
     adminListIncidents,
     adminGetIncidentById,
     adminUpdateIncident,
+    adminReopenIncident,    
     adminDeleteIncident,
+    getIncidentLogs, 
 };

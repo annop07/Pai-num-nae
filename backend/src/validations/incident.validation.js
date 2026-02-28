@@ -1,5 +1,6 @@
 const { z } = require('zod');
-const { IncidentType, IncidentStatus, IncidentPriority } = require('@prisma/client');
+const { IncidentType, IncidentStatus, IncidentPriority,
+    StatusChangeReason } = require('@prisma/client');
 
 const createIncidentSchema = z.object({
     type: z.nativeEnum(IncidentType, {
@@ -22,10 +23,12 @@ const idParamSchema = z.object({
 });
 
 const updateIncidentSchema = z.object({
-    status: z.nativeEnum(IncidentStatus).optional(),
+    status: z.nativeEnum(IncidentStatus, { required_error: 'กรุณาระบุสถานะใหม่' }),
+    reason: z.nativeEnum(StatusChangeReason, { required_error: 'กรุณาระบุเหตุผล' }),
+    note: z.string().trim().min(1, 'กรุณาระบุหมายเหตุ').max(1000),
     priority: z.nativeEnum(IncidentPriority).optional(),
     resolution: z.string().trim().min(1).optional(),
-}).refine(obj => Object.keys(obj).length > 0, { message: 'กรุณาระบุข้อมูลที่ต้องการแก้ไข' });
+});
 
 const listIncidentsQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),
@@ -38,9 +41,15 @@ const listIncidentsQuerySchema = z.object({
     sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
+const reopenIncidentSchema = z.object({
+    reason: z.nativeEnum(StatusChangeReason, { required_error: 'กรุณาระบุเหตุผล' }),
+    note: z.string().trim().min(1, 'กรุณาระบุหมายเหตุ').max(1000),
+});
+
 module.exports = {
     createIncidentSchema,
     idParamSchema,
     updateIncidentSchema,
     listIncidentsQuerySchema,
+    reopenIncidentSchema,
 };
