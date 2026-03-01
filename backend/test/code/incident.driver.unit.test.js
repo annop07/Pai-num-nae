@@ -49,8 +49,8 @@ const mockBooking = {
 };
 
 const mockRoute = { id: ROUTE_ID };
-const mockPassengerUser = { id: PASSENGER_ID, username: 'passenger1' };
-const mockDriverUser = { id: DRIVER_ID, username: 'driver1' };
+const mockPassengerUser = { id: PASSENGER_ID, username: 'TestPassenger_UAT' };
+const mockDriverUser = { id: DRIVER_ID, username: 'TestDriver_UAT' };
 
 // ============================================================
 // Driver Incident Tests
