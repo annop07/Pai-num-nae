@@ -42,17 +42,14 @@
           </div>
         </div>
 
-        <!-- ระดับความเร่งด่วน -->
-        <div class="mb-6">
-          <label class="block mb-2 font-medium text-gray-700">
-            ระดับความเร่งด่วน <span class="text-red-500">*</span>
-          </label>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <button v-for="level in urgencyLevels" :key="level.value" @click="selectedUrgency = level.value"
-              :class="getUrgencyClass(level.value)" class="border-2 rounded-xl py-3 font-medium transition">
-              {{ level.label }}
-            </button>
+        <!-- ระดับความเร่งด่วน (แสดงอัตโนมัติตามประเภทปัญหา) -->
+        <div v-if="selectedCategory" class="mb-6">
+          <label class="block mb-2 font-medium text-gray-700">ระดับความเร่งด่วน</label>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-xl border"
+            :class="autoPriorityStyle.border">
+            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" :class="autoPriorityStyle.dot"></span>
+            <span class="font-semibold" :class="autoPriorityStyle.text">{{ autoPriorityLabel }}</span>
+            <span class="text-sm text-gray-400 ml-1">— กำหนดอัตโนมัติตามประเภทปัญหาที่เลือก</span>
           </div>
         </div>
 
@@ -169,58 +166,65 @@
 
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold">เลือกตำแหน่ง</h3>
-            <button @click="closeMapPicker">✕</button>
+            <button @click="closeMapPicker" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
           </div>
 
-          <div ref="mapContainer" class="w-full h-[400px] rounded-xl"></div>
+          <!-- Search Box -->
+          <div class="relative mb-3">
+            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+              </svg>
+            </div>
+            <input
+              ref="searchInput"
+              type="text"
+              placeholder="ค้นหาสถานที่... เช่น สยามพารากอน, มหาวิทยาลัยเกษตรศาสตร์"
+              class="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <!-- Selected place name preview -->
+          <div v-if="tempLocationName" class="mb-3 px-3 py-2 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-700 flex items-center gap-2">
+            <span>📍</span>
+            <span class="truncate">{{ tempLocationName }}</span>
+          </div>
+
+          <div ref="mapContainer" class="w-full h-[380px] rounded-xl"></div>
+
+          <p class="text-xs text-gray-400 mt-2">คลิกบนแผนที่หรือค้นหาชื่อสถานที่เพื่อเลือกตำแหน่ง</p>
 
           <div class="flex justify-end mt-4">
-            <button @click="confirmLocation" class="bg-blue-600 text-white px-6 py-3 rounded-xl">
+            <button @click="confirmLocation" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition">
               ยืนยันตำแหน่ง
             </button>
           </div>
         </div>
       </div>
     </div>
-    <!-- SUCCESS MODAL -->
-    <div v-if="isSuccessModalOpen" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-      <div class="bg-white w-[90%] max-w-md rounded-2xl shadow-xl p-8 text-center">
-
-        <div class="w-16 h-16 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
+    <!-- Success Overlay (เหมือน Admin - เครื่องหมายถูก + พื้นหลังเบลอ) -->
+    <transition name="success-fade">
+      <div v-if="showSuccess" class="success-overlay">
+        <div class="success-box">
+          <div class="success-checkmark">
+            <svg viewBox="0 0 52 52" class="checkmark-svg">
+              <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+              <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+          </div>
+          <p class="success-text">บันทึกสำเร็จ</p>
         </div>
-
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">
-          ส่งข้อมูลเรียบร้อยแล้ว
-        </h3>
-
-        <p class="text-gray-500 mb-6">
-          ทีมงานได้รับรายงานของคุณแล้ว จะติดต่อกลับทางอีเมลหรือระบบแจ้งเตือน
-        </p>
-
-        <div class="flex flex-col gap-3">
-
-          <!-- Close Button -->
-          <button @click="isSuccessModalOpen = false"
-            class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition">
-            ปิด
-          </button>
-
-        </div>
-
       </div>
-    </div>
+    </transition>
 
   </div>
 
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { useRoute } from '#app'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRoute, navigateTo } from '#app'
 
 const { $api } = useNuxtApp()
 const route = useRoute()
@@ -232,24 +236,54 @@ const files = ref([])
 const location = ref(null)
 const isMapOpen = ref(false)
 const mapContainer = ref(null)
+const searchInput = ref(null)
 const locationName = ref('')
+const tempLocationName = ref('')
 const getLocationLoading = ref(false)
-const isSuccessModalOpen = ref(false)
+const showSuccess = ref(false)
 const lastCreatedIncident = ref(null)
+
+function triggerSuccess() {
+  showSuccess.value = true
+  setTimeout(() => {
+    showSuccess.value = false
+    navigateTo('/myIncidents')
+  }, 2000)
+}
 
 let gmap = null
 let marker = null
 let tempLocation = null
+let autocomplete = null
 
 function openMapPicker() {
+  tempLocationName.value = locationName.value || ''
+  tempLocation = location.value ? { ...location.value } : null
   isMapOpen.value = true
   nextTick(() => {
     initializeMap()
+    // ถ้ามีตำแหน่งเดิม ให้วาง marker ไว้ก่อน
+    if (tempLocation) {
+      placeMarker(tempLocation.lat, tempLocation.lng)
+      gmap?.panTo(tempLocation)
+      gmap?.setZoom(16)
+    }
   })
 }
 
 function closeMapPicker() {
   isMapOpen.value = false
+  autocomplete = null
+}
+
+function placeMarker(lat, lng) {
+  if (marker) marker.setMap(null)
+  marker = new window.google.maps.Marker({
+    position: { lat, lng },
+    map: gmap,
+    animation: window.google.maps.Animation.DROP,
+  })
+  tempLocation = { lat, lng }
 }
 
 function initializeMap() {
@@ -259,22 +293,37 @@ function initializeMap() {
 
   gmap = new window.google.maps.Map(mapContainer.value, {
     center: defaultCenter,
-    zoom: 12
+    zoom: 12,
   })
 
-  gmap.addListener('click', (event) => {
+  // คลิกบนแผนที่ → วาง marker + reverse geocode realtime
+  gmap.addListener('click', async (event) => {
     const lat = event.latLng.lat()
     const lng = event.latLng.lng()
-
-    tempLocation = { lat, lng }
-
-    if (marker) marker.setMap(null)
-
-    marker = new window.google.maps.Marker({
-      position: { lat, lng },
-      map: gmap
-    })
+    placeMarker(lat, lng)
+    tempLocationName.value = 'กำลังโหลดชื่อสถานที่...'
+    tempLocationName.value = await reverseGeocode(lat, lng)
   })
+
+  // Google Places Autocomplete
+  if (searchInput.value && window.google.maps.places) {
+    autocomplete = new window.google.maps.places.Autocomplete(searchInput.value, {
+      fields: ['geometry', 'formatted_address', 'name'],
+    })
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace()
+      if (!place.geometry?.location) return
+
+      const lat = place.geometry.location.lat()
+      const lng = place.geometry.location.lng()
+
+      gmap.panTo({ lat, lng })
+      gmap.setZoom(16)
+      placeMarker(lat, lng)
+      tempLocationName.value = place.formatted_address || place.name || ''
+    })
+  }
 }
 
 async function reverseGeocode(lat, lng) {
@@ -296,16 +345,12 @@ async function reverseGeocode(lat, lng) {
 
 async function confirmLocation() {
   if (!tempLocation) {
-    alert('กรุณาเลือกตำแหน่ง')
+    alert('กรุณาเลือกตำแหน่งบนแผนที่หรือค้นหาชื่อสถานที่')
     return
   }
 
-  location.value = tempLocation
-
-  locationName.value = await reverseGeocode(
-    tempLocation.lat,
-    tempLocation.lng
-  )
+  location.value = { ...tempLocation }
+  locationName.value = tempLocationName.value || await reverseGeocode(tempLocation.lat, tempLocation.lng)
 
   closeMapPicker()
 }
@@ -394,37 +439,57 @@ const categories = [
   'การฉ้อโกง',
   'ปัญหาเส้นทาง',
   'ข้อพิพาทการชำระเงิน',
-  'อื่นๆ'
-]
-
-const urgencyLevels = [
-  { label: 'ไม่เร่งด่วน', value: 'low' },
-  { label: 'ปกติ', value: 'normal' },
-  { label: 'เร่งด่วน', value: 'high' },
-  { label: 'เร่งด่วนมาก', value: 'critical' }
+  'ลืมของ',
+  'คนขับไม่มาตามจุดนัด',
+  'ผู้โดยสารไม่มา',
+  'ป้ายทะเบียนรถไม่ตรง',
+  'อื่นๆ',
 ]
 
 const categoryToType = {
-  'ปัญหาความปลอดภัย': 'SAFETY_CONCERN',
-  'พฤติกรรมไม่เหมาะสม': 'INAPPROPRIATE_BEHAVIOR',
-  'การล่วงละเมิด': 'HARASSMENT',
-  'อุบัติเหตุ': 'ACCIDENT',
-  'ปัญหารถยนต์': 'VEHICLE_ISSUE',
-  'การฉ้อโกง': 'FRAUD',
-  'ปัญหาเส้นทาง': 'ROUTE_ISSUE',
-  'ข้อพิพาทการชำระเงิน': 'PAYMENT_DISPUTE',
-  'อื่นๆ': 'OTHER',
+  'ปัญหาความปลอดภัย':      'SAFETY_CONCERN',
+  'พฤติกรรมไม่เหมาะสม':   'INAPPROPRIATE_BEHAVIOR',
+  'การล่วงละเมิด':          'HARASSMENT',
+  'อุบัติเหตุ':             'ACCIDENT',
+  'ปัญหารถยนต์':           'VEHICLE_ISSUE',
+  'การฉ้อโกง':             'FRAUD',
+  'ปัญหาเส้นทาง':          'ROUTE_ISSUE',
+  'ข้อพิพาทการชำระเงิน':  'PAYMENT_DISPUTE',
+  'ลืมของ':                'LOST_ITEM',
+  'คนขับไม่มาตามจุดนัด':   'NO_SHOW_DRIVER',
+  'ผู้โดยสารไม่มา':        'NO_SHOW_PASSENGER',
+  'ป้ายทะเบียนรถไม่ตรง':  'LICENSE_PLATE_MISMATCH',
+  'อื่นๆ':                 'OTHER',
 }
 
-const urgencyToPriority = {
-  'low': 'LOW',
-  'normal': 'NORMAL',
-  'high': 'HIGH',
-  'critical': 'URGENT',
+// Priority กำหนดอัตโนมัติตามประเภทปัญหา (3 ระดับ: LOW / NORMAL / HIGH)
+const categoryToPriority = {
+  'ปัญหาความปลอดภัย':     'HIGH',
+  'พฤติกรรมไม่เหมาะสม':  'LOW',
+  'การล่วงละเมิด':         'HIGH',
+  'อุบัติเหตุ':            'HIGH',
+  'ปัญหารถยนต์':          'NORMAL',
+  'การฉ้อโกง':            'HIGH',
+  'ปัญหาเส้นทาง':         'LOW',
+  'ข้อพิพาทการชำระเงิน': 'NORMAL',
+  'ลืมของ':               'NORMAL',
+  'คนขับไม่มาตามจุดนัด':  'NORMAL',
+  'ผู้โดยสารไม่มา':       'LOW',
+  'ป้ายทะเบียนรถไม่ตรง': 'NORMAL',
+  'อื่นๆ':                'LOW',
 }
+
+const PRIORITY_DISPLAY = {
+  LOW:    { label: 'ไม่เร่งด่วน', dot: 'bg-green-500',  text: 'text-green-700',  border: 'border-green-200 bg-green-50' },
+  NORMAL: { label: 'ปกติ',        dot: 'bg-blue-500',   text: 'text-blue-700',   border: 'border-blue-200 bg-blue-50' },
+  HIGH:   { label: 'เร่งด่วน',    dot: 'bg-orange-500', text: 'text-orange-700', border: 'border-orange-200 bg-orange-50' },
+}
+
+const autoPriority = computed(() => categoryToPriority[selectedCategory.value] || 'NORMAL')
+const autoPriorityLabel = computed(() => PRIORITY_DISPLAY[autoPriority.value]?.label || '')
+const autoPriorityStyle = computed(() => PRIORITY_DISPLAY[autoPriority.value] || PRIORITY_DISPLAY.NORMAL)
 
 const selectedCategory = ref('')
-const selectedUrgency = ref('')
 const title = ref('')
 const description = ref('')
 const isDropdownOpen = ref(false)
@@ -439,30 +504,9 @@ function selectCategory(item) {
   isDropdownOpen.value = false
 }
 
-function getUrgencyClass(value) {
-  const base = 'border-gray-300 hover:border-gray-400'
-
-  if (selectedUrgency.value === value) {
-    if (value === 'low' || value === 'normal')
-      return 'border-green-600 bg-green-600 text-white'
-    if (value === 'high')
-      return 'border-orange-500 bg-orange-500 text-white'
-    if (value === 'critical')
-      return 'border-red-600 bg-red-600 text-white'
-  }
-
-  if (value === 'low' || value === 'normal')
-    return `${base} hover:border-green-600`
-  if (value === 'high')
-    return `${base} hover:border-orange-500`
-  if (value === 'critical')
-    return `${base} hover:border-red-600`
-
-  return base
-}
 
 async function handleSubmit() {
-  if (!selectedCategory.value || !selectedUrgency.value || !title.value || !description.value) {
+  if (!selectedCategory.value || !title.value || !description.value) {
     alert('กรุณากรอกข้อมูลให้ครบถ้วน')
     return
   }
@@ -472,7 +516,7 @@ async function handleSubmit() {
   try {
     const formData = new FormData()
     formData.append('type', categoryToType[selectedCategory.value])
-    formData.append('priority', urgencyToPriority[selectedUrgency.value])
+    formData.append('priority', autoPriority.value)
     formData.append('title', title.value)
     formData.append('description', description.value)
 
@@ -490,7 +534,7 @@ async function handleSubmit() {
     })
 
     lastCreatedIncident.value = res || null
-    isSuccessModalOpen.value = true
+    triggerSuccess()
   } catch (err) {
     alert(err?.statusMessage || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
   } finally {
@@ -512,3 +556,78 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 </script>
+
+<style scoped>
+/* Success Overlay (เหมือน Admin incidents) */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.success-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.success-checkmark {
+  width: 96px;
+  height: 96px;
+}
+
+.checkmark-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.checkmark-circle {
+  stroke: #22c55e;
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: stroke-circle 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  stroke: #22c55e;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke-check 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
+}
+
+@keyframes stroke-circle {
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes stroke-check {
+  100% { stroke-dashoffset: 0; }
+}
+
+.success-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #334155;
+  margin: 0;
+}
+
+.success-fade-enter-active {
+  transition: opacity 0.2s ease;
+}
+.success-fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+.success-fade-enter-from,
+.success-fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -7,11 +7,44 @@
         <p class="mt-2 text-gray-600">ดูรายการเหตุการณ์ที่คุณแจ้งหรือถูกแจ้ง และติดตามสถานะได้ที่นี่</p>
       </div>
 
+      <!-- Tabs -->
+      <div class="mb-6 border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+          <button @click="activeTab = 'reported'"
+            :class="[
+              activeTab === 'reported'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors'
+            ]">
+            เคสที่ฉันแจ้ง
+            <span :class="[
+              activeTab === 'reported' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-900',
+              'ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium inline-block'
+            ]">{{ reportedIncidents.length }}</span>
+          </button>
+
+          <button @click="activeTab = 'against'"
+            :class="[
+              activeTab === 'against'
+                ? 'border-amber-500 text-amber-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors'
+            ]">
+            เคสที่ฉันถูกแจ้ง
+            <span :class="[
+              activeTab === 'against' ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-900',
+              'ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium inline-block'
+            ]">{{ againstIncidents.length }}</span>
+          </button>
+        </nav>
+      </div>
+
       <!-- Stats Summary -->
       <div class="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
         <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <p class="text-sm font-medium text-gray-500">ทั้งหมด</p>
-          <p class="mt-1 text-2xl font-bold text-gray-900">{{ incidents.length }}</p>
+          <p class="text-sm font-medium text-gray-500">ทั้งหมดในหมวดนี้</p>
+          <p class="mt-1 text-2xl font-bold text-gray-900">{{ currentTabIncidents.length }}</p>
         </div>
         <div class="p-4 bg-white rounded-xl border border-amber-200 shadow-sm">
           <p class="text-sm font-medium text-amber-700">รอดำเนินการ</p>
@@ -87,7 +120,7 @@
               <h3 class="text-lg font-semibold text-gray-900 truncate">{{ incident.title }}</h3>
               <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ incident.description }}</p>
               <p class="mt-2 text-xs text-gray-500">{{ getTypeLabel(incident.type) }}</p>
-              <p v-if="isReporter(incident)" class="mt-1 text-xs text-blue-600">คุณเป็นผู้แจ้ง</p>
+              <p v-if="activeTab === 'reported'" class="mt-1 text-xs text-blue-600">คุณเป็นผู้แจ้ง</p>
               <p v-else class="mt-1 text-xs text-amber-600">คุณเป็นผู้ถูกแจ้ง</p>
             </div>
           </div>
@@ -216,28 +249,45 @@ const filterStatus = ref('')
 const selectedIncident = ref(null)
 const statusLogs = ref([])
 const logsLoading = ref(false)
+const activeTab = ref('reported') // 'reported' or 'against'
 
-const pendingCount = computed(() => incidents.value.filter(i => i.status === 'PENDING').length)
-const investigatingCount = computed(() => incidents.value.filter(i => i.status === 'INVESTIGATING').length)
+function isReporter(incident) {
+  return user.value?.id === incident.reporterId
+}
+
+const reportedIncidents = computed(() => incidents.value.filter(i => isReporter(i)))
+const againstIncidents = computed(() => incidents.value.filter(i => !isReporter(i)))
+
+const currentTabIncidents = computed(() => {
+  return activeTab.value === 'reported' ? reportedIncidents.value : againstIncidents.value
+})
+
+const pendingCount = computed(() => currentTabIncidents.value.filter(i => i.status === 'PENDING').length)
+const investigatingCount = computed(() => currentTabIncidents.value.filter(i => i.status === 'INVESTIGATING').length)
 const resolvedCount = computed(() =>
-  incidents.value.filter(i => ['RESOLVED', 'DISMISSED'].includes(i.status)).length
+  currentTabIncidents.value.filter(i => ['RESOLVED', 'DISMISSED'].includes(i.status)).length
 )
 
 const filteredIncidents = computed(() => {
-  if (!filterStatus.value) return incidents.value
-  return incidents.value.filter(i => i.status === filterStatus.value)
+  let list = currentTabIncidents.value
+  if (!filterStatus.value) return list
+  return list.filter(i => i.status === filterStatus.value)
 })
 
 const TYPE_LABELS = {
-  SAFETY_CONCERN: 'ปัญหาความปลอดภัย',
+  SAFETY_CONCERN:         'ปัญหาความปลอดภัย',
   INAPPROPRIATE_BEHAVIOR: 'พฤติกรรมไม่เหมาะสม',
-  HARASSMENT: 'การล่วงละเมิด',
-  ACCIDENT: 'อุบัติเหตุ',
-  VEHICLE_ISSUE: 'ปัญหารถยนต์',
-  FRAUD: 'การฉ้อโกง',
-  ROUTE_ISSUE: 'ปัญหาเส้นทาง',
-  PAYMENT_DISPUTE: 'ข้อพิพาทการชำระเงิน',
-  OTHER: 'อื่นๆ'
+  HARASSMENT:             'การล่วงละเมิด',
+  ACCIDENT:               'อุบัติเหตุ',
+  VEHICLE_ISSUE:          'ปัญหารถยนต์',
+  FRAUD:                  'การฉ้อโกง',
+  ROUTE_ISSUE:            'ปัญหาเส้นทาง',
+  PAYMENT_DISPUTE:        'ข้อพิพาทการชำระเงิน',
+  LOST_ITEM:              'ลืมของ',
+  NO_SHOW_DRIVER:         'คนขับไม่มาตามจุดนัด',
+  NO_SHOW_PASSENGER:      'ผู้โดยสารไม่มา',
+  LICENSE_PLATE_MISMATCH: 'ป้ายทะเบียนรถไม่ตรง',
+  OTHER:                  'อื่นๆ',
 }
 
 const STATUS_LABELS = {
@@ -298,10 +348,6 @@ function formatDate(dateStr) {
     hour: '2-digit',
     minute: '2-digit'
   })
-}
-
-function isReporter(incident) {
-  return user.value?.id === incident.reporterId
 }
 
 async function fetchIncidents() {
