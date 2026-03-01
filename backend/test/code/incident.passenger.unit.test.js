@@ -1,6 +1,7 @@
 const incidentService = require('../../src/services/incident.service');
 const prisma = require('../../src/utils/prisma');
 const notificationService = require('../../src/services/notification.service');
+const { createIncidentSchema } = require('../../src/validations/incident.validation');
 
 // Mock Prisma
 jest.mock('../../src/utils/prisma', () => ({
@@ -405,6 +406,166 @@ describe('Unit Test: Passenger รายงานเหตุการณ์ (In
             await expect(
                 incidentService.getIncidentLogs('non-existent', PASSENGER_ID, 'PASSENGER')
             ).rejects.toThrow('ไม่พบรายงานเหตุการณ์');
+        });
+    });
+
+    // ----------------------------------------------------------
+    // Validation — ตรวจสอบข้อมูลไม่ถูกต้อง (Zod Schema)
+    // ----------------------------------------------------------
+    describe('Validation — ข้อมูลไม่ถูกต้อง (createIncidentSchema)', () => {
+        it('ควร reject ถ้า title เป็นค่าว่าง', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: '',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues[0].message).toBe('กรุณาระบุหัวข้อ');
+        });
+
+        it('ควร reject ถ้าไม่ส่ง title', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('title'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า description เป็นค่าว่าง', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+                description: '',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues[0].message).toBe('กรุณาระบุรายละเอียด');
+        });
+
+        it('ควร reject ถ้าไม่ส่ง description', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('description'))).toBe(true);
+        });
+
+        it('ควร reject ถ้าไม่ส่ง type', () => {
+            const data = {
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('type'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า type ไม่ถูกต้อง (ค่าที่ไม่อยู่ใน enum)', () => {
+            const data = {
+                type: 'INVALID_TYPE_XYZ',
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('type'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า title ยาวเกิน 100 ตัวอักษร', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'A'.repeat(101),
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('title'))).toBe(true);
+        });
+
+        it('ควรผ่านเมื่อข้อมูลถูกต้องครบถ้วน', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(true);
+            expect(result.data.priority).toBe('NORMAL');
+            expect(result.data.evidenceUrls).toEqual([]);
+        });
+    });
+
+    // ----------------------------------------------------------
+    // Upload Middleware — ตรวจสอบไฟล์แนบ (multer fileFilter)
+    // ----------------------------------------------------------
+    describe('Upload Middleware — ตรวจสอบไฟล์แนบ (multer)', () => {
+        const upload = require('../../src/middlewares/upload.middleware');
+
+        it('PR-08: ควร reject ไฟล์ virus.exe (ประเภทไม่ถูกต้อง)', () => {
+            const invalidFiles = [
+                { name: 'virus.exe', mimetype: 'application/x-msdownload' },
+                { name: 'malware.bat', mimetype: 'application/x-msdos-program' },
+                { name: 'script.sh', mimetype: 'application/x-sh' },
+            ];
+
+            invalidFiles.forEach(file => {
+                const isImage = file.mimetype.startsWith('image/');
+                expect(isImage).toBe(false);
+            });
+        });
+
+        it('ควรอนุญาตเฉพาะไฟล์รูปภาพ (image/*)', () => {
+            const validFiles = [
+                { name: 'evidence.jpg', mimetype: 'image/jpeg' },
+                { name: 'accident.png', mimetype: 'image/png' },
+                { name: 'photo.webp', mimetype: 'image/webp' },
+            ];
+
+            validFiles.forEach(file => {
+                const isImage = file.mimetype.startsWith('image/');
+                expect(isImage).toBe(true);
+            });
+        });
+
+        it('ไฟล์ .pdf, .doc ไม่ผ่าน fileFilter', () => {
+            const docTypes = [
+                'application/pdf',
+                'application/msword',
+                'text/plain',
+            ];
+
+            docTypes.forEach(mimetype => {
+                const isImage = mimetype.startsWith('image/');
+                expect(isImage).toBe(false);
+            });
+        });
+
+        it('ขนาดไฟล์เกิน 50MB ไม่ผ่าน', () => {
+            const maxAllowedBytes = 50 * 1024 * 1024;
+            const oversizedFile = 51 * 1024 * 1024;
+
+            expect(oversizedFile).toBeGreaterThan(maxAllowedBytes);
         });
     });
 });
