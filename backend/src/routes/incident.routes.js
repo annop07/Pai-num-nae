@@ -74,6 +74,13 @@ router.get(
     incidentController.getMyIncidents
 );
 
+// GET /api/incidents/evidence-proxy?url=... (โปรกซีดาวน์โหลดหลักฐานจาก Cloudinary)
+router.get(
+    '/evidence-proxy',
+    protect,
+    incidentController.proxyEvidence
+);
+
 // GET /api/incidents/:id
 router.get(
     '/:id',

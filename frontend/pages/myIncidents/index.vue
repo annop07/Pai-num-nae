@@ -176,12 +176,48 @@
                 </div>
                 <div v-if="selectedIncident.evidenceUrls?.length">
                   <label class="block text-sm font-medium text-gray-700">หลักฐาน</label>
+                  <p v-if="selectedIncident.evidenceUrls.some(u => isPdf(u))" class="text-xs text-amber-600 mt-1">
+                    ถ้า PDF เปิดหรือโหลดไม่ได้: เปิด &quot;Allow delivery of PDF and ZIP files&quot; ใน Cloudinary → Settings → Security
+                  </p>
                   <div class="grid grid-cols-2 gap-3 mt-2 md:grid-cols-3">
-                    <a v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx" :href="url" target="_blank"
-                      class="block overflow-hidden rounded-lg border border-gray-200">
-                      <img :src="url" :alt="`หลักฐาน ${idx + 1}`"
-                        class="object-cover w-full h-24 transition hover:opacity-90" />
-                    </a>
+                    <template v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx">
+
+                      <!-- PDF -->
+                      <div v-if="isPdf(url)"
+                        class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 h-24 p-2 gap-1">
+                        <span class="text-2xl">📄</span>
+                        <span class="text-xs text-red-600 font-medium text-center truncate w-full px-1">{{ getFilename(url) }}</span>
+                        <div class="flex gap-1 mt-1">
+                          <a :href="fixPdfUrl(url)" target="_blank"
+                            class="text-xs px-2 py-0.5 rounded bg-red-500 text-white hover:bg-red-600 transition">
+                            เปิด
+                          </a>
+                          <button @click.stop="downloadFile(pdfDownloadUrl(url), getFilename(url))"
+                            class="text-xs px-2 py-0.5 rounded bg-white border border-red-400 text-red-600 hover:bg-red-50 transition">
+                            ดาวน์โหลด
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Video -->
+                      <div v-else-if="isVideo(url)"
+                        class="relative rounded-lg border border-gray-200 overflow-hidden h-24">
+                        <video :src="url" class="w-full h-full object-cover" preload="metadata"></video>
+                        <a :href="url" target="_blank"
+                          class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
+                          <span class="text-white text-2xl">▶️</span>
+                        </a>
+                      </div>
+
+                      <!-- Image -->
+                      <button v-else
+                        class="block overflow-hidden rounded-lg border border-gray-200 h-24 w-full"
+                        @click.stop="openLightbox(url)">
+                        <img :src="url" :alt="`หลักฐาน ${idx + 1}`"
+                          class="object-cover w-full h-full transition hover:opacity-90" />
+                      </button>
+
+                    </template>
                   </div>
                 </div>
                 <div v-if="selectedIncident.location" class="mt-4">
@@ -230,6 +266,21 @@
           </div>
         </div>
       </Transition>
+
+      <!-- Lightbox -->
+      <div v-if="lightboxUrl"
+        class="fixed inset-0 z-[60] flex items-center justify-center bg-black/80"
+        @click.self="closeLightbox">
+        <div class="relative max-w-3xl w-full mx-4">
+          <button @click="closeLightbox"
+            class="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300">✕</button>
+          <img :src="lightboxUrl" class="w-full max-h-[80vh] object-contain rounded-lg" />
+          <a :href="lightboxUrl" target="_blank"
+            class="absolute bottom-3 right-3 text-xs bg-white/90 px-3 py-1.5 rounded-full text-gray-700 hover:bg-white transition">
+            เปิดเต็มหน้า
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -238,6 +289,8 @@
 import { ref, computed, onMounted } from 'vue'
 const { $api } = useNuxtApp()
 const { user } = useAuth()
+const config = useRuntimeConfig()
+const token = useCookie('token')
 
 definePageMeta({
   middleware: ['auth']
@@ -247,6 +300,91 @@ const incidents = ref([])
 const isLoading = ref(false)
 const filterStatus = ref('')
 const selectedIncident = ref(null)
+const lightboxUrl = ref('')
+function openLightbox(url) { lightboxUrl.value = url }
+function closeLightbox() { lightboxUrl.value = '' }
+function isPdf(url) {
+  const lower = url?.toLowerCase() || ''
+  return lower.includes('.pdf') || lower.includes('/raw/upload/')
+}
+function isVideo(url) {
+  return /\.(mp4|mov|webm|ogg|avi)$/i.test(url?.split('?')[0] || '')
+}
+function getFilename(url) {
+  try {
+    const name = decodeURIComponent(url.split('?')[0]).split('/').pop() || 'ไฟล์'
+    if (isPdf(url) && !name.includes('.')) return name + '.pdf'
+    return name
+  } catch { return 'ไฟล์' }
+}
+async function downloadFile(url, filename) {
+  const apiBase = (config.public?.apiBase || '').replace(/\/$/, '')
+  const proxyUrl = apiBase
+    ? `${apiBase}/incidents/evidence-proxy?url=${encodeURIComponent(url)}`
+    : null
+
+  try {
+    if (proxyUrl && token.value) {
+      const res = await fetch(proxyUrl, {
+        headers: { Authorization: `Bearer ${token.value}` },
+      })
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}))
+        const msg = errBody?.message || errBody?.error?.message || `HTTP ${res.status}`
+        if (res.status === 502 && msg.includes('Allow delivery of PDF')) {
+          alert('ไม่สามารถดาวน์โหลดได้: Cloudinary ยังไม่อนุญาตให้ส่งไฟล์ PDF\n\nกรุณาเปิด "Allow delivery of PDF and ZIP files" ใน Cloudinary Dashboard → Settings → Security')
+          return
+        }
+        throw new Error(msg)
+      }
+      const blob = await res.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = filename || 'file.pdf'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(blobUrl)
+      return
+    }
+  } catch (e) {
+    if (e?.message && e.message.includes('Allow delivery of PDF')) {
+      alert('ไม่สามารถดาวน์โหลดได้: กรุณาเปิด "Allow delivery of PDF and ZIP files" ใน Cloudinary → Settings → Security')
+      return
+    }
+  }
+
+  try {
+    const res = await fetch(url, { mode: 'cors' })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const blob = await res.blob()
+    if (blob.size < 100 && blob.type?.includes('text/html')) throw new Error('Got HTML')
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename || 'file.pdf'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(blobUrl)
+  } catch {
+    window.open(url, '_blank', 'noopener')
+  }
+}
+// คืนค่า URL สำหรับเปิด/ดู PDF
+// PDF ใหม่: อัปโหลดเป็น raw → URL มี /raw/upload/ อยู่แล้ว
+// PDF เก่า: ถ้าเก็บใน image pipeline (/image/upload/) ให้ใช้ตามนั้น (เปลี่ยนเป็น raw จะ 404)
+function fixPdfUrl(url) {
+  if (!url || !isPdf(url)) return url
+  return url
+}
+// URL สำหรับดาวน์โหลด - เพิ่ม fl_attachment ให้ Cloudinary ส่ง Content-Disposition: attachment
+function pdfDownloadUrl(url) {
+  if (!url) return url
+  const u = fixPdfUrl(url)
+  return u + (u.includes('?') ? '&' : '?') + 'fl_attachment'
+}
 const statusLogs = ref([])
 const logsLoading = ref(false)
 const activeTab = ref('reported') // 'reported' or 'against'

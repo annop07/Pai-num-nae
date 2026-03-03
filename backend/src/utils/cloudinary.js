@@ -8,25 +8,39 @@ cloudinary.config({
     secure: true,
 });
 
-const uploadToCloudinary = (fileBuffer, folder) => {
+// รายการ mimetype ที่ถือว่าเป็น PDF (บาง browser/OS ส่งค่าต่างกัน)
+const PDF_MIMETYPES = ['application/pdf', 'application/x-pdf'];
+
+const uploadToCloudinary = (fileBuffer, folder, mimetype = '', originalname = '') => {
+    // PDF ต้องใช้ resource_type 'raw' เพื่อให้ Cloudinary เก็บและ serve ไฟล์ต้นฉบับได้ถูกต้อง
+    // (ถ้าใช้ 'image' หรือ 'auto' Cloudinary อาจ transform/convert ทำให้เปิด PDF ไม่ได้)
+    const isPdf = PDF_MIMETYPES.includes(mimetype);
+    const resourceType = isPdf ? 'raw' : 'auto';
+
+    const options = { folder, resource_type: resourceType };
+
+    // สำหรับ raw files (PDF) ต้องใส่นามสกุล .pdf ใน public_id
+    // เพื่อให้ URL มีนามสกุล .pdf → เบราว์เซอร์เปิด/ดาวน์โหลดได้ถูกต้อง
+    if (resourceType === 'raw') {
+        const ext = originalname && originalname.includes('.')
+            ? originalname.substring(originalname.lastIndexOf('.')).toLowerCase()
+            : '';
+        const hasPdfExt = ext === '.pdf';
+        const uniqueSuffix = `${Date.now()}_${Math.round(Math.random() * 1e6)}`;
+        options.public_id = hasPdfExt ? `${uniqueSuffix}${ext}` : `${uniqueSuffix}.pdf`;
+    }
+
     return new Promise((resolve, reject) => {
-        
         const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                folder: folder,
-                resource_type: "auto",
-            },
+            options,
             (error, result) => {
                 if (error) {
                     console.error("Cloudinary Upload Error:", error);
-                    
                     return reject(new ApiError(500, "Cloudinary upload failed."));
                 }
-                
                 resolve({ url: result.secure_url, public_id: result.public_id });
             }
         );
-
         uploadStream.end(fileBuffer);
     });
 };
