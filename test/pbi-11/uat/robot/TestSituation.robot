@@ -113,6 +113,120 @@ Step 7 - Fill General Incident Form And Submit (Happy Path)
     # ตรวจสอบสถานะการเชื่อมต่อ และผลลัพธ์: ระบุข้อความ "บันทึกสำเร็จ"
     Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
 
+Step 7b - Fill General Incident Form And Submit (Accident)
+    [Documentation]    กรอกข้อมูลในฟอร์มแจ้งเหตุทั่วไป (ประเภท: อุบัติเหตุ) ให้ครบทุกช่อง แล้วกดส่ง
+    Go To    ${BASE_URL}/myRoute
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'เส้นทางของฉัน')]    timeout=5s
+    Execute JavaScript    window.scrollTo(0, 0)
+    Sleep    1s
+    Click Element    xpath=//button[contains(text(),'เส้นทางของฉัน')]
+    Sleep    2s
+    
+    Wait Until Element Is Visible    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]    timeout=5s
+    Scroll Element Into View    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Execute JavaScript    window.scrollBy(0, -200)
+    Sleep    1s
+    Click Element    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Wait Until Location Contains    /formIncident    timeout=10s
+    Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
+    Execute JavaScript    window.scrollTo(0, 300)
+    Sleep    1s
+
+    Click Element    xpath=//div[contains(@class,'cursor-pointer')]//span[contains(text(),'เลือกประเภทปัญหา')]
+    Sleep    0.5s
+    Wait Until Element Is Visible    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'อุบัติเหตุ')]    timeout=5s
+    Click Element    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'อุบัติเหตุ')]
+    Sleep    0.5s
+
+    Input Text    xpath=//input[@maxlength='100']    รถชนบนทางด่วน
+    Input Text    xpath=//textarea    เฉี่ยวชนกับรถยนต์อีกคัน รอประกันมาเคลียร์
+    Execute JavaScript    window.scrollTo(0, 600)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
+
+    Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]
+    Sleep    2s
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
+
+Step 7c - Fill General Incident Form And Submit (Car Problem)
+    [Documentation]    กรอกข้อมูลในฟอร์มแจ้งเหตุทั่วไป (ประเภท: ปัญหารถยนต์) ให้ครบทุกช่อง แล้วกดส่ง
+    Go To    ${BASE_URL}/myRoute
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'เส้นทางของฉัน')]    timeout=5s
+    Execute JavaScript    window.scrollTo(0, 0)
+    Sleep    1s
+    Click Element    xpath=//button[contains(text(),'เส้นทางของฉัน')]
+    Sleep    2s
+    
+    Wait Until Element Is Visible    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]    timeout=5s
+    Scroll Element Into View    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Execute JavaScript    window.scrollBy(0, -200)
+    Sleep    1s
+    Click Element    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Wait Until Location Contains    /formIncident    timeout=10s
+    Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
+    Execute JavaScript    window.scrollTo(0, 300)
+    Sleep    1s
+
+    Click Element    xpath=//div[contains(@class,'cursor-pointer')]//span[contains(text(),'เลือกประเภทปัญหา')]
+    Sleep    0.5s
+    Wait Until Element Is Visible    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'ปัญหารถยนต์')]    timeout=5s
+    Click Element    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'ปัญหารถยนต์')]
+    Sleep    0.5s
+
+    Input Text    xpath=//input[@maxlength='100']    ยางแตก
+    Input Text    xpath=//textarea    ยางรั่วและแตกตรงมอเตอร์เวย์
+    Execute JavaScript    window.scrollTo(0, 600)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
+
+    Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]
+    Sleep    2s
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
+
+Step 7d - Fill General Incident Form And Submit (Others)
+    [Documentation]    กรอกข้อมูลในฟอร์มแจ้งเหตุทั่วไป (ประเภท: อื่นๆ) ให้ครบทุกช่อง แล้วกดส่ง
+    Go To    ${BASE_URL}/myRoute
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'เส้นทางของฉัน')]    timeout=5s
+    Execute JavaScript    window.scrollTo(0, 0)
+    Sleep    1s
+    Click Element    xpath=//button[contains(text(),'เส้นทางของฉัน')]
+    Sleep    2s
+    
+    Wait Until Element Is Visible    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]    timeout=5s
+    Scroll Element Into View    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Execute JavaScript    window.scrollBy(0, -200)
+    Sleep    1s
+    Click Element    xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]
+    Wait Until Location Contains    /formIncident    timeout=10s
+    Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
+    Execute JavaScript    window.scrollTo(0, 300)
+    Sleep    1s
+
+    Click Element    xpath=//div[contains(@class,'cursor-pointer')]//span[contains(text(),'เลือกประเภทปัญหา')]
+    Sleep    0.5s
+    Wait Until Element Is Visible    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'อื่นๆ')]    timeout=5s
+    Click Element    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'อื่นๆ')]
+    Sleep    0.5s
+
+    Input Text    xpath=//input[@maxlength='100']    พบสัตว์เลี้ยงบนถนน
+    Input Text    xpath=//textarea    มีสุนัขวิ่งตัดหน้าบนถนนหลวง
+    Execute JavaScript    window.scrollTo(0, 600)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
+
+    Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
+    Sleep    0.5s
+    Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]
+    Sleep    2s
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
+
 Step 8a - Submit General Incident Without Image (Happy Path No File)
     [Documentation]    กรอกฟอร์มแจ้งเหตุทั่วไปครบ แต่ไม่แนบไฟล์รูป
     # กลับไปเริ่มใหม่
