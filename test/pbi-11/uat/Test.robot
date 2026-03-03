@@ -158,7 +158,8 @@ Step 7c - Submit Without Location (Happy Path No Location)
     Go To    ${BASE_URL}/myRoute
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'คำขอจองเส้นทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
 
@@ -288,8 +289,8 @@ Step 8c - Submit Without Description (Negative)
     # ตรวจสอบ: ระบบแจ้งเตือน alert
     Alert Should Be Present    กรุณากรอกข้อมูลให้ครบถ้วน    action=ACCEPT
 
-Step 8d - Upload File Exceeds 10MB (Negative)
-    [Documentation]    แนบไฟล์ขนาดเกิน 10MB → ระบบแจ้งเตือนว่าไฟล์ต้องไม่เกิน 10MB
+Step 8d - Upload File Exceeds 50MB (Negative)
+    [Documentation]    แนบไฟล์ขนาดเกิน 50MB → ระบบแจ้งเตือนว่าไฟล์ต้องไม่เกิน 50MB
     Go To    ${BASE_URL}/myRoute
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'คำขอจองเส้นทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
@@ -300,12 +301,12 @@ Step 8d - Upload File Exceeds 10MB (Negative)
     Execute JavaScript    window.scrollTo(0, 600)
     Sleep    1s
 
-    # แนบไฟล์ขนาดใหญ่ (15MB)
-    Choose File    xpath=//input[@type='file']    ${CURDIR}${/}resources${/}large_video.mp4
-    Sleep    1s
+    # จำลองการแนบไฟล์ขนาด 51MB ด้วย JavaScript เพื่อป้องการ browser ค้างจากการอัปโหลดไฟล์จริง
+    Execute JavaScript    const dt = new DataTransfer(); dt.items.add(new File([new ArrayBuffer(51 * 1024 * 1024)], 'large.mp4', {type: 'video/mp4'})); const input = document.querySelector("input[type='file']"); input.files = dt.files; input.dispatchEvent(new Event('change', { bubbles: true }));
+    Sleep    2s
 
     # ตรวจสอบ: ระบบแจ้งเตือน alert ว่าไฟล์เกินขนาด
-    Alert Should Be Present    ไฟล์ต้องไม่เกิน 10MB    action=ACCEPT
+    Alert Should Be Present    ไฟล์ต้องไม่เกิน 50MB    action=ACCEPT
 
     # ตรวจสอบ: ไฟล์ไม่ถูกเพิ่มเข้า preview (ไม่มี preview แสดง)
     Page Should Not Contain Element    xpath=//button[contains(text(),'✕')]
@@ -346,8 +347,8 @@ Step 8e - Upload Invalid File Type (Negative)
     # ตรวจสอบ: ระบบจะแจ้ง error จาก backend (Only image files are allowed!)
     Alert Should Be Present    action=ACCEPT
 
-Step 8f - Upload PDF File (Negative)
-    [Documentation]    แนบไฟล์ .pdf ซึ่งไม่ใช่รูปภาพหรือวิดีโอ → เมื่อกดส่งระบบจะแจ้ง error
+Step 8f - Upload PDF File (Happy Path)
+    [Documentation]    แนบไฟล์ .pdf ซึ่งตอนนี้ backend รองรับแล้ว → ส่งสำเร็จ
     Go To    ${BASE_URL}/myRoute
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'คำขอจองเส้นทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
@@ -365,9 +366,9 @@ Step 8f - Upload PDF File (Negative)
     Click Element    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'อุบัติเหตุ')]
     Sleep    0.5s
     Input Text    xpath=//input[@maxlength='100']    ทดสอบไฟล์ PDF
-    Input Text    xpath=//textarea    ทดสอบแนบไฟล์ .pdf ซึ่งไม่ใช่รูปภาพ
+    Input Text    xpath=//textarea    ทดสอบแนบไฟล์ .pdf
 
-    # แนบไฟล์ .pdf
+    # แนบไฟล์ .pdf (ตอนนี้ backend รองรับ)
     Execute JavaScript    window.scrollTo(0, 600)
     Sleep    0.5s
     Choose File    xpath=//input[@type='file']    ${CURDIR}${/}resources${/}document.pdf
@@ -379,5 +380,5 @@ Step 8f - Upload PDF File (Negative)
     Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]
     Sleep    2s
 
-    # ตรวจสอบ: ระบบจะแจ้ง error จาก backend
-    Alert Should Be Present    action=ACCEPT
+    # ตรวจสอบ: ส่งสำเร็จ (PDF เป็นไฟล์ที่ backend รองรับแล้ว)
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
