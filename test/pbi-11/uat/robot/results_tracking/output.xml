@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-03-03T20:01:17.660566" rpa="false" schemaversion="5">
+<suite id="s1" name="TestTracking" source="C:\SoftwareEngineer\Pai-num-nae\test\pbi-11\uat\robot\TestTracking.robot">
+<kw name="Login And Go To Tracking" type="SETUP">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T20:01:17.958763" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x00000149AACACAD0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T20:01:17.958283" elapsed="0.000543"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T20:01:17.959812" level="INFO">${service} = &lt;selenium.webdriver.chrome.service.Service object at 0x00000149AACAC980&gt;</msg>
+<var>${service}</var>
+<arg>sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T20:01:17.959004" elapsed="0.000859"/>
+</kw>
+<kw name="Create Webdriver" owner="SeleniumLibrary">
+<msg time="2026-03-03T20:01:17.960154" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<arg>service=${service}</arg>
+<doc>Creates an instance of Selenium WebDriver.</doc>
+<status status="PASS" start="2026-03-03T20:01:17.959981" elapsed="1.507616"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T20:01:19.467942" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T20:01:19.467777" elapsed="0.045520"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-03T20:01:19.513467" elapsed="0.034578"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-03T20:01:22.682675" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491bee
+	0x4cf2d5
+	0x4fe8f6
+	0x4fa491
+	0x4f9ab2
+	0x46500e
+	0x4655ae
+	0x465a8d
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x464c69
+	0x4642b0
+	0xa4876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-03T20:01:22.683403" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>id=identifier</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-03T20:01:19.548209" elapsed="3.217084">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765489" elapsed="0.000036"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765603" elapsed="0.000020"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>${DRIVER_USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765700" elapsed="0.000018"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>id=password</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765783" elapsed="0.000017"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>id=password</arg>
+<arg>${DRIVER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765861" elapsed="0.000018"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.765951" elapsed="0.000021"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766037" elapsed="0.000017"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766114" elapsed="0.000017"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<arg>${BASE_URL}/myIncidents</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766190" elapsed="0.000017"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/myIncidents</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766268" elapsed="0.000019"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'ติดตามสถานะแจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766344" elapsed="0.000024"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T20:01:22.766427" elapsed="0.000018"/>
+</kw>
+<doc>เปิด Browser, Login, แล้วไปหน้าติดตามสถานะแจ้งเหตุการณ์</doc>
+<status status="FAIL" start="2026-03-03T20:01:17.957338" elapsed="4.809237">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<test id="s1-t1" name="TR-01 Verify Initial Load &amp; Tabs" line="42">
+<doc>ตรวจสอบการเข้าหน้าติดตามสถานะ, สลับ Tab และตรวจสอบสถิติ</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.766880" elapsed="0.000942">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t2" name="TR-02 Verify Status Filter" line="62">
+<doc>ตรวจสอบการกรองด้วย dropdown สถานะ</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.768044" elapsed="0.000434">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t3" name="TR-03 Verify Clear Filter" line="76">
+<doc>ตรวจสอบปุ่มล้างตัวกรอง</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.768767" elapsed="0.000430">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t4" name="TR-04 Verify Incident Details Modal" line="83">
+<doc>ตรวจสอบการคลิกเปิด Modal Detail ของบัตรแรก (ถ้ามี)</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.769363" elapsed="0.000666">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t5" name="TR-05 Verify Status Timeline Logs" line="99">
+<doc>ตรวจสอบ Timeline ประวัติสถานะภายใน Modal</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.770299" elapsed="0.000809">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t6" name="TR-06 Verify Empty State" line="114">
+<doc>(จำลอง) ทดสอบการสลับไปหน้าจอ/ตัวกรองที่ไม่มีข้อมูล</doc>
+<status status="FAIL" start="2026-03-03T20:01:22.771439" elapsed="0.000911">Parent suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-03T20:01:22.772783" elapsed="2.058015"/>
+</kw>
+<status status="FAIL" start="2026-03-03T20:01:17.662221" elapsed="7.168670">Suite setup failed:
+InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491db0
+	0x480d4e
+	0x49f895
+	0x5052ec
+	0x51b0d9
+	0x4fe7d6
+	0x4d0049
+	0x4d0e04
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x690648
+	0x690812
+	0x67a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="6" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="TestTracking" id="s1" pass="0" fail="6" skip="0">TestTracking</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-03T20:01:22.682675" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x687dd3
+	0x687e14
+	0x491bee
+	0x4cf2d5
+	0x4fe8f6
+	0x4fa491
+	0x4f9ab2
+	0x46500e
+	0x4655ae
+	0x465a8d
+	0x8e6924
+	0x8e1bf7
+	0x8ff5a0
+	0x6a0f58
+	0x6a891d
+	0x464c69
+	0x4642b0
+	0xa4876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+</errors>
+</robot>

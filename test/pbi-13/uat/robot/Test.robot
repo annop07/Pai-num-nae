@@ -110,7 +110,8 @@ Step 7b - Submit Without Image (Happy Path No File)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
 
@@ -199,7 +200,8 @@ Step 8a - Submit Without Category (Negative)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -226,7 +228,8 @@ Step 8b - Submit Without Title (Negative)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -258,7 +261,8 @@ Step 8c - Submit Without Description (Negative)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -290,7 +294,8 @@ Step 8d - Upload File Exceeds 50MB (Negative)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -312,7 +317,8 @@ Step 8e - Upload Invalid File Type (Negative)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -348,7 +354,8 @@ Step 8f - Upload PDF File (Happy Path)
     Go To    ${BASE_URL}/myTrip
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
-    Sleep    2s
+    Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
