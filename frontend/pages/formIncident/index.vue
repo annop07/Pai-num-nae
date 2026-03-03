@@ -251,9 +251,11 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRoute, navigateTo } from '#app'
+import { useAuth } from '~/composables/useAuth'
 
 const { $api } = useNuxtApp()
 const route = useRoute()
+const { user } = useAuth()
 const bookingId = route.query.bookingId || null
 const routeId = route.query.routeId || null
 // mode: 'person' = มาจาก Booking (แจ้งเกี่ยวกับ Passenger), 'general' = มาจาก Route (แจ้งสถานการณ์ทั่วไป)
@@ -528,7 +530,23 @@ const isSituationRelated = computed(() => {
 // - ไม่มี context: แสดงทั้งหมด
 const visibleCategories = computed(() => {
   if (incidentMode === 'person') {
-    return categories.filter(c => PERSON_RELATED_TYPES.has(categoryToType[c]))
+    let filtered = categories.filter(c => PERSON_RELATED_TYPES.has(categoryToType[c]))
+    const currentRole = user.value?.role
+    
+    // กรองประเภทที่ไม่สมเหตุสมผลสำหรับแต่ละ Role
+    if (currentRole === 'DRIVER') {
+      // คนขับรายงานบุคคล: ไม่ควรเห็น "คนขับไม่มา(ตัวเอง)" และ "ป้ายทะเบียนรถไม่ตรง"
+      filtered = filtered.filter(c => 
+        categoryToType[c] !== 'NO_SHOW_DRIVER' && 
+        categoryToType[c] !== 'LICENSE_PLATE_MISMATCH'
+      )
+    } else if (currentRole === 'PASSENGER') {
+      // ผู้โดยสารรายงานบุคคล: ไม่ควรเห็น "ผู้โดยสารไม่มา(ตัวเอง)"
+      filtered = filtered.filter(c => 
+        categoryToType[c] !== 'NO_SHOW_PASSENGER'
+      )
+    }
+    return filtered
   }
   if (incidentMode === 'general') {
     return categories.filter(c => SITUATION_RELATED_TYPES.has(categoryToType[c]))
