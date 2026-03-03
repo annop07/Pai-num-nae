@@ -163,7 +163,12 @@
                                 </div>
 
                                 <!-- ปุ่มขวาล่าง -->
-                                <div class="flex justify-end" :class="{ 'mt-4': selectedTripId !== route.id }">
+                                <div class="flex justify-end gap-2" :class="{ 'mt-4': selectedTripId !== route.id }">
+                                    <button
+                                        @click.stop="goToGeneralIncidentForm(route)"
+                                        class="px-4 py-2 text-sm text-yellow-600 transition duration-200 border border-yellow-300 rounded-md hover:bg-yellow-50">
+                                        แจ้งเหตุทั่วไป
+                                    </button>
                                     <NuxtLink :to="`/myRoute/${route.id}/edit`"
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
                                         @click.stop>
@@ -477,6 +482,11 @@ const selectedLabel = computed(() => {
 
 function goToIncidentForm(trip) {
     navigateTo(`/formIncident?bookingId=${trip.id}`)
+}
+
+// แจ้งเหตุทั่วไประดับ Route (Situation-related) — ไม่เกี่ยวกับ Passenger คนใดคนหนึ่ง
+function goToGeneralIncidentForm(route) {
+    navigateTo(`/formIncident?routeId=${route.id}`)
 }
 
 // --- Methods ---

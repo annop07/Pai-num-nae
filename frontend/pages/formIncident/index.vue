@@ -17,6 +17,28 @@
           </p>
         </div>
 
+        <!-- Mode Banner: แสดง context ให้ user รู้ว่ากำลังแจ้งประเภทไหน -->
+        <div v-if="incidentMode === 'person'"
+          class="flex items-start gap-3 px-4 py-3 mb-6 rounded-xl border border-red-200 bg-red-50">
+          <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <div>
+            <p class="text-sm font-semibold text-red-700">รายงานเกี่ยวกับบุคคล</p>
+            <p class="text-xs text-red-500 mt-0.5">แบบฟอร์มนี้ใช้สำหรับแจ้งปัญหาที่เกี่ยวข้องกับผู้โดยสารในการเดินทางนี้โดยตรง</p>
+          </div>
+        </div>
+        <div v-else-if="incidentMode === 'general'"
+          class="flex items-start gap-3 px-4 py-3 mb-6 rounded-xl border border-blue-200 bg-blue-50">
+          <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+          </svg>
+          <div>
+            <p class="text-sm font-semibold text-blue-700">รายงานสถานการณ์ทั่วไป</p>
+            <p class="text-xs text-blue-500 mt-0.5">แบบฟอร์มนี้ใช้สำหรับรายงานเหตุการณ์ที่ไม่เกี่ยวข้องกับผู้โดยสารคนใดโดยตรง — มีเพียงคุณและแอดมินที่เห็นรายงานนี้</p>
+          </div>
+        </div>
+
         <!-- ประเภทปัญหา -->
         <div class="mb-6 relative" ref="dropdownRef">
           <label class="block mb-2 font-medium text-gray-700">
@@ -35,7 +57,7 @@
 
           <div v-if="isDropdownOpen"
             class="absolute w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-2 z-20 overflow-hidden">
-            <div v-for="item in categories" :key="item" @click="selectCategory(item)"
+            <div v-for="item in visibleCategories" :key="item" @click="selectCategory(item)"
               class="px-4 py-3 hover:bg-blue-50 cursor-pointer transition">
               {{ item }}
             </div>
@@ -233,6 +255,9 @@ import { useRoute, navigateTo } from '#app'
 const { $api } = useNuxtApp()
 const route = useRoute()
 const bookingId = route.query.bookingId || null
+const routeId = route.query.routeId || null
+// mode: 'person' = มาจาก Booking (แจ้งเกี่ยวกับ Passenger), 'general' = มาจาก Route (แจ้งสถานการณ์ทั่วไป)
+const incidentMode = bookingId ? 'person' : (routeId ? 'general' : 'person')
 const isSubmitting = ref(false)
 
 const fileInput = ref(null)
@@ -466,6 +491,51 @@ const categoryToType = {
   'อื่นๆ':                 'OTHER',
 }
 
+// กลุ่ม type ที่เกี่ยวข้องกับบุคคล (ต้องตรงกับ PERSON_RELATED_TYPES ใน backend)
+const PERSON_RELATED_TYPES = new Set([
+  'SAFETY_CONCERN',
+  'INAPPROPRIATE_BEHAVIOR',
+  'HARASSMENT',
+  'FRAUD',
+  'NO_SHOW_DRIVER',
+  'NO_SHOW_PASSENGER',
+  'LICENSE_PLATE_MISMATCH',
+  'PAYMENT_DISPUTE',
+  'LOST_ITEM',
+])
+
+// กลุ่ม type ที่เป็นรายงานสถานการณ์ทั่วไป (ไม่เกี่ยวกับบุคคล)
+const SITUATION_RELATED_TYPES = new Set([
+  'ACCIDENT',
+  'VEHICLE_ISSUE',
+  'ROUTE_ISSUE',
+  'OTHER',
+])
+
+const isPersonRelated = computed(() => {
+  const type = categoryToType[selectedCategory.value]
+  return type ? PERSON_RELATED_TYPES.has(type) : false
+})
+
+const isSituationRelated = computed(() => {
+  const type = categoryToType[selectedCategory.value]
+  return type ? SITUATION_RELATED_TYPES.has(type) : false
+})
+
+// แสดงหมวดหมู่ตาม mode:
+// - mode 'person' (มาจาก Booking): แสดงเฉพาะ Person-related
+// - mode 'general' (มาจาก Route): แสดงเฉพาะ Situation-related
+// - ไม่มี context: แสดงทั้งหมด
+const visibleCategories = computed(() => {
+  if (incidentMode === 'person') {
+    return categories.filter(c => PERSON_RELATED_TYPES.has(categoryToType[c]))
+  }
+  if (incidentMode === 'general') {
+    return categories.filter(c => SITUATION_RELATED_TYPES.has(categoryToType[c]))
+  }
+  return categories
+})
+
 // Priority กำหนดอัตโนมัติตามประเภทปัญหา (3 ระดับ: LOW / NORMAL / HIGH)
 const categoryToPriority = {
   'ปัญหาความปลอดภัย':     'HIGH',
@@ -525,6 +595,7 @@ async function handleSubmit() {
     formData.append('description', description.value)
 
     if (bookingId) formData.append('bookingId', bookingId)
+    if (!bookingId && routeId) formData.append('routeId', routeId)
     if (location.value) formData.append('location', JSON.stringify(location.value))
 
     // Append evidence files
