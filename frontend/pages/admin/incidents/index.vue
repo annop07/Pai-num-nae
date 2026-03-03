@@ -310,12 +310,44 @@
                 <div v-if="selectedIncident.evidenceUrls?.length" class="mt-4">
                   <label class="block text-xs font-bold text-gray-800 mb-2">Media Evidence</label>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <a v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx" :href="url" target="_blank" rel="noopener noreferrer" class="aspect-square block rounded-xl overflow-hidden border border-gray-200 hover:border-blue-500 transition relative group">
-                      <img :src="url" :alt="`หลักฐาน ${idx + 1}`" class="object-cover w-full h-full group-hover:scale-105 transition duration-300" />
-                      <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition flex items-center justify-center">
-                        <i class="fa-solid fa-expand text-white opacity-0 group-hover:opacity-100 drop-shadow-md"></i>
+                    <template v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx">
+                      <!-- PDF: ใช้ไอคอน + ลิงก์ (ไม่ใช้ img เพื่อให้ Chrome แสดงถูกต้อง) -->
+                      <a v-if="isEvidencePdf(url)" :href="url" target="_blank" rel="noopener noreferrer"
+                        class="aspect-square flex flex-col items-center justify-center rounded-xl border border-red-200 bg-red-50 hover:border-red-400 transition p-3">
+                        <i class="fa-solid fa-file-pdf text-red-500 text-3xl mb-1"></i>
+                        <span class="text-xs font-medium text-red-700 text-center">หลักฐาน {{ idx + 1 }}</span>
+                        <span class="text-xs text-red-600 mt-0.5">PDF</span>
+                      </a>
+                      <!-- Video: พรีวิว + ปุ่มเปิด (เล่นในโมดัล) / ดาวน์โหลด -->
+                      <div v-else-if="isEvidenceVideo(url)"
+                        class="aspect-square rounded-xl overflow-hidden border border-gray-200 hover:border-blue-500 transition relative group shadow-sm">
+                        <video :src="url" class="object-cover w-full h-full group-hover:scale-105 transition duration-500" preload="metadata" muted playsinline></video>
+                        <!-- ไอคอนเล่นตรงกลาง -->
+                        <button type="button" @click.stop="openVideoModal(url)"
+                          class="absolute inset-0 w-full h-full flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition duration-300">
+                          <i class="fa-solid fa-circle-play text-white/90 group-hover:text-white text-4xl drop-shadow-lg transform group-hover:scale-110 transition duration-300"></i>
+                        </button>
+                        <!-- แถบเครื่องมือด้านล่าง -->
+                        <div class="absolute bottom-0 left-0 right-0 flex gap-2 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 translate-y-2 group-hover:translate-y-0">
+                          <button type="button" @click.stop="openVideoModal(url)"
+                            class="flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30 transition shadow-sm">
+                            <i class="fa-solid fa-play"></i>เปิด
+                          </button>
+                          <button type="button" @click.stop="downloadEvidenceFile(evidenceVideoDownloadUrl(url), getEvidenceFilename(url))"
+                            class="flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-500 text-white backdrop-blur-sm border border-blue-400/50 transition shadow-sm">
+                            <i class="fa-solid fa-download"></i>โหลด
+                          </button>
+                        </div>
                       </div>
-                    </a>
+                      <!-- Image -->
+                      <a v-else :href="url" target="_blank" rel="noopener noreferrer"
+                        class="aspect-square block rounded-xl overflow-hidden border border-gray-200 hover:border-blue-500 transition relative group">
+                        <img :src="url" :alt="`หลักฐาน ${idx + 1}`" class="object-cover w-full h-full group-hover:scale-105 transition duration-300" loading="lazy" />
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition flex items-center justify-center">
+                          <i class="fa-solid fa-expand text-white opacity-0 group-hover:opacity-100 drop-shadow-md"></i>
+                        </div>
+                      </a>
+                    </template>
                   </div>
                 </div>
 
@@ -427,6 +459,17 @@
           </div>
         </div>
       </transition>
+
+      <!-- โมดัลเล่นวิดีโอ (เปิด = เล่นในหน้า ไม่โหลดไฟล์) -->
+      <div v-if="videoModalUrl" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4" @click.self="videoModalUrl = null">
+        <div class="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl">
+          <button type="button" @click="videoModalUrl = null"
+            class="absolute top-2 right-2 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center">
+            <i class="fa-solid fa-xmark text-xl"></i>
+          </button>
+          <video :src="videoModalUrl" controls autoplay class="w-full max-h-[85vh]"></video>
+        </div>
+      </div>
     </main>
   </div>
 </template>
@@ -1211,6 +1254,12 @@ const reopenLoading = ref(false)
 // Success overlay
 const showSuccess = ref(false)
 
+// โมดัลเล่นวิดีโอ (กดเปิด = เล่นในหน้า ไม่เปิดลิงก์ที่อาจโหลดไฟล์)
+const videoModalUrl = ref(null)
+function openVideoModal(url) {
+  videoModalUrl.value = url
+}
+
 function triggerSuccess() {
   showSuccess.value = true
   setTimeout(() => { showSuccess.value = false }, 2000)
@@ -1242,6 +1291,45 @@ function formatDate(dateStr) {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+
+function isEvidencePdf(url) {
+  const lower = (url || '').toLowerCase()
+  return lower.includes('.pdf') || lower.includes('/raw/upload/')
+}
+function isEvidenceVideo(url) {
+  return /\.(mp4|mov|webm|ogg|avi)$/i.test((url || '').split('?')[0] || '')
+}
+function getEvidenceFilename(url) {
+  try {
+    const name = decodeURIComponent((url || '').split('?')[0]).split('/').pop() || 'evidence'
+    if (isEvidenceVideo(url) && !name.includes('.')) return name + '.mp4'
+    return name
+  } catch {
+    return 'evidence'
+  }
+}
+function evidenceVideoDownloadUrl(url) {
+  if (!url || !isEvidenceVideo(url)) return url
+  return url + (url.includes('?') ? '&' : '?') + 'fl_attachment'
+}
+async function downloadEvidenceFile(url, filename) {
+  try {
+    const res = await fetch(url, { mode: 'cors' })
+    if (!res.ok) throw new Error('HTTP ' + res.status)
+    const blob = await res.blob()
+    if (blob.size < 100 && blob.type?.includes('text/html')) throw new Error('Got HTML')
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename || 'video.mp4'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(blobUrl)
+  } catch {
+    window.open(url, '_blank', 'noopener')
+  }
 }
 
 async function fetchIncidents(page = 1) {

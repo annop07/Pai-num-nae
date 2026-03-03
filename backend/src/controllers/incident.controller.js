@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const axios = require("axios");
 const incidentService = require("../services/incident.service");
 const { uploadToCloudinary } = require("../utils/cloudinary");
 const ApiError = require("../utils/ApiError");
@@ -9,7 +10,7 @@ const createIncident = asyncHandler(async (req, res) => {
     // อัปโหลดไฟล์หลักฐานไปยัง Cloudinary 
     if (req.files && req.files.length > 0) {
         const uploadResults = await Promise.all(
-            req.files.map(file => uploadToCloudinary(file.buffer, 'painamnae/incidents'))
+            req.files.map(file => uploadToCloudinary(file.buffer, 'painamnae/incidents', file.mimetype, file.originalname))
         );
         req.body.evidenceUrls = uploadResults.map(r => r.url);
     }
@@ -86,6 +87,54 @@ const getIncidentLogs = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: logs });
 });
 
+// โปรกซีดาวน์โหลดหลักฐาน (PDF/ไฟล์) จาก Cloudinary ผ่าน backend เพื่อหลีกเลี่ยง CORS และการบล็อกของเบราว์เซอร์
+const proxyEvidence = asyncHandler(async (req, res) => {
+    const rawUrl = req.query.url;
+    if (!rawUrl || typeof rawUrl !== 'string') {
+        throw new ApiError(400, 'ต้องส่ง query url');
+    }
+    let targetUrl;
+    try {
+        targetUrl = decodeURIComponent(rawUrl.trim());
+    } catch {
+        throw new ApiError(400, 'รูปแบบ url ไม่ถูกต้อง');
+    }
+    if (!targetUrl.startsWith('https://res.cloudinary.com/')) {
+        throw new ApiError(400, 'อนุญาตเฉพาะ URL จาก Cloudinary');
+    }
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    if (cloudName && !targetUrl.includes(`res.cloudinary.com/${cloudName}/`)) {
+        throw new ApiError(400, 'อนุญาตเฉพาะ Cloudinary ของโปรเจกต์นี้');
+    }
+
+    let axiosRes;
+    try {
+        axiosRes = await axios.get(targetUrl, {
+            responseType: 'arraybuffer',
+            maxContentLength: 50 * 1024 * 1024,
+            timeout: 30000,
+        });
+    } catch (err) {
+        if (err.response?.status === 403) {
+            throw new ApiError(502, 'Cloudinary ไม่อนุญาตให้ส่งไฟล์นี้ (เปิด "Allow delivery of PDF and ZIP files" ใน Security)');
+        }
+        if (err.response?.status === 404) {
+            throw new ApiError(404, 'ไม่พบไฟล์');
+        }
+        throw new ApiError(502, 'ดึงไฟล์จาก Cloudinary ไม่สำเร็จ');
+    }
+
+    const buffer = Buffer.from(axiosRes.data);
+    const contentType = axiosRes.headers['content-type'] || 'application/pdf';
+    const nameFromUrl = targetUrl.split('/').pop()?.split('?')[0] || 'evidence.pdf';
+    const filename = decodeURIComponent(nameFromUrl) || 'evidence.pdf';
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', buffer.length);
+    res.send(buffer);
+});
+
 module.exports = {
     createIncident,
     getMyIncidents,
@@ -93,7 +142,8 @@ module.exports = {
     adminListIncidents,
     adminGetIncidentById,
     adminUpdateIncident,
-    adminReopenIncident,    
+    adminReopenIncident,
     adminDeleteIncident,
-    getIncidentLogs, 
+    getIncidentLogs,
+    proxyEvidence,
 };

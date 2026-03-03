@@ -138,18 +138,93 @@
             </div>
           </div>
 
-          <!-- Evidence Images -->
+          <!-- Evidence Files -->
           <div v-if="incident.evidenceUrls?.length" class="bg-white border border-gray-200 rounded-lg shadow-sm">
-            <div class="px-6 py-4 border-b border-gray-100">
-              <h3 class="font-medium text-gray-700">หลักฐาน ({{ incident.evidenceUrls.length }} รูป)</h3>
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 class="font-medium text-gray-700">หลักฐาน ({{ incident.evidenceUrls.length }} ไฟล์)</h3>
             </div>
             <div class="px-6 py-5">
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <a v-for="(url, idx) in incident.evidenceUrls" :key="idx" :href="url" target="_blank"
-                  class="block overflow-hidden rounded-lg border border-gray-200 hover:opacity-90 transition">
-                  <img :src="url" :alt="`หลักฐาน ${idx + 1}`" class="w-full h-28 object-cover" />
-                </a>
+                <template v-for="(url, idx) in incident.evidenceUrls" :key="idx">
+
+                  <!-- PDF -->
+                  <div v-if="isPdf(url)"
+                    class="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 h-28 p-2 gap-1">
+                    <i class="fa-solid fa-file-pdf text-red-500 text-3xl"></i>
+                    <span class="text-xs text-red-600 font-medium text-center truncate w-full px-1">
+                      {{ getFilename(url) }}
+                    </span>
+                    <div class="flex gap-1 mt-1">
+                      <a :href="fixPdfUrl(url)" target="_blank"
+                        class="text-xs px-2 py-0.5 rounded bg-red-500 text-white hover:bg-red-600 transition">
+                        <i class="fa-solid fa-eye mr-1"></i>เปิด
+                      </a>
+                      <button @click="downloadFile(pdfDownloadUrl(url), getFilename(url))"
+                        class="text-xs px-2 py-0.5 rounded bg-white border border-red-400 text-red-600 hover:bg-red-50 transition">
+                        <i class="fa-solid fa-download mr-1"></i>ดาวน์โหลด
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Video: เปิด = เล่นในโมดัล (ไม่โหลดไฟล์) -->
+                  <div v-else-if="isVideo(url)"
+                    class="relative rounded-xl border border-gray-200 overflow-hidden h-32 group shadow-sm">
+                    <video :src="url" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" preload="metadata"></video>
+                    <!-- ไอคอนเล่นตรงกลาง -->
+                    <button type="button" @click.stop="openVideoModal(url)"
+                      class="absolute inset-0 w-full h-full flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition duration-300">
+                      <i class="fa-solid fa-circle-play text-white/90 group-hover:text-white text-4xl drop-shadow-lg transform group-hover:scale-110 transition duration-300"></i>
+                    </button>
+                    <!-- แถบเครื่องมือด้านล่าง -->
+                    <div class="absolute bottom-0 left-0 right-0 flex gap-2 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 translate-y-2 group-hover:translate-y-0">
+                      <button type="button" @click.stop="openVideoModal(url)"
+                        class="flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30 transition shadow-sm">
+                        <i class="fa-solid fa-play"></i>เปิด
+                      </button>
+                      <button type="button" @click.stop="downloadFile(videoDownloadUrl(url), getFilename(url))"
+                        class="flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-500 text-white backdrop-blur-sm border border-blue-400/50 transition shadow-sm">
+                        <i class="fa-solid fa-download"></i>โหลด
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Image -->
+                  <button v-else
+                    class="block overflow-hidden rounded-lg border border-gray-200 hover:opacity-90 transition h-28 w-full"
+                    @click="openLightbox(url)">
+                    <img :src="url" :alt="`หลักฐาน ${idx + 1}`" class="w-full h-full object-cover" />
+                  </button>
+
+                </template>
               </div>
+            </div>
+          </div>
+
+          <!-- Lightbox -->
+          <div v-if="lightboxUrl"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+            @click.self="closeLightbox">
+            <div class="relative max-w-4xl w-full mx-4">
+              <button @click="closeLightbox"
+                class="absolute -top-10 right-0 text-white text-2xl hover:text-gray-300">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+              <img :src="lightboxUrl" class="w-full max-h-[80vh] object-contain rounded-lg" />
+              <a :href="lightboxUrl" target="_blank"
+                class="absolute bottom-3 right-3 text-xs bg-white/90 px-3 py-1.5 rounded-full text-gray-700 hover:bg-white transition">
+                <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>เปิดเต็มหน้า
+              </a>
+            </div>
+          </div>
+
+          <!-- โมดัลเล่นวิดีโอ (กดเปิด = เล่นในหน้า ไม่โหลดไฟล์) -->
+          <div v-if="videoModalUrl" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4" @click.self="videoModalUrl = null">
+            <div class="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl">
+              <button type="button" @click="videoModalUrl = null"
+                class="absolute top-2 right-2 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-xl"></i>
+              </button>
+              <video :src="videoModalUrl" controls autoplay class="w-full max-h-[85vh]"></video>
             </div>
           </div>
 
@@ -299,7 +374,65 @@ const saveSuccess = ref(false)
 
 const form = ref({ status: '', priority: '', resolution: '' })
 
-/* ---------- Helpers ---------- */
+const lightboxUrl = ref('')
+function openLightbox(url) { lightboxUrl.value = url }
+function closeLightbox() { lightboxUrl.value = '' }
+
+const videoModalUrl = ref(null)
+function openVideoModal(url) { videoModalUrl.value = url }
+
+function isPdf(url) {
+  const lower = url?.toLowerCase() || ''
+  return lower.includes('.pdf') || lower.includes('/raw/upload/')
+}
+function isVideo(url) {
+  return /\.(mp4|mov|webm|ogg|avi)$/i.test(url?.split('?')[0] || '')
+}
+function getFilename(url) {
+  try {
+    const decoded = decodeURIComponent(url.split('?')[0])
+    const name = decoded.split('/').pop() || 'ไฟล์'
+    if (isPdf(url) && !name.includes('.')) return name + '.pdf'
+    if (isVideo(url) && !name.includes('.')) return name + '.mp4'
+    return name
+  } catch {
+    return 'ไฟล์'
+  }
+}
+// URL สำหรับดาวน์โหลดวิดีโอ (บังคับ Content-Disposition: attachment)
+function videoDownloadUrl(url) {
+  if (!url || !isVideo(url)) return url
+  return url + (url.includes('?') ? '&' : '?') + 'fl_attachment'
+}
+async function downloadFile(url, filename) {
+  try {
+    const res = await fetch(url, { mode: 'cors' })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const blob = await res.blob()
+    if (blob.size < 100 && blob.type?.includes('text/html')) {
+      throw new Error('Got HTML instead of file')
+    }
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename || 'file.pdf'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(blobUrl)
+  } catch {
+    window.open(url, '_blank', 'noopener')
+  }
+}
+function fixPdfUrl(url) {
+  if (!url || !isPdf(url)) return url
+  return url
+}
+function pdfDownloadUrl(url) {
+  if (!url) return url
+  const u = fixPdfUrl(url)
+  return u + (u.includes('?') ? '&' : '?') + 'fl_attachment'
+}
 function formatDate(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleString('th-TH', {

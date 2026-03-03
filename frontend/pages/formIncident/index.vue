@@ -122,7 +122,7 @@
         <!-- แนบไฟล์ -->
         <div>
           <label class="block mb-2 font-semibold text-gray-700 mt-6">
-            แนบหลักฐาน (รูปภาพหรือวิดีโอ)
+            แนบหลักฐาน (รูปภาพ, วิดีโอ หรือ PDF)
           </label>
 
           <div
@@ -130,17 +130,21 @@
             @click="triggerFileInput">
             <div class="text-4xl mb-3"></div>
             <p class="text-gray-600">คลิกเพื่ออัปโหลด หรือ ลากไฟล์มาวาง</p>
-            <p class="text-sm text-gray-400 mt-1">JPG, PNG, MP4 (สูงสุด 10MB)</p>
+            <p class="text-sm text-gray-400 mt-1">JPG, PNG, MP4, MOV, PDF (สูงสุด 50MB)</p>
           </div>
 
-          <input ref="fileInput" type="file" class="hidden" multiple accept="image/*,video/mp4"
+          <input ref="fileInput" type="file" class="hidden" multiple accept="image/*,video/mp4,video/quicktime,application/pdf"
             @change="handleFileUpload" />
 
           <!-- Preview -->
           <div v-if="files.length" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
             <div v-for="(file, index) in files" :key="index" class="relative border rounded-lg overflow-hidden">
               <img v-if="file.type.startsWith('image/')" :src="file.preview" class="w-full h-32 object-cover" />
-              <video v-else :src="file.preview" class="w-full h-32 object-cover"></video>
+              <video v-else-if="file.type.startsWith('video/')" :src="file.preview" class="w-full h-32 object-cover"></video>
+              <div v-else class="w-full h-32 flex flex-col items-center justify-center bg-red-50">
+                <span class="text-3xl">📄</span>
+                <span class="text-xs text-red-600 font-medium mt-1 px-2 truncate w-full text-center">{{ file.file.name }}</span>
+              </div>
 
               <button @click="removeFile(index)"
                 class="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded">
@@ -407,8 +411,8 @@ function handleFileUpload(event) {
   const selectedFiles = Array.from(event.target.files)
 
   selectedFiles.forEach((file) => {
-    if (file.size > 10 * 1024 * 1024) {
-      alert('ไฟล์ต้องไม่เกิน 10MB')
+    if (file.size > 50 * 1024 * 1024) {
+      alert('ไฟล์ต้องไม่เกิน 50MB')
       return
     }
 
