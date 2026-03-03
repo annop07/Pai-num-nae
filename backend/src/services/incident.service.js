@@ -20,6 +20,28 @@ const INCIDENT_INCLUDE = {
     },
 };
 
+// Incident types that are directed AT a specific person (auto-assign reportedUserId)
+const PERSON_RELATED_TYPES = [
+    'INAPPROPRIATE_BEHAVIOR',
+    'HARASSMENT',
+    'FRAUD',
+    'NO_SHOW_DRIVER',
+    'NO_SHOW_PASSENGER',
+    'LICENSE_PLATE_MISMATCH',
+    'SAFETY_CONCERN',
+    'PAYMENT_DISPUTE',
+    'LOST_ITEM',
+];
+
+// Incident types that are general situation reports (do NOT auto-assign reportedUserId)
+// ACCIDENT, VEHICLE_ISSUE, ROUTE_ISSUE, OTHER
+const SITUATION_RELATED_TYPES = [
+    'ACCIDENT',
+    'VEHICLE_ISSUE',
+    'ROUTE_ISSUE',
+    'OTHER',
+];
+
 //Allowed status transitions
 const ALLOWED_TRANSITIONS = {
     PENDING:       ['INVESTIGATING', 'DISMISSED'],
@@ -49,14 +71,20 @@ async function createIncident(data, reporterId) {
             select: { id: true, routeId: true, passengerId: true, route: { select: { driverId: true } } },
         });
         if (!booking) throw new ApiError(404, 'ไม่พบการจอง');
-        // ดึง routeId จาก booking อัตโนมัติเมื่อไม่ได้ส่งมา
+        // ดึง routeId จาก booking อัตโนมัติเมื่อไม่ได้ส่งมา (ทุก type)
         if (!routeIdToUse) routeIdToUse = booking.routeId;
-        // ดึง reportedUserId จากฝั่งตรงข้ามของ booking (ผู้รายงานเป็นคนขับ → target เป็นผู้โดยสาร, และในทางกลับกัน)
-        if (!reportedUserIdToUse && reporterId === booking.route?.driverId) {
-            reportedUserIdToUse = booking.passengerId;
-        } else if (!reportedUserIdToUse && reporterId === booking.passengerId) {
-            reportedUserIdToUse = booking.route?.driverId || null;
+        // auto-assign reportedUserId เฉพาะ type ที่เกี่ยวข้องกับบุคคล (PERSON_RELATED_TYPES)
+        // type ที่เป็นการรายงานสถานการณ์ทั่วไป (SITUATION_RELATED_TYPES) จะไม่ assign target
+        if (!reportedUserIdToUse && PERSON_RELATED_TYPES.includes(data.type)) {
+            if (reporterId === booking.route?.driverId) {
+                // ผู้แจ้งเป็นคนขับ → target คือผู้โดยสารของ booking นี้
+                reportedUserIdToUse = booking.passengerId;
+            } else if (reporterId === booking.passengerId) {
+                // ผู้แจ้งเป็นผู้โดยสาร → target คือคนขับ
+                reportedUserIdToUse = booking.route?.driverId || null;
+            }
         }
+        // SITUATION_RELATED_TYPES: ไม่ auto-assign reportedUserId (null) แม้จะมี bookingId
     }
 
     if (routeIdToUse) {
