@@ -17,6 +17,7 @@ Login And Go To Form
     Create Webdriver    Chrome    options=${options}    service=${service}
     Go To    ${BASE_URL}/login
     Maximize Browser Window
+    Set Selenium Speed    0.5s
     Wait Until Element Is Visible    id=identifier    timeout=10s
     Sleep    1s
     Click Element    id=identifier
@@ -51,7 +52,7 @@ Verify Category Priority
     Wait Until Element Is Visible    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]    timeout=5s
     ${item}=    Get WebElement    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]
     Execute JavaScript    JAVASCRIPT    arguments[0].scrollIntoView({block:'center'});    ARGUMENTS    ${item}
-    Sleep    0.3s
+    Sleep    0.5s
     Execute JavaScript    JAVASCRIPT    arguments[0].click();    ARGUMENTS    ${item}
     Sleep    0.5s
     # ตรวจสอบว่า priority ถูกต้อง
