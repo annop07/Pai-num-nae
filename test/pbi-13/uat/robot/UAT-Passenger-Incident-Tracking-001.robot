@@ -17,6 +17,7 @@ Step 1 - Login As Passenger
     Create Webdriver    Chrome    options=${options}    service=${service}
     Go To    ${BASE_URL}/login
     Maximize Browser Window
+    Set Selenium Speed    0.5s
     Wait Until Element Is Visible    id=identifier    timeout=10s
     Input Text    id=identifier    ${PASSENGER_USERNAME}
     Input Text    id=password    ${PASSENGER_PASSWORD}

@@ -17,6 +17,7 @@ Login And Go To Form
     Create Webdriver    Chrome    options=${options}    service=${service}
     Go To    ${BASE_URL}/login
     Maximize Browser Window
+    Set Selenium Speed    0.5s
     Wait Until Element Is Visible    id=identifier    timeout=10s
     Sleep    1s
     Click Element    id=identifier
