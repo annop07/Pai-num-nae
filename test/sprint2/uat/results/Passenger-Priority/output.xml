@@ -1,0 +1,1554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-03-04T16:31:08.014943" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-Passenger-Incident-Priority-001" source="C:\SoftwareEngineer\Pai-num-nae\test\sprint2\uat\UAT-Passenger-Incident-Priority-001.robot">
+<kw name="Login And Go To Form" type="SETUP">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T16:31:08.247443" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x000001D0D3818AD0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T16:31:08.247039" elapsed="0.000441"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T16:31:08.248281" level="INFO">${service} = &lt;selenium.webdriver.chrome.service.Service object at 0x000001D0D3818980&gt;</msg>
+<var>${service}</var>
+<arg>sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T16:31:08.247597" elapsed="0.000714"/>
+</kw>
+<kw name="Create Webdriver" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:08.248569" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<arg>service=${service}</arg>
+<doc>Creates an instance of Selenium WebDriver.</doc>
+<status status="PASS" start="2026-03-04T16:31:08.248416" elapsed="1.231506"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:09.480268" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T16:31:09.480103" elapsed="1.655506"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T16:31:11.135916" elapsed="0.055077"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:11.191174" elapsed="0.025746"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:12.218087" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:11.217234" elapsed="1.000966"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:12.218551" level="INFO">Clicking element 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.218352" elapsed="0.050150"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:12.269089" level="INFO">Typing text 'TestPassenger_UAT' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.268724" elapsed="0.071694"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:12.340910" level="INFO">Clicking element 'id=password'.</msg>
+<arg>id=password</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.340645" elapsed="0.043398"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:12.384571" level="INFO">Typing text '12345678Test' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSENGER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.384277" elapsed="0.036926"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:12.922504" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.421392" elapsed="0.501229"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:12.922950" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.922773" elapsed="0.052487"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="PASS" start="2026-03-04T16:31:12.975434" elapsed="0.223741"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:13.199701" level="INFO">Clicking element 'xpath=//a[contains(text(),'การเดินทางของฉัน')]'.</msg>
+<arg>xpath=//a[contains(text(),'การเดินทางของฉัน')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:13.199386" elapsed="0.122243"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/myTrip</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-04T16:31:13.321832" elapsed="0.005624"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h2[contains(text(),'การเดินทางของฉัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:13.327632" elapsed="0.014232"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:13.342236" level="INFO">Clicking element 'xpath=//button[contains(text(),'ยืนยันแล้ว')]'.</msg>
+<arg>xpath=//button[contains(text(),'ยืนยันแล้ว')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:13.342041" elapsed="0.041641"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:15.384728" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:13.383845" elapsed="2.000997"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:15.385174" level="INFO">Clicking element 'xpath=//button[contains(text(),'แจ้งเหตุ')]'.</msg>
+<arg>xpath=//button[contains(text(),'แจ้งเหตุ')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:15.384992" elapsed="0.049199"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/formIncident</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-04T16:31:15.434435" elapsed="0.209521"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:15.644118" elapsed="0.013951"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:15.658593" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:15.658246" elapsed="0.003981"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:16.663737" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:15.662382" elapsed="1.001538"/>
+</kw>
+<doc>เปิด Browser, Login ด้วย Passenger, แล้วไปหน้า formIncident</doc>
+<status status="PASS" start="2026-03-04T16:31:08.246567" elapsed="8.417536"/>
+</kw>
+<test id="s1-t1" name="CP-01 ปัญหาความปลอดภัย -&gt; เร่งด่วน" line="79">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:16.674732" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.80")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:16.665649" elapsed="0.009127"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:16.675280" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.80")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:16.674930" elapsed="0.005327"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:16.981392" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:16.680440" elapsed="0.301103"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:16.982296" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.80")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:16.981770" elapsed="0.008996"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:17.491828" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:16.990960" elapsed="0.500998"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.492120" elapsed="0.018115"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:17.516280" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.82")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.510487" elapsed="0.005878"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:17.517141" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.82")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.516619" elapsed="0.005663"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:17.823060" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.522446" elapsed="0.300789"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:17.823893" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.3D247ECADECC383685167B4732A017B2.e.82")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.823499" elapsed="0.008599"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:18.332986" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:17.832270" elapsed="0.500830"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:18.333248" elapsed="0.015379"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:18.349001" level="INFO">Typing text 'ทดสอบหมวดหมู่ ปัญหาความปลอดภัย' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:18.348789" elapsed="0.079448"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:18.428712" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ปัญหาความปลอดภัย แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:18.428419" elapsed="0.089891"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:18.518884" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:18.518519" elapsed="0.004298"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:19.023737" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:18.522971" elapsed="0.500889"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:19.024196" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.024017" elapsed="0.046371"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.070587" elapsed="0.235007"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.305758" elapsed="0.055686"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.361738" elapsed="0.573156"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:19.935688" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.935177" elapsed="0.019165"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:20.955700" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:19.954634" elapsed="1.001184"/>
+</kw>
+<arg>ปัญหาความปลอดภัย</arg>
+<arg>เร่งด่วน</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:16.665400" elapsed="4.290517"/>
+</kw>
+<doc>ประเภท: ปัญหาความปลอดภัย → Priority: HIGH (เร่งด่วน)</doc>
+<status status="PASS" start="2026-03-04T16:31:16.664261" elapsed="4.291783"/>
+</test>
+<test id="s1-t2" name="CP-02 พฤติกรรมไม่เหมาะสม -&gt; ไม่เร่งด่วน" line="83">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:20.964419" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.108")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:20.957584" elapsed="0.006875"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:20.964928" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.108")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:20.964596" elapsed="0.007324"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:21.273043" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:20.972080" elapsed="0.301093"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:21.273735" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.108")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.273327" elapsed="0.005913"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:21.780043" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.279414" elapsed="0.500747"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.780326" elapsed="0.014320"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:21.800506" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.110")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.794829" elapsed="0.005730"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:21.801065" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.110")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.800711" elapsed="0.004397"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:22.106140" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:21.805281" elapsed="0.300980"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:22.106919" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5F76DA323D329CF21DD3AF461316F031.e.110")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.106423" elapsed="0.007767"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:22.615246" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.114446" elapsed="0.500955"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.615585" elapsed="0.015755"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:22.631874" level="INFO">Typing text 'ทดสอบหมวดหมู่ พฤติกรรมไม่เหมาะสม' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.631535" elapsed="0.089436"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:22.721610" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ พฤติกรรมไม่เหมาะสม แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.721217" elapsed="0.121141"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:22.843015" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.842571" elapsed="0.003678"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:23.346874" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:22.846437" elapsed="0.500549"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:23.347318" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:23.347139" elapsed="0.043372"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:23.390741" elapsed="0.222877"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:23.613801" elapsed="0.051936"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:23.666007" elapsed="0.459512"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:24.126007" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:24.125694" elapsed="0.005042"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:25.131596" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:24.130896" elapsed="1.000818"/>
+</kw>
+<arg>พฤติกรรมไม่เหมาะสม</arg>
+<arg>ไม่เร่งด่วน</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:20.957360" elapsed="4.174455"/>
+</kw>
+<doc>ประเภท: พฤติกรรมไม่เหมาะสม → Priority: LOW (ไม่เร่งด่วน)</doc>
+<status status="PASS" start="2026-03-04T16:31:20.956315" elapsed="4.175634"/>
+</test>
+<test id="s1-t3" name="CP-03 การล่วงละเมิด -&gt; เร่งด่วน" line="87">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:25.139433" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.134")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.133334" elapsed="0.006144"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:25.139979" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.134")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.139623" elapsed="0.004190"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:25.444451" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.143990" elapsed="0.300571"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:25.445084" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.134")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.444716" elapsed="0.007067"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:25.952471" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.451975" elapsed="0.500625"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.952769" elapsed="0.016487"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:25.975511" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.136")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.969425" elapsed="0.006140"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:25.976245" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.136")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.975751" elapsed="0.006343"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:26.283652" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:25.982606" elapsed="0.301154"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:26.284248" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.9EF75967147B91780A07434023E79D86.e.136")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.283906" elapsed="0.008047"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:26.793128" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.292165" elapsed="0.501096"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.793437" elapsed="0.013012"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:26.806954" level="INFO">Typing text 'ทดสอบหมวดหมู่ การล่วงละเมิด' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.806701" elapsed="0.066887"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:26.874734" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ การล่วงละเมิด แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.874282" elapsed="0.087134"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:26.961949" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.961624" elapsed="0.003474"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:27.465973" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:26.965241" elapsed="0.500844"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:27.466402" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:27.466233" elapsed="0.038810"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:27.505222" elapsed="0.229014"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:27.734554" elapsed="0.051373"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:27.786128" elapsed="0.448772"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:28.235609" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:28.235145" elapsed="0.004503"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:29.240581" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:28.239886" elapsed="1.000808"/>
+</kw>
+<arg>การล่วงละเมิด</arg>
+<arg>เร่งด่วน</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:25.133099" elapsed="4.107689"/>
+</kw>
+<doc>ประเภท: การล่วงละเมิด → Priority: HIGH (เร่งด่วน)</doc>
+<status status="PASS" start="2026-03-04T16:31:25.132206" elapsed="4.108691"/>
+</test>
+<test id="s1-t4" name="CP-06 การฉ้อโกง -&gt; เร่งด่วน" line="91">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:29.249068" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.160")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:29.242053" elapsed="0.007057"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:29.249589" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.160")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:29.249256" elapsed="0.005820"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:29.555857" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:29.255247" elapsed="0.300724"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:29.556475" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.160")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:29.556119" elapsed="0.006998"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:30.064216" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:29.563347" elapsed="0.500987"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.064485" elapsed="0.013447"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:30.083544" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.162")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.078087" elapsed="0.005496"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:30.084040" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.162")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.083717" elapsed="0.004403"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:30.388768" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.088279" elapsed="0.300608"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:30.389442" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FEA692CEE086645BC6BDD6586B05B34F.e.162")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.389050" elapsed="0.007549"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:30.897614" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.396826" elapsed="0.500929"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.897922" elapsed="0.013171"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:30.911490" level="INFO">Typing text 'ทดสอบหมวดหมู่ การฉ้อโกง' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.911262" elapsed="0.065163"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:30.976979" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ การฉ้อโกง แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:30.976663" elapsed="0.084766"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:31.061912" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.061600" elapsed="0.003540"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:31.566159" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.065357" elapsed="0.500909"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:31.566589" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.566413" elapsed="0.037550"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.604199" elapsed="0.226221"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.830614" elapsed="0.047164"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:31.877958" elapsed="0.441302"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:32.320135" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:32.319675" elapsed="0.003586"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:33.324088" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:32.323409" elapsed="1.000789"/>
+</kw>
+<arg>การฉ้อโกง</arg>
+<arg>เร่งด่วน</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:29.241843" elapsed="4.082445"/>
+</kw>
+<doc>ประเภท: การฉ้อโกง → Priority: HIGH (เร่งด่วน)</doc>
+<status status="PASS" start="2026-03-04T16:31:29.241098" elapsed="4.083297"/>
+</test>
+<test id="s1-t5" name="CP-08 ข้อพิพาทการชำระเงิน -&gt; ปกติ" line="95">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:33.332218" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.189")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:33.325674" elapsed="0.006687"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:33.332906" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.189")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:33.332498" elapsed="0.005163"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:33.638333" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:33.337813" elapsed="0.300630"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:33.638947" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.189")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:33.638592" elapsed="0.006956"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:34.146698" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:33.645780" elapsed="0.501029"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.146960" elapsed="0.015108"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:34.170832" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.191")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.162226" elapsed="0.008650"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:34.171361" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.191")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.171023" elapsed="0.005717"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:34.477887" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.177014" elapsed="0.300985"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:34.478503" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.FE2AEB8D1D069933A0A612BEDD90F672.e.191")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.478149" elapsed="0.008658"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:34.987622" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.486984" elapsed="0.500750"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:34.987882" elapsed="0.016205"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:35.004451" level="INFO">Typing text 'ทดสอบหมวดหมู่ ข้อพิพาทการชำระเงิน' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.004240" elapsed="0.067061"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:35.071759" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ข้อพิพาทการชำระเงิน แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.071465" elapsed="0.102890"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:35.174830" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.174524" elapsed="0.003450"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:35.679580" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.178252" elapsed="0.501437"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:35.680015" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.679837" elapsed="0.036823"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.716862" elapsed="0.227545"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.944576" elapsed="0.050828"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:35.996181" elapsed="0.518360"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:36.515719" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:36.515062" elapsed="0.004913"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:37.520688" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:36.520134" elapsed="1.000677"/>
+</kw>
+<arg>ข้อพิพาทการชำระเงิน</arg>
+<arg>ปกติ</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:33.325468" elapsed="4.195431"/>
+</kw>
+<doc>ประเภท: ข้อพิพาทการชำระเงิน → Priority: NORMAL (ปกติ)</doc>
+<status status="PASS" start="2026-03-04T16:31:33.324602" elapsed="4.196406"/>
+</test>
+<test id="s1-t6" name="CP-09 ลืมของ -&gt; ปกติ" line="99">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:37.529357" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.217")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:37.522060" elapsed="0.007335"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:37.529865" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.217")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:37.529537" elapsed="0.004782"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:37.835206" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:37.534516" elapsed="0.300798"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:37.835806" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.217")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:37.835460" elapsed="0.007009"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:38.343081" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:37.842649" elapsed="0.500543"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.343341" elapsed="0.013742"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:38.362180" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.219")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.357249" elapsed="0.004968"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:38.362663" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.219")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.362347" elapsed="0.003498"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:38.666305" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.365994" elapsed="0.300457"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:38.667147" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.F764D63C8F213AEA583396C97D21FCED.e.219")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.666646" elapsed="0.007674"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:39.175503" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:38.674497" elapsed="0.501174"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.175891" elapsed="0.014508"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:39.190901" level="INFO">Typing text 'ทดสอบหมวดหมู่ ลืมของ' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.190616" elapsed="0.079491"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:39.270760" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ลืมของ แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.270393" elapsed="0.088194"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:39.359168" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.358836" elapsed="0.004984"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:39.864634" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.363985" elapsed="0.500764"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:39.865087" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.864895" elapsed="0.045718"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:39.910820" elapsed="0.240855"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:40.152569" elapsed="0.056727"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:40.210270" elapsed="0.545988"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:40.756791" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:40.756432" elapsed="0.004998"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:41.762025" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:40.761627" elapsed="1.000508"/>
+</kw>
+<arg>ลืมของ</arg>
+<arg>ปกติ</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:37.521859" elapsed="4.240363"/>
+</kw>
+<doc>ประเภท: ลืมของ → Priority: NORMAL (ปกติ)</doc>
+<status status="PASS" start="2026-03-04T16:31:37.521215" elapsed="4.241118"/>
+</test>
+<test id="s1-t7" name="CP-10 คนขับไม่มาตามจุดนัด -&gt; ปกติ" line="103">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:41.771954" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.247")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:41.764056" elapsed="0.007964"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:41.772591" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.247")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:41.772221" elapsed="0.005046"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:42.078186" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:41.777516" elapsed="0.300777"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:42.078790" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.247")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.078444" elapsed="0.008969"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:42.588678" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.087670" elapsed="0.501152"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.589017" elapsed="0.015823"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:42.611711" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.249")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.604996" elapsed="0.006763"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:42.612343" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.249")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.611903" elapsed="0.005975"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:42.919054" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.618135" elapsed="0.301473"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:42.920258" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.5246770D738573D0596B9F86DCAE9061.e.249")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.919835" elapsed="0.006913"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:43.428023" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:42.927127" elapsed="0.501006"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:43.428277" elapsed="0.013200"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:43.441857" level="INFO">Typing text 'ทดสอบหมวดหมู่ คนขับไม่มาตามจุดนัด' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:43.441639" elapsed="0.067134"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:43.509401" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ คนขับไม่มาตามจุดนัด แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:43.509064" elapsed="0.116264"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:43.626304" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:43.625644" elapsed="0.004823"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:44.131589" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:43.630805" elapsed="0.500916"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:44.132097" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.131915" elapsed="0.037290"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.169404" elapsed="0.229277"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.398843" elapsed="0.055928"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.455000" elapsed="0.490107"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:44.945596" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.945282" elapsed="0.007270"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:45.953199" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:44.952712" elapsed="1.000650"/>
+</kw>
+<arg>คนขับไม่มาตามจุดนัด</arg>
+<arg>ปกติ</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:41.763792" elapsed="4.189670"/>
+</kw>
+<doc>ประเภท: คนขับไม่มาตามจุดนัด → Priority: NORMAL (ปกติ)</doc>
+<status status="PASS" start="2026-03-04T16:31:41.762548" elapsed="4.191031"/>
+</test>
+<test id="s1-t8" name="CP-12 ป้ายทะเบียนรถไม่ตรง -&gt; ปกติ" line="107">
+<kw name="Verify Category Priority">
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:45.974989" level="INFO">${trigger} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.273")&gt;</msg>
+<var>${trigger}</var>
+<arg>xpath=//label[contains(text(),'ประเภทปัญหา')]/following-sibling::div[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:45.955485" elapsed="0.019549"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:45.975581" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.273")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:45.975210" elapsed="0.005215"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:46.281577" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:45.980714" elapsed="0.300997"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:46.282286" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.273")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${trigger}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.281902" elapsed="0.006425"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:46.789050" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.288501" elapsed="0.500753"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.789478" elapsed="0.015081"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:46.810184" level="INFO">${item} = &lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.275")&gt;</msg>
+<var>${item}</var>
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'${category}')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.804765" elapsed="0.005514"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:46.810876" level="INFO">Executing JavaScript:
+arguments[0].scrollIntoView({block:'center'});
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.275")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].scrollIntoView({block:'center'});</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.810415" elapsed="0.004750"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:47.115878" level="INFO">Slept 300 milliseconds.</msg>
+<arg>0.3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:46.815329" elapsed="0.300739"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:47.117055" level="INFO">Executing JavaScript:
+arguments[0].click();
+By using argument:
+'&lt;selenium.webdriver.remote.webelement.WebElement (session="b728b2fec8c1094b662fa3ff84cf8134", element="f.678EC208B4624FE2319732DF7960ECD4.d.AC68984F095FB842E22A5644C27D3F01.e.275")&gt;'</msg>
+<arg>JAVASCRIPT</arg>
+<arg>arguments[0].click();</arg>
+<arg>ARGUMENTS</arg>
+<arg>${item}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.116346" elapsed="0.007734"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:47.625005" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.124257" elapsed="0.500904"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'${expected_priority}')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.625318" elapsed="0.013635"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:47.639325" level="INFO">Typing text 'ทดสอบหมวดหมู่ ป้ายทะเบียนรถไม่ตรง' into text field 'xpath=//input[@maxlength='100']'.</msg>
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>ทดสอบหมวดหมู่ ${category}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.639110" elapsed="0.077063"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:47.717177" level="INFO">Typing text 'ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ป้ายทะเบียนรถไม่ตรง แบบ E2E' into text field 'xpath=//textarea'.</msg>
+<arg>xpath=//textarea</arg>
+<arg>ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.716444" elapsed="0.115171"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:47.832278" level="INFO">Executing JavaScript:
+window.scrollTo(0, document.body.scrollHeight)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.831851" elapsed="0.007337"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:48.339889" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:47.839390" elapsed="0.500607"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:48.340335" level="INFO">Clicking element 'xpath=//button[contains(text(),'รายงานเหตุการณ์')]'.</msg>
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T16:31:48.340155" elapsed="0.038348"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:48.378707" elapsed="0.230075"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2026-03-04T16:31:48.609003" elapsed="0.063685"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T16:31:48.673229" elapsed="0.482133"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T16:31:49.155876" level="INFO">Executing JavaScript:
+window.scrollTo(0, 300)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T16:31:49.155528" elapsed="0.006380"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T16:31:50.162510" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T16:31:49.162065" elapsed="1.000572"/>
+</kw>
+<arg>ป้ายทะเบียนรถไม่ตรง</arg>
+<arg>ปกติ</arg>
+<doc>เลือกประเภทปัญหาแล้วตรวจสอบว่าระดับความเร่งด่วนถูกต้อง</doc>
+<status status="PASS" start="2026-03-04T16:31:45.955117" elapsed="4.207620"/>
+</kw>
+<doc>ประเภท: ป้ายทะเบียนรถไม่ตรง → Priority: NORMAL (ปกติ)</doc>
+<status status="PASS" start="2026-03-04T16:31:45.953841" elapsed="4.209012"/>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T16:31:50.163341" elapsed="2.364053"/>
+</kw>
+<status status="PASS" start="2026-03-04T16:31:08.016348" elapsed="44.511151"/>
+</suite>
+<statistics>
+<total>
+<stat pass="8" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-Passenger-Incident-Priority-001" id="s1" pass="8" fail="0" skip="0">UAT-Passenger-Incident-Priority-001</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
