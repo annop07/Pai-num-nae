@@ -12,7 +12,7 @@ As an admin, I want to keep the users updated on their reported incidents
 1.2 กรอก Email และ Password ของผู้ดูแลระบบ
 1.3 กดปุ่ม เข้าสู่ระบบ
 
-![Login](/../img/adminLogin.png)
+![Login](../img/Admin-Category-Reason.png)
 
 ---
 
