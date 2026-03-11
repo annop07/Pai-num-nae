@@ -152,10 +152,10 @@
             @click="triggerFileInput">
             <div class="text-4xl mb-3"></div>
             <p class="text-gray-600">คลิกเพื่ออัปโหลด หรือ ลากไฟล์มาวาง</p>
-            <p class="text-sm text-gray-400 mt-1">JPG, PNG, MP4, MOV, PDF (สูงสุด 50MB)</p>
+            <p class="text-sm text-gray-400 mt-1">JPG, PNG, MP4, MOV, MP3, PDF (สูงสุด 50MB)</p>
           </div>
 
-          <input ref="fileInput" type="file" class="hidden" multiple accept="image/*,video/mp4,video/quicktime,application/pdf"
+          <input ref="fileInput" type="file" class="hidden" multiple accept="image/*,video/mp4,video/quicktime,audio/mpeg,application/pdf"
             @change="handleFileUpload" />
 
           <!-- Preview -->

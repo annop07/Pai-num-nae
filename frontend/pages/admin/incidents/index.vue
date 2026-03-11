@@ -318,6 +318,15 @@
                         <span class="text-xs font-medium text-red-700 text-center">หลักฐาน {{ idx + 1 }}</span>
                         <span class="text-xs text-red-600 mt-0.5">PDF</span>
                       </a>
+                      
+                      <div v-else-if="isEvidenceAudio(url)"
+                        class="col-span-2 sm:col-span-4 rounded-xl border border-purple-200 bg-purple-50 p-3 flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                          <i class="fa-solid fa-music text-purple-500 text-xl"></i>
+                          <span class="text-xs font-medium text-purple-700 truncate">{{ getEvidenceFilename(url) }}</span>
+                        </div>
+                        <audio controls class="w-full h-9" :src="url" preload="metadata"></audio>
+                      </div>
                       <!-- Video: พรีวิว + ปุ่มเปิด (เล่นในโมดัล) / ดาวน์โหลด -->
                       <div v-else-if="isEvidenceVideo(url)"
                         class="aspect-square rounded-xl overflow-hidden border border-gray-200 hover:border-blue-500 transition relative group shadow-sm">
@@ -1297,8 +1306,11 @@ function isEvidencePdf(url) {
   const lower = (url || '').toLowerCase()
   return lower.includes('.pdf') || lower.includes('/raw/upload/')
 }
+function isEvidenceAudio(url) {
+  return /\.(mp3|wav|aac|ogg|flac|m4a)$/i.test((url || '').split('?')[0] || '')
+}
 function isEvidenceVideo(url) {
-  return /\.(mp4|mov|webm|ogg|avi)$/i.test((url || '').split('?')[0] || '')
+  return /\.(mp4|mov|webm|avi)$/i.test((url || '').split('?')[0] || '')
 }
 function getEvidenceFilename(url) {
   try {
