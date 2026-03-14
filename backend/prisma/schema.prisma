@@ -42,6 +42,15 @@ model User {
   incidentsAgainst     Incident[]          @relation("ReportedUserIncidents")
   resolvedIncidents    Incident[]          @relation("ResolverIncidents")
   incidentStatusLogs   IncidentStatusLog[] @relation("AdminStatusChanges")
+  driverTaxProfile     DriverTaxProfile?
+  paymentConfirmationsAsPassenger PaymentConfirmation[] @relation("PaymentConfirmationPassenger")
+  paymentConfirmationsAsDriver    PaymentConfirmation[] @relation("PaymentConfirmationDriver")
+  paymentConfirmationsConfirmed   PaymentConfirmation[] @relation("PaymentConfirmationConfirmer")
+  paymentProofSubmissions         PaymentProofSubmission[] @relation("PaymentProofSubmittedBy")
+  paymentProofReviews             PaymentProofSubmission[] @relation("PaymentProofReviewedBy")
+  issuedPaymentDocuments          PaymentDocument[] @relation("PaymentDocumentIssuer")
+  receivedPaymentDocuments        PaymentDocument[] @relation("PaymentDocumentReceiver")
+  paymentAuditLogs                PaymentAuditLog[] @relation("PaymentAuditActor")
 
   @@index([role])
   @@index([isActive])
@@ -139,6 +148,7 @@ model Route {
   cancelledAt     DateTime?
   cancelledBy     String?
   bookings        Booking[]
+  paymentConfirmations PaymentConfirmation[]
   driver          User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
   vehicle         Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   incidents       Incident[]
@@ -165,6 +175,166 @@ model Booking {
   passenger       User          @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
   route           Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
   incidents       Incident[]
+  paymentConfirmation PaymentConfirmation?
+}
+
+model DriverTaxProfile {
+  id           String       @id @default(cuid())
+  driverId     String       @unique
+  taxpayerType TaxpayerType @default(INDIVIDUAL)
+  taxpayerName String
+  taxId        String       @unique
+  branchCode   String?
+  isHeadOffice Boolean      @default(true)
+  taxAddress   String
+  email        String?
+  phoneNumber  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  driver       User         @relation(fields: [driverId], references: [id], onDelete: Cascade)
+}
+
+model PaymentConfirmation {
+  id                 String                    @id @default(cuid())
+  bookingId          String                    @unique
+  routeId            String
+  passengerId        String
+  driverId           String
+  expectedAmount     Decimal                   @db.Decimal(12, 2)
+  paidAmount         Decimal?                  @db.Decimal(12, 2)
+  currency           String                    @default("THB") @db.VarChar(3)
+  receiverRole       PaymentReceiverRole       @default(DRIVER)
+  status             PaymentConfirmationStatus @default(UNPAID)
+  latestSubmissionId String?                   @unique
+  confirmedAt        DateTime?
+  confirmedById      String?
+  disputedAt         DateTime?
+  disputeReason      String?                   @db.Text
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  booking          Booking                  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  route            Route                    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  passenger        User                     @relation("PaymentConfirmationPassenger", fields: [passengerId], references: [id], onDelete: Cascade)
+  driver           User                     @relation("PaymentConfirmationDriver", fields: [driverId], references: [id], onDelete: Cascade)
+  confirmedBy      User?                    @relation("PaymentConfirmationConfirmer", fields: [confirmedById], references: [id], onDelete: SetNull)
+  latestSubmission PaymentProofSubmission?  @relation("PaymentLatestSubmission", fields: [latestSubmissionId], references: [id], onDelete: SetNull)
+  proofSubmissions PaymentProofSubmission[] @relation("PaymentProofHistory")
+  documents        PaymentDocument[]
+  auditLogs        PaymentAuditLog[]
+
+  @@index([routeId])
+  @@index([passengerId])
+  @@index([driverId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model PaymentProofSubmission {
+  id                    String              @id @default(cuid())
+  paymentConfirmationId String
+  submittedById         String
+  reviewedById          String?
+  submissionNo          Int
+  paymentMethod         OffAppPaymentMethod
+  paidAt                DateTime
+  amount                Decimal             @db.Decimal(12, 2)
+  referenceNo           String?
+  note                  String?             @db.Text
+  isCorporateRequest    Boolean             @default(false)
+  companyName           String?
+  companyTaxId          String?
+  companyBranchCode     String?
+  companyAddress        String?
+  reviewStatus          ProofReviewStatus   @default(PENDING)
+  rejectReason          String?             @db.Text
+  reviewedAt            DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  paymentConfirmation   PaymentConfirmation   @relation("PaymentProofHistory", fields: [paymentConfirmationId], references: [id], onDelete: Cascade)
+  submittedBy           User                  @relation("PaymentProofSubmittedBy", fields: [submittedById], references: [id], onDelete: Cascade)
+  reviewedBy            User?                 @relation("PaymentProofReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  evidenceFiles         PaymentEvidenceFile[]
+  latestForConfirmation PaymentConfirmation?  @relation("PaymentLatestSubmission")
+
+  @@unique([paymentConfirmationId, submissionNo])
+  @@index([paymentConfirmationId, createdAt])
+  @@index([submittedById])
+  @@index([reviewStatus])
+}
+
+model PaymentEvidenceFile {
+  id                  String   @id @default(cuid())
+  paymentSubmissionId String
+  fileUrl             String
+  mimeType            String?
+  fileName            String?
+  fileSizeBytes       Int?
+  createdAt           DateTime @default(now())
+
+  paymentSubmission PaymentProofSubmission @relation(fields: [paymentSubmissionId], references: [id], onDelete: Cascade)
+
+  @@index([paymentSubmissionId])
+  @@index([createdAt])
+}
+
+model PaymentDocument {
+  id                    String                @id @default(cuid())
+  paymentConfirmationId String
+  documentType          PaymentDocumentType
+  status                PaymentDocumentStatus @default(ISSUED)
+  documentNumber        String                @unique
+  issuedById            String
+  issuedToId            String
+  issuedAt              DateTime              @default(now())
+  paidAt                DateTime?
+  paymentMethod         OffAppPaymentMethod
+  referenceNo           String?
+  currency              String                @default("THB") @db.VarChar(3)
+  subtotal              Decimal               @db.Decimal(12, 2)
+  taxAmount             Decimal               @default(0) @db.Decimal(12, 2)
+  totalAmount           Decimal               @db.Decimal(12, 2)
+  payerName             String
+  payerTaxId            String?
+  payerAddress          String?
+  payeeName             String
+  payeeTaxId            String?
+  payeeBranchCode       String?
+  payeeAddress          String
+  templateData          Json?                 @db.Json
+  pdfUrl                String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  paymentConfirmation PaymentConfirmation @relation(fields: [paymentConfirmationId], references: [id], onDelete: Cascade)
+  issuedBy            User                @relation("PaymentDocumentIssuer", fields: [issuedById], references: [id], onDelete: Cascade)
+  issuedTo            User                @relation("PaymentDocumentReceiver", fields: [issuedToId], references: [id], onDelete: Cascade)
+
+  @@unique([paymentConfirmationId, documentType])
+  @@index([documentType])
+  @@index([issuedById])
+  @@index([issuedToId])
+  @@index([createdAt])
+}
+
+model PaymentAuditLog {
+  id                    String                     @id @default(cuid())
+  paymentConfirmationId String
+  fromStatus            PaymentConfirmationStatus?
+  toStatus              PaymentConfirmationStatus
+  action                PaymentAuditAction
+  note                  String?                    @db.Text
+  metadata              Json?                      @db.Json
+  actionById            String
+  createdAt             DateTime                   @default(now())
+
+  paymentConfirmation PaymentConfirmation @relation(fields: [paymentConfirmationId], references: [id], onDelete: Cascade)
+  actionBy            User                @relation("PaymentAuditActor", fields: [actionById], references: [id], onDelete: Cascade)
+
+  @@index([paymentConfirmationId])
+  @@index([actionById])
+  @@index([createdAt])
 }
 
 model Incident {
@@ -326,5 +496,57 @@ enum StatusChangeReason {
   REQUIRES_ESCALATION
   REOPENED
   OTHER
+}
+
+enum PaymentConfirmationStatus {
+  UNPAID
+  PROOF_SUBMITTED
+  CONFIRMED
+  DISPUTED
+}
+
+enum OffAppPaymentMethod {
+  CASH
+  BANK_TRANSFER
+  PROMPTPAY
+  QR_CODE
+  OTHER
+}
+
+enum PaymentReceiverRole {
+  DRIVER
+  PASSENGER
+  OTHER
+}
+
+enum ProofReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentDocumentType {
+  RECEIPT
+  TAX_INVOICE
+  PAYMENT_VOUCHER
+}
+
+enum PaymentDocumentStatus {
+  ISSUED
+  VOIDED
+}
+
+enum TaxpayerType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum PaymentAuditAction {
+  PROOF_SUBMITTED
+  PROOF_CONFIRMED
+  PROOF_REJECTED
+  PROOF_RESUBMITTED
+  DOCUMENT_ISSUED
+  STATUS_UPDATED
 }
 
