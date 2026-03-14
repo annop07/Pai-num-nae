@@ -8,6 +8,7 @@ const bookingRoutes = require('./booking.routes');
 const notificationRoutes = require('./notification.routes');
 const mapRoutes = require('./maps.routes');
 const incidentRoutes = require('./incident.routes');
+const paymentRoutes = require('./payment.routes');
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use('/bookings', bookingRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/maps', mapRoutes);
 router.use('/incidents', incidentRoutes);
+router.use('/payments', paymentRoutes);
 
 module.exports = router;
