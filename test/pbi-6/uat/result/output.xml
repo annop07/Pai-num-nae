@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.2 on win32)" generated="2026-03-04T00:50:10.811219" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-Admin-ChangeStatus-010" source="D:\SE\Sprint2\Pai-num-nae\test\pbi-6\UAT-Admin-ChangeStatus-010.robot">
+<test id="s1-t1" name="UAT-Admin-ChangeStatus-010" line="12">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:11.154941" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3001/admin/incidents'.</msg>
+<arg>${BASE_URL}/admin/incidents</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T00:50:11.154452" elapsed="5.372231"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T00:50:16.530922" elapsed="0.082171"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>0.3s</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T00:50:16.618185" elapsed="0.002955"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//input[@type='text']</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T00:50:16.628051" elapsed="1.452485"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:18.081694" level="INFO">Typing text 'admin123' into text field 'xpath=//input[@type='text']'.</msg>
+<arg>xpath=//input[@type='text']</arg>
+<arg>${USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:18.081221" elapsed="1.087909"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:19.170190" level="INFO">Typing text 'Admin@12345' into text field 'xpath=//input[@type='password']'.</msg>
+<arg>xpath=//input[@type='password']</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:19.169743" elapsed="0.975039"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:20.145743" level="INFO">Clicking button 'xpath=//button[contains(.,'เข้าสู่ระบบ')]'.</msg>
+<arg>xpath=//button[contains(.,'เข้าสู่ระบบ')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:20.145373" elapsed="1.584173"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T00:50:21.729907" elapsed="0.315017"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//tr[td[contains(.,'ESCALATED')]]//button[contains(.,'View')]</arg>
+<arg>15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T00:50:22.048678" elapsed="5.309822"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:27.360096" level="INFO">Clicking element 'xpath=//tr[td[contains(.,'ESCALATED')]]//button[contains(.,'View')]'.</msg>
+<arg>xpath=//tr[td[contains(.,'ESCALATED')]]//button[contains(.,'View')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:27.359534" elapsed="0.840231"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>New Status</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T00:50:28.200508" elapsed="0.397716"/>
+</kw>
+<kw name="Select From List By Label" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:28.598991" level="INFO">Selecting options from selection list 'xpath=//label[contains(.,'New Status')]/following::select[1]' by label DISMISSED.</msg>
+<arg>xpath=//label[contains(.,'New Status')]/following::select[1]</arg>
+<arg>DISMISSED</arg>
+<doc>Selects options from selection list ``locator`` by ``labels``.</doc>
+<status status="PASS" start="2026-03-04T00:50:28.598712" elapsed="3.503989"/>
+</kw>
+<kw name="Select From List By Index" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:32.104133" level="INFO">Selecting options from selection list 'xpath=//label[contains(.,'Reason Category')]/following::select[1]' by index 1.</msg>
+<arg>xpath=//label[contains(.,'Reason Category')]/following::select[1]</arg>
+<arg>1</arg>
+<doc>Selects options from selection list ``locator`` by ``indexes``.</doc>
+<status status="PASS" start="2026-03-04T00:50:32.103641" elapsed="3.075314"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:35.179827" level="INFO">Typing text 'ตรวจสอบแล้วพบว่าไม่เข้าข่ายการดำเนินการ' into text field 'xpath=//textarea[contains(@placeholder,'โปรดอธิบาย')]'.</msg>
+<arg>xpath=//textarea[contains(@placeholder,'โปรดอธิบาย')]</arg>
+<arg>ตรวจสอบแล้วพบว่าไม่เข้าข่ายการดำเนินการ</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:35.179306" elapsed="1.017730"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:36.198087" level="INFO">Typing text 'ปิดเคสหลังการพิจารณาโดยผู้บริหาร' into text field 'xpath=//textarea[contains(@placeholder,'บันทึกภายใน')]'.</msg>
+<arg>xpath=//textarea[contains(@placeholder,'บันทึกภายใน')]</arg>
+<arg>ปิดเคสหลังการพิจารณาโดยผู้บริหาร</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:36.197789" elapsed="1.016952"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:37.215864" level="INFO">Clicking element 'xpath=//input[@type='checkbox']'.</msg>
+<arg>xpath=//input[@type='checkbox']</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:37.215475" elapsed="0.701635"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T00:50:37.918229" level="INFO">Clicking button 'xpath=//button[contains(.,'รายงาน')]'.</msg>
+<arg>xpath=//button[contains(.,'รายงาน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T00:50:37.917944" elapsed="1.579552"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>DISMISSED</arg>
+<arg>15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T00:50:39.507827" elapsed="0.600330"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T00:50:40.108553" elapsed="3.626822"/>
+</kw>
+<doc>เปลี่ยนสถานะ Incident จาก ESCALATED เป็น DISMISSED</doc>
+<status status="PASS" start="2026-03-04T00:50:11.153278" elapsed="32.587666"/>
+</test>
+<doc>UAT - Admin Change Status from ESCALATED to DISMISSED</doc>
+<status status="PASS" start="2026-03-04T00:50:10.813219" elapsed="32.933464"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-Admin-ChangeStatus-010" id="s1" pass="1" fail="0" skip="0">UAT-Admin-ChangeStatus-010</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

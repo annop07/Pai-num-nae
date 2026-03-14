@@ -3,7 +3,7 @@ Library           SeleniumLibrary
 Suite Teardown    Close All Browsers
 
 *** Variables ***
-${BASE_URL}             http://localhost:3001
+${BASE_URL}             https://cssekku3-5.cpkku.com/
 ${DRIVER_USERNAME}      TestDriver_UAT
 ${DRIVER_PASSWORD}      12345678Test
 ${CHROMEDRIVER}         C:\\Users\\porap\\.wdm\\drivers\\chromedriver\\win64\\145.0.7632.117\\chromedriver-win32\\chromedriver.exe
@@ -51,6 +51,16 @@ Step 5 - Fill General Incident Form And Submit (Happy Path)
     Click Element    xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'ปัญหาเส้นทาง')]
     Input Text    xpath=//input[@maxlength='100']    น้ำท่วมขังบนถนนเส้นหลัก
     Input Text    xpath=//textarea    ไม่สามารถเดินทางผ่านได้ เนื่องจากน้ำท่วมสูงกว่า 50 ซม.
+    
+    # อัปโหลดรูปภาพ
+    Choose File    xpath=//input[@type='file']    ${CURDIR}${/}resources${/}small_image.jpg
+    Sleep    1s
+
+    # รับตำแหน่งปัจจุบัน
+    Execute JavaScript    window.scrollTo(0, 600)
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
+
     Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
     Sleep    0.5s
     Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]

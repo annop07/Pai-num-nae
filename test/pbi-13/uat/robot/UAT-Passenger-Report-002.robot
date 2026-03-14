@@ -3,7 +3,7 @@ Library           SeleniumLibrary
 Suite Teardown    Close All Browsers
 
 *** Variables ***
-${BASE_URL}             http://localhost:3001
+${BASE_URL}             https://cssekku3-5.cpkku.com/
 ${PASSENGER_USERNAME}   TestPassenger_UAT
 ${PASSENGER_PASSWORD}   12345678Test
 ${CHROMEDRIVER}         C:\\Users\\porap\\.wdm\\drivers\\chromedriver\\win64\\145.0.7632.117\\chromedriver-win32\\chromedriver.exe
@@ -28,6 +28,7 @@ Step 2 - Negative Validation Cases
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
     Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=15s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -48,6 +49,7 @@ Step 2 - Negative Validation Cases
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
     Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=15s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -69,6 +71,7 @@ Step 2 - Negative Validation Cases
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
     Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=15s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -92,6 +95,7 @@ Step 2 - Negative Validation Cases
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
     Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=15s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s
@@ -106,6 +110,7 @@ Step 2 - Negative Validation Cases
     Wait Until Element Is Visible    xpath=//h2[contains(text(),'การเดินทางของฉัน')]    timeout=10s
     Click Element    xpath=//button[contains(text(),'ยืนยันแล้ว')]
     Sleep    3s
+    Wait Until Element Is Visible    xpath=//button[contains(text(),'แจ้งเหตุ')]    timeout=15s
     Click Element    xpath=//button[contains(text(),'แจ้งเหตุ')]
     Wait Until Location Contains    /formIncident    timeout=10s
     Wait Until Element Is Visible    xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]    timeout=10s

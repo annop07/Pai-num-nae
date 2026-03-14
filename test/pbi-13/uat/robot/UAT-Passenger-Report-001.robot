@@ -3,7 +3,7 @@ Library           SeleniumLibrary
 Suite Teardown    Close All Browsers
 
 *** Variables ***
-${BASE_URL}             http://localhost:3001
+${BASE_URL}             https://cssekku3-5.cpkku.com/
 ${PASSENGER_USERNAME}   TestPassenger_UAT
 ${PASSENGER_PASSWORD}   12345678Test
 ${CHROMEDRIVER}         C:\\Users\\porap\\.wdm\\drivers\\chromedriver\\win64\\145.0.7632.117\\chromedriver-win32\\chromedriver.exe
@@ -48,6 +48,10 @@ Step 5 - Fill Incident Form And Submit (Happy Path)
     Input Text    xpath=//textarea    พูดจาไม่สุภาพระหว่างการเดินทาง
     Choose File    xpath=//input[@type='file']    ${CURDIR}${/}resources${/}document.pdf
     Sleep    1s
+    # รับตำแหน่งปัจจุบัน
+    Execute JavaScript    window.scrollTo(0, 600)
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
     Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
     Sleep    0.5s
     Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]

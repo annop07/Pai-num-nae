@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-03-04T20:21:06.412677" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-Admin-Reopened-006" source="C:\SoftwareEngineer\Pai-num-nae\test\pbi-6\uat\Robot\UAT-Admin-Reopened-006.robot">
+<test id="s1-t1" name="UAT-Admin-ChangeStatus-006" line="13">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T20:21:06.715084" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x0000023A7B9C8AD0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T20:21:06.714173" elapsed="0.000957"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T20:21:06.717166" level="INFO">${service} = &lt;selenium.webdriver.chrome.service.Service object at 0x0000023A7B9C86E0&gt;</msg>
+<var>${service}</var>
+<arg>sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T20:21:06.715313" elapsed="0.001897"/>
+</kw>
+<kw name="Create Webdriver" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:06.717547" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<arg>service=${service}</arg>
+<doc>Creates an instance of Selenium WebDriver.</doc>
+<status status="PASS" start="2026-03-04T20:21:06.717350" elapsed="1.324736"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:08.042718" level="INFO">Opening url 'https://cssekku3-5.cpkku.com//login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:21:08.042397" elapsed="0.872025"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T20:21:08.914596" elapsed="0.026595"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>0.3s</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T20:21:08.941356" elapsed="0.000228"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T20:21:08.941712" elapsed="0.621015"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:09.563156" level="INFO">Typing text 'admin@painamnae.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:09.562914" elapsed="0.996743"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:10.560121" level="INFO">Typing text 'Admin@12345' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:10.559854" elapsed="0.978639"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:11.538863" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:11.538678" elapsed="1.592832"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="PASS" start="2026-03-04T20:21:13.131703" elapsed="2.326724"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:15.458783" level="INFO">Opening url 'https://cssekku3-5.cpkku.com//admin/incidents'</msg>
+<arg>${BASE_URL}/admin/incidents</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:21:15.458614" elapsed="1.182909"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Incident Management</arg>
+<arg>timeout=30s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T20:21:16.641755" elapsed="0.313831"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:21:19.956470" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:21:16.955852" elapsed="3.000772"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//td[contains(.,'RESOLVED')]</arg>
+<arg>timeout=30s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T20:21:19.956840" elapsed="1.634223"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:21:22.592041" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:21:21.591247" elapsed="1.000917"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:22.592511" level="INFO">Clicking element 'xpath=//td[contains(.,'RESOLVED')]/following::button[contains(.,'View')][1]'.</msg>
+<arg>xpath=//td[contains(.,'RESOLVED')]/following::button[contains(.,'View')][1]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:22.592323" elapsed="0.679154"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>เหตุผลในการเปิดเคสใหม่</arg>
+<arg>timeout=30s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T20:21:23.271855" elapsed="0.321685"/>
+</kw>
+<kw name="Select From List By Index" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:23.593946" level="INFO">Selecting options from selection list 'xpath=//label[contains(.,'เหตุผลในการเปิดเคสใหม่')]/following::select[1]' by index 1.</msg>
+<arg>xpath=//label[contains(.,'เหตุผลในการเปิดเคสใหม่')]/following::select[1]</arg>
+<arg>1</arg>
+<doc>Selects options from selection list ``locator`` by ``indexes``.</doc>
+<status status="PASS" start="2026-03-04T20:21:23.593733" elapsed="3.091603"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:26.686633" level="INFO">Typing text 'พบข้อมูลเพิ่มเติม ต้องกลับไปตรวจสอบใหม่' into text field 'xpath=//textarea[contains(@placeholder,'โปรดอธิบาย')]'.</msg>
+<arg>xpath=//textarea[contains(@placeholder,'โปรดอธิบาย')]</arg>
+<arg>พบข้อมูลเพิ่มเติม ต้องกลับไปตรวจสอบใหม่</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:26.686257" elapsed="0.994121"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:21:27.680770" level="INFO">Clicking button 'xpath=//button[contains(.,'รายงาน')]'.</msg>
+<arg>xpath=//button[contains(.,'รายงาน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:21:27.680579" elapsed="1.567166"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>PENDING</arg>
+<arg>timeout=30s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T20:21:29.248217" elapsed="0.311634"/>
+</kw>
+<doc>เปิดเคสจาก RESOLVED กลับไป PENDING</doc>
+<status status="PASS" start="2026-03-04T20:21:06.712820" elapsed="22.847534"/>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T20:21:29.561091" elapsed="2.582444"/>
+</kw>
+<doc>UAT - Reopen Case from RESOLVED to PENDING</doc>
+<status status="PASS" start="2026-03-04T20:21:06.414045" elapsed="25.729592"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-Admin-Reopened-006" id="s1" pass="1" fail="0" skip="0">UAT-Admin-Reopened-006</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

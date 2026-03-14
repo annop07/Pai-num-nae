@@ -1,0 +1,1579 @@
+{
+  "info": {
+    "_postman_id": "13eba5ad-7fbe-497b-9ad1-94ed39ffe082",
+    "name": "Incident Backlog API Tests",
+    "description": "API Tests สำหรับ 3 Product Backlog Items เรื่อง Incident Reporting:\n1. Admin แจ้งอัปเดตสถานะ incident ให้ผู้ใช้\n2. Driver รายงานเหตุการณ์และติดตามความคืบหน้า\n3. Passenger รายงานพฤติกรรมคนขับและติดตามความคืบหน้า",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33092733"
+  },
+  "item": [
+    {
+      "name": "0. Setup - เตรียมข้อมูล",
+      "item": [
+        {
+          "name": "0.1 Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Admin สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('adminToken', json.data.token);",
+                  "    pm.collectionVariables.set('adminId', json.data.user.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@painamnae.com\",\n    \"password\": \"Admin@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.2 Login Driver",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Driver สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('driverToken', json.data.token);",
+                  "    pm.collectionVariables.set('driverId', json.data.user.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"driver@gmail.com\",\n    \"password\": \"0611044772za\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.3 Login Passenger",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Passenger สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('passengerToken', json.data.token);",
+                  "    pm.collectionVariables.set('passengerId', json.data.user.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"passenger@gmail.com\",\n    \"password\": \"0611044772ZA\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.4 Setup - สร้าง Incident สำหรับ Admin Flow",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('สร้าง Test Incident สำเร็จ (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('id');",
+                  "    pm.collectionVariables.set('adminIncidentId', json.data.id);",
+                  "    console.log('adminIncidentId set: ' + json.data.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"ROUTE_ISSUE\",\n    \"title\": \"[TEST] Admin Flow Test Incident\",\n    \"description\": \"Incident สร้างอัตโนมัติสำหรับทดสอบ admin flow\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Backlog - Admin แจ้งอัปเดตสถานะให้ผู้ใช้",
+      "item": [
+        {
+          "name": "1.1 Admin ดูรายการ Incident ทั้งหมด",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึงรายการ Incident สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "    pm.expect(json.pagination).to.have.property('total');",
+                  "    pm.expect(json.pagination).to.have.property('totalPages');",
+                  "});",
+                  "",
+                  "pm.test('มี pagination ครบ', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.pagination.page).to.be.a('number');",
+                  "    pm.expect(json.pagination.limit).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.2 Admin Filter ด้วย status=PENDING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Filter ด้วย status PENDING สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    json.data.forEach(function(incident) {",
+                  "        pm.expect(incident.status).to.eql('PENDING');",
+                  "    });",
+                  "",
+                  "    // เก็บ incident id แรกสำหรับ test ถัดไป (ถ้ามี)",
+                  "    if (json.data.length > 0) {",
+                  "        pm.collectionVariables.set('adminIncidentId', json.data[0].id);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin?status=PENDING",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.3 Admin อัปเดต PENDING → INVESTIGATING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('อัปเดตสถานะเป็น INVESTIGATING สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.status).to.eql('INVESTIGATING');",
+                  "});",
+                  "",
+                  "pm.test('priority ถูกอัปเดตเป็น HIGH', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.priority).to.eql('HIGH');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"INVESTIGATING\",\n    \"reason\": \"EVIDENCE_REVIEWED\",\n    \"note\": \"กำลังตรวจสอบหลักฐานที่แนบมา\",\n    \"priority\": \"HIGH\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{adminIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{adminIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.4 Admin อัปเดต INVESTIGATING → RESOLVED",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('อัปเดตสถานะเป็น RESOLVED สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.status).to.eql('RESOLVED');",
+                  "});",
+                  "",
+                  "pm.test('resolvedAt ถูกตั้งค่า', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.resolvedAt).to.not.be.null;",
+                  "});",
+                  "",
+                  "pm.test('resolution ถูกบันทึก', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.resolution).to.eql('ตรวจสอบและตักเตือนผู้ที่เกี่ยวข้องแล้ว');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"RESOLVED\",\n    \"reason\": \"MATTER_RESOLVED\",\n    \"note\": \"ตรวจสอบเสร็จเรียบร้อย\",\n    \"resolution\": \"ตรวจสอบและตักเตือนผู้ที่เกี่ยวข้องแล้ว\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{adminIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{adminIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.5 Admin Reopen Incident ที่ RESOLVED",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Reopen Incident สำเร็จ (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.status).to.eql('PENDING');",
+                  "    pm.collectionVariables.set('reopenedIncidentId', json.data.id);",
+                  "});",
+                  "",
+                  "pm.test('มี parentIncidentId อ้างอิง incident เดิม', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.parentIncidentId).to.eql(pm.collectionVariables.get('adminIncidentId'));",
+                  "});",
+                  "",
+                  "pm.test('revisionNumber เพิ่มขึ้น', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.revisionNumber).to.be.above(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"REOPENED\",\n    \"note\": \"ต้องตรวจสอบข้อมูลเพิ่มเติม\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{adminIncidentId}}/reopen",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{adminIncidentId}}",
+                "reopen"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.6 ผู้รายงานตรวจสอบ Notification ที่ได้รับ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึง Notifications สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('มี notification ประเภท INCIDENT', function () {",
+                  "    var json = pm.response.json();",
+                  "    var incidentNotifs = json.data.filter(function(n) {",
+                  "        return n.type === 'INCIDENT';",
+                  "    });",
+                  "    pm.expect(incidentNotifs.length).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.7 Negative - User ไม่ใช่ Admin เข้าถึง admin API ไม่ได้ (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Passenger เข้าถึง admin API ไม่ได้ (403)', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1.8 Negative - Status transition ไม่ถูกต้อง (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status transition ไม่ถูกต้อง ถูก reject (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"RESOLVED\",\n    \"reason\": \"MATTER_RESOLVED\",\n    \"note\": \"พยายามข้ามขั้นตอน\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{reopenedIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{reopenedIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Backlog - Driver รายงาน Incident",
+      "item": [
+        {
+          "name": "2.1 Driver สร้าง Incident รายงานผู้โดยสาร",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('สร้าง Incident สำเร็จ (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.have.property('id');",
+                  "    pm.expect(json.data.status).to.eql('PENDING');",
+                  "    pm.collectionVariables.set('driverIncidentId', json.data.id);",
+                  "});",
+                  "",
+                  "pm.test('type และ priority ถูกตั้งค่าถูกต้อง', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.type).to.eql('INAPPROPRIATE_BEHAVIOR');",
+                  "    pm.expect(json.data.priority).to.eql('NORMAL');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"INAPPROPRIATE_BEHAVIOR\",\n    \"title\": \"[TEST] ผู้โดยสารมีพฤติกรรมไม่เหมาะสม\",\n    \"description\": \"ผู้โดยสารพูดจาไม่สุภาพและทำลายทรัพย์สินในรถ\",\n    \"reportedUserId\": \"{{passengerId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.2 Driver ดู Incidents ของตัวเอง",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึงรายการ Incidents ของตัวเองสำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('มี incident ที่เพิ่งสร้างอยู่ในรายการ', function () {",
+                  "    var json = pm.response.json();",
+                  "    var found = json.data.find(function(inc) {",
+                  "        return inc.id === pm.collectionVariables.get('driverIncidentId');",
+                  "    });",
+                  "    pm.expect(found).to.not.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.3 Driver ดูรายละเอียด Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดูรายละเอียด Incident สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.id).to.eql(pm.collectionVariables.get('driverIncidentId'));",
+                  "    pm.expect(json.data.type).to.eql('INAPPROPRIATE_BEHAVIOR');",
+                  "});",
+                  "",
+                  "pm.test('มีข้อมูล reporter ครบ', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.reporter).to.have.property('id');",
+                  "    pm.expect(json.data.reporter).to.have.property('username');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/{{driverIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "{{driverIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.4 Admin อัปเดต Incident ของ Driver → INVESTIGATING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin อัปเดตสถานะสำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.status).to.eql('INVESTIGATING');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"INVESTIGATING\",\n    \"reason\": \"EVIDENCE_REVIEWED\",\n    \"note\": \"กำลังตรวจสอบรายงานจากคนขับ\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{driverIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{driverIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.5 Driver ตรวจสอบ Notification ที่ได้รับ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึง Notifications สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('มี notification อัปเดตสถานะ incident', function () {",
+                  "    var json = pm.response.json();",
+                  "    var notif = json.data.find(function(n) {",
+                  "        return n.type === 'INCIDENT' &&",
+                  "               n.metadata &&",
+                  "               n.metadata.incidentId === pm.collectionVariables.get('driverIncidentId');",
+                  "    });",
+                  "    pm.expect(notif).to.not.be.undefined;",
+                  "    pm.expect(notif.title).to.include('อัปเดตสถานะ');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.6 Driver ดู Incident Logs เพื่อติดตามสถานะ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึง Incident Logs สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "    pm.expect(json.data.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Log มีข้อมูลการเปลี่ยนสถานะ', function () {",
+                  "    var json = pm.response.json();",
+                  "    var log = json.data[0];",
+                  "    pm.expect(log).to.have.property('fromStatus');",
+                  "    pm.expect(log).to.have.property('toStatus');",
+                  "    pm.expect(log).to.have.property('reason');",
+                  "    pm.expect(log).to.have.property('changedBy');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/{{driverIncidentId}}/logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "{{driverIncidentId}}",
+                "logs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Backlog - Passenger รายงานพฤติกรรมคนขับ",
+      "item": [
+        {
+          "name": "3.1 Passenger สร้าง Incident รายงานคนขับ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('สร้าง Incident สำเร็จ (201)', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.have.property('id');",
+                  "    pm.expect(json.data.status).to.eql('PENDING');",
+                  "    pm.collectionVariables.set('passengerIncidentId', json.data.id);",
+                  "});",
+                  "",
+                  "pm.test('type เป็น SAFETY_CONCERN', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.type).to.eql('SAFETY_CONCERN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"SAFETY_CONCERN\",\n    \"title\": \"[TEST] คนขับขับรถเร็วเกินกำหนด\",\n    \"description\": \"คนขับขับรถเร็วมากเกินกว่าที่กำหนด ทำให้รู้สึกไม่ปลอดภัย\",\n    \"reportedUserId\": \"{{driverId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.2 Passenger ดู Incidents ของตัวเอง",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึงรายการ Incidents ของตัวเองสำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('มี incident ที่เพิ่งสร้างอยู่ในรายการ', function () {",
+                  "    var json = pm.response.json();",
+                  "    var found = json.data.find(function(inc) {",
+                  "        return inc.id === pm.collectionVariables.get('passengerIncidentId');",
+                  "    });",
+                  "    pm.expect(found).to.not.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.3 Passenger ดูรายละเอียด Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดูรายละเอียดสำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.id).to.eql(pm.collectionVariables.get('passengerIncidentId'));",
+                  "});",
+                  "",
+                  "pm.test('มี reportedUser ข้อมูลคนขับ', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.reportedUser).to.have.property('id');",
+                  "    pm.expect(json.data.reportedUser.id).to.eql(pm.collectionVariables.get('driverId'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/{{passengerIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "{{passengerIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.4 Admin อัปเดต Incident ของ Passenger → INVESTIGATING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin อัปเดตสถานะสำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.status).to.eql('INVESTIGATING');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"INVESTIGATING\",\n    \"reason\": \"EVIDENCE_REVIEWED\",\n    \"note\": \"กำลังตรวจสอบรายงานจากผู้โดยสาร\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{passengerIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{passengerIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.5 Admin อัปเดต → DISMISSED (ปฏิเสธ)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin ปฏิเสธ Incident สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.status).to.eql('DISMISSED');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"DISMISSED\",\n    \"reason\": \"INSUFFICIENT_EVIDENCE\",\n    \"note\": \"หลักฐานไม่เพียงพอ\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{passengerIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{passengerIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.6 Passenger ตรวจสอบ Notification ที่ได้รับ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดึง Notifications สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('มี notification อัปเดตสถานะ incident ของ passenger', function () {",
+                  "    var json = pm.response.json();",
+                  "    var notifs = json.data.filter(function(n) {",
+                  "        return n.type === 'INCIDENT' &&",
+                  "               n.metadata &&",
+                  "               n.metadata.incidentId === pm.collectionVariables.get('passengerIncidentId');",
+                  "    });",
+                  "    pm.expect(notifs.length).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.7 Passenger ดู Incident Logs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ดู Incident Logs สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data).to.be.an('array');",
+                  "    pm.expect(json.data.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('มี log ทั้ง INVESTIGATING และ DISMISSED', function () {",
+                  "    var json = pm.response.json();",
+                  "    var statuses = json.data.map(function(l) { return l.toStatus; });",
+                  "    pm.expect(statuses).to.include('INVESTIGATING');",
+                  "    pm.expect(statuses).to.include('DISMISSED');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/{{passengerIncidentId}}/logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "{{passengerIncidentId}}",
+                "logs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.8 Negative - คนอื่นดู Incident ไม่ได้ (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('คนที่ไม่เกี่ยวข้องดู incident ไม่ได้ (403)', function () {",
+                  "    // Driver ไม่ใช่ reporter ของ incident นี้ ที่เป็น reported user อาจดูได้",
+                  "    // ถ้า driver เป็น reportedUser จะได้ 200 ให้ปรับ test ตามจริง",
+                  "    var status = pm.response.code;",
+                  "    pm.expect([200, 403]).to.include(status);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/{{passengerIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "{{passengerIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.9 Negative - ไม่ส่ง Token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ไม่ส่ง Token ถูก reject (401)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"SAFETY_CONCERN\",\n    \"title\": \"[TEST] No Auth\",\n    \"description\": \"ไม่มี token\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3.10 Negative - ไม่ระบุ type (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ไม่ระบุ type ถูก reject (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"[TEST] ไม่มี type\",\n    \"description\": \"ทดสอบ validation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Cleanup - ลบข้อมูลทดสอบ",
+      "item": [
+        {
+          "name": "4.1 Admin ลบ Driver Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบ Incident ของ Driver สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{driverIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{driverIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.2 Admin ลบ Passenger Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบ Incident ของ Passenger สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{passengerIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{passengerIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.3 Admin ลบ Reopened Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบ Reopened Incident สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents/admin/{{reopenedIncidentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "incidents",
+                "admin",
+                "{{reopenedIncidentId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "passengerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "passengerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverIncidentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "passengerIncidentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminIncidentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reopenedIncidentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bookingId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

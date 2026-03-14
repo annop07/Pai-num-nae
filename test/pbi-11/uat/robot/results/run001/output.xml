@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.13.3 on win32)" generated="2026-03-04T19:34:41.914514" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-Driver-Incident-001" source="C:\SoftwareEngineer\Pai-num-nae\test\pbi-11\uat\robot\UAT-Driver-Incident-001.robot">
+<test id="s1-t1" name="Step 1 - Login As Driver" line="12">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T19:34:42.302344" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x00000269CAA58AD0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T19:34:42.301645" elapsed="0.000738"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T19:34:42.303313" level="INFO">${service} = &lt;selenium.webdriver.chrome.service.Service object at 0x00000269CAA586E0&gt;</msg>
+<var>${service}</var>
+<arg>sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T19:34:42.302520" elapsed="0.000821"/>
+</kw>
+<kw name="Create Webdriver" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:42.303617" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<arg>service=${service}</arg>
+<doc>Creates an instance of Selenium WebDriver.</doc>
+<status status="PASS" start="2026-03-04T19:34:42.303444" elapsed="2.361330"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:44.665363" level="INFO">Opening url 'https://cssekku3-5.cpkku.com//login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:34:44.665047" elapsed="0.650822"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T19:34:45.316040" elapsed="0.032166"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>0.5s</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T19:34:45.348520" elapsed="0.000450"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T19:34:45.349156" elapsed="1.026245"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:46.375805" level="INFO">Typing text 'TestDriver_UAT' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${DRIVER_USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:34:46.375581" elapsed="1.589006"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:47.965124" level="INFO">Typing text '12345678Test' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${DRIVER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:34:47.964824" elapsed="1.565982"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:49.531189" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:34:49.530990" elapsed="2.571961"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:58.614453" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.615647" level="FAIL">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81db0
+	0xb70d4e
+	0xb8f895
+	0xbf52ec
+	0xc0b0d9
+	0xbee7d6
+	0xbc0049
+	0xbc0e04
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xd80648
+	0xd80812
+	0xd6a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>/login</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="FAIL" start="2026-03-04T19:34:52.103204" elapsed="6.568973">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81db0
+	0xb70d4e
+	0xb8f895
+	0xbf52ec
+	0xc0b0d9
+	0xbee7d6
+	0xbc0049
+	0xbc0e04
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xd80648
+	0xd80812
+	0xd6a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<doc>คนขับรายงานเหตุการณ์ทั่วไปสำเร็จ</doc>
+<status status="FAIL" start="2026-03-04T19:34:42.300525" elapsed="16.371877">InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81db0
+	0xb70d4e
+	0xb8f895
+	0xbf52ec
+	0xc0b0d9
+	0xbee7d6
+	0xbc0049
+	0xbc0e04
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xd80648
+	0xd80812
+	0xd6a21a
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t2" name="Step 2 - Navigate To My Route Requests" line="26">
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:58.673157" level="INFO">Simulating Mouse Over on element 'xpath=//a[contains(text(),'การเดินทางทั้งหมด')]'.</msg>
+<msg time="2026-03-04T19:34:58.675135" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.675597" level="FAIL">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>xpath=//a[contains(text(),'การเดินทางทั้งหมด')]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T19:34:58.672953" elapsed="0.007559">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.680717" elapsed="0.000035"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//a[@href='/myRoute' and contains(text(),'คำขอจองเส้นทางของฉัน')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.680829" elapsed="0.000019"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/myRoute</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.680911" elapsed="0.000017"/>
+</kw>
+<status status="FAIL" start="2026-03-04T19:34:58.672665" elapsed="0.008407">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t3" name="Step 3 - Click My Routes Tab" line="32">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:58.685195" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.685682" level="FAIL">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>xpath=//h2[contains(text(),'คำขอจองเส้นทางของฉัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T19:34:58.681498" elapsed="0.006330">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//button[contains(text(),'เส้นทางของฉัน')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.688011" elapsed="0.000030"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.688111" elapsed="0.000020"/>
+</kw>
+<status status="FAIL" start="2026-03-04T19:34:58.681280" elapsed="0.006973">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t4" name="Step 4 - Click Report General Incident Button" line="37">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:58.692152" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.692381" level="FAIL">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T19:34:58.688769" elapsed="0.005403">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<kw name="Scroll Element Into View" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]</arg>
+<doc>Scrolls the element identified by ``locator`` into view.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.694349" elapsed="0.000030"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<arg>window.scrollBy(0, -200)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.694448" elapsed="0.000018"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.694528" elapsed="0.000022"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=(//div[contains(@class,'trip-card')])[1]//button[contains(text(),'แจ้งเหตุทั่วไป')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.694727" elapsed="0.000025"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/formIncident</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.694819" elapsed="0.000017"/>
+</kw>
+<status status="FAIL" start="2026-03-04T19:34:58.688452" elapsed="0.006517">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<test id="s1-t5" name="Step 5 - Fill General Incident Form And Submit (Happy Path)" line="45">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:34:58.698073" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.698309" level="FAIL">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<arg>xpath=//h1[contains(text(),'แจ้งเหตุการณ์')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T19:34:58.695399" elapsed="0.004797">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<arg>window.scrollTo(0, 300)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700393" elapsed="0.000032"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'cursor-pointer')]//span[contains(text(),'เลือกประเภทปัญหา')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700499" elapsed="0.000020"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700586" elapsed="0.000020"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'ปัญหาเส้นทาง')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700683" elapsed="0.000030"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//div[contains(@class,'hover:bg-blue-50') and contains(text(),'ปัญหาเส้นทาง')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700810" elapsed="0.000024"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>xpath=//input[@maxlength='100']</arg>
+<arg>น้ำท่วมขังบนถนนเส้นหลัก</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.700922" elapsed="0.000025"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>xpath=//textarea</arg>
+<arg>ไม่สามารถเดินทางผ่านได้ เนื่องจากน้ำท่วมสูงกว่า 50 ซม.</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.701029" elapsed="0.000019"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<arg>window.scrollTo(0, document.body.scrollHeight)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.701112" elapsed="0.000016"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.701184" elapsed="0.000018"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//button[contains(text(),'รายงานเหตุการณ์')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.701266" elapsed="0.000016"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'บันทึกสำเร็จ')]</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-04T19:34:58.701337" elapsed="0.000017"/>
+</kw>
+<status status="FAIL" start="2026-03-04T19:34:58.695160" elapsed="0.006325">InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</status>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T19:34:58.701935" elapsed="2.550183"/>
+</kw>
+<status status="FAIL" start="2026-03-04T19:34:41.915865" elapsed="19.336349"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="5" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-Driver-Incident-001" id="s1" pass="0" fail="5" skip="0">UAT-Driver-Incident-001</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-04T19:34:58.614453" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.675135" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.685195" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.692152" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+<msg time="2026-03-04T19:34:58.698073" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0xd77dd3
+	0xd77e14
+	0xb81bee
+	0xbbf2d5
+	0xbee8f6
+	0xbea491
+	0xbe9ab2
+	0xb5500e
+	0xb555ae
+	0xb55a8d
+	0xfd6924
+	0xfd1bf7
+	0xfef5a0
+	0xd90f58
+	0xd9891d
+	0xb54c69
+	0xb542b0
+	0x113876f
+	0x75e65d49
+	0x7733d81b
+	0x7733d7a1
+</msg>
+</errors>
+</robot>
