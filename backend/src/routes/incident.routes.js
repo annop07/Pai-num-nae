@@ -7,7 +7,6 @@ const {
     createIncidentSchema,
     idParamSchema,
     updateIncidentSchema,
-    reopenIncidentSchema,
     listIncidentsQuerySchema,
 } = require('../validations/incident.validation');
 
@@ -38,15 +37,6 @@ router.patch(
     requireAdmin,
     validate({ params: idParamSchema, body: updateIncidentSchema }),
     incidentController.adminUpdateIncident
-);
-
-// POST /api/incidents/admin/:id/reopen
-router.post(
-    '/admin/:id/reopen',
-    protect,
-    requireAdmin,
-    validate({ params: idParamSchema, body: reopenIncidentSchema }),
-    incidentController.adminReopenIncident
 );
 
 // DELETE /api/incidents/admin/:id

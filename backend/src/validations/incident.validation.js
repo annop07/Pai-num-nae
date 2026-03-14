@@ -41,15 +41,9 @@ const listIncidentsQuerySchema = z.object({
     sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
-const reopenIncidentSchema = z.object({
-    reason: z.nativeEnum(StatusChangeReason, { required_error: 'กรุณาระบุเหตุผล' }),
-    note: z.string().trim().min(1, 'กรุณาระบุหมายเหตุ').max(1000),
-});
-
 module.exports = {
     createIncidentSchema,
     idParamSchema,
     updateIncidentSchema,
     listIncidentsQuerySchema,
-    reopenIncidentSchema,
 };

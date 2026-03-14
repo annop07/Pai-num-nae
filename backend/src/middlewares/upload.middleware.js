@@ -14,6 +14,8 @@ const ALLOWED_MIMETYPES = [
     // Videos
     'video/mp4',
     'video/quicktime',
+    // Audio
+    'audio/mpeg',
     // Documents (บาง browser/OS ส่ง PDF เป็น x-pdf)
     'application/pdf',
     'application/x-pdf',
@@ -27,7 +29,7 @@ const upload = multer({
         if (ALLOWED_MIMETYPES.includes(file.mimetype) || file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
-            cb(new ApiError(400, 'Only image, video (MP4/MOV), and PDF files are allowed!'), false);
+            cb(new ApiError(400, 'Only image, video (MP4/MOV), audio (MP3), and PDF files are allowed!'), false);
         }
     },
 });

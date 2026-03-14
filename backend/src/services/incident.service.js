@@ -44,11 +44,11 @@ const SITUATION_RELATED_TYPES = [
 
 //Allowed status transitions
 const ALLOWED_TRANSITIONS = {
-    PENDING:       ['INVESTIGATING', 'DISMISSED'],
+    PENDING: ['INVESTIGATING', 'DISMISSED'],
     INVESTIGATING: ['RESOLVED', 'DISMISSED', 'ESCALATED'],
-    ESCALATED:     ['RESOLVED', 'DISMISSED'],
-    RESOLVED:      [],
-    DISMISSED:     [],
+    ESCALATED: ['RESOLVED', 'DISMISSED'],
+    RESOLVED: [],
+    DISMISSED: [],
 };
 
 // Human-readable status labels for notifications
@@ -276,71 +276,6 @@ async function updateIncidentStatus(id, data, adminId) {
     return updated;
 }
 
-async function reopenIncident(id, data, adminId) {
-    const incident = await prisma.incident.findUnique({ where: { id } });
-    if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
-
-    // Only allow reopen on terminal states
-    const terminalStates = ['RESOLVED', 'DISMISSED'];
-    if (!terminalStates.includes(incident.status)) {
-        throw new ApiError(400, 'สามารถ Reopen ได้เฉพาะเหตุการณ์ที่ RESOLVED หรือ DISMISSED เท่านั้น');
-    }
-
-    const newIncident = await prisma.$transaction(async (tx) => {
-        // 1. Archive the old incident
-        await tx.incident.update({
-            where: { id },
-            data: { isArchived: true },
-        });
-
-        // 2. Create new incident (copy from old)
-        const created = await tx.incident.create({
-            data: {
-                reporterId: incident.reporterId,
-                reportedUserId: incident.reportedUserId,
-                routeId: incident.routeId,
-                bookingId: incident.bookingId,
-                type: incident.type,
-                priority: incident.priority,
-                title: incident.title,
-                description: incident.description,
-                location: incident.location,
-                evidenceUrls: incident.evidenceUrls,
-                metadata: incident.metadata,
-                status: 'PENDING',
-                parentIncidentId: id,
-                revisionNumber: incident.revisionNumber + 1,
-            },
-            include: INCIDENT_INCLUDE,
-        });
-
-        // 3. Log the reopen on the new incident
-        await tx.incidentStatusLog.create({
-            data: {
-                incidentId: created.id,
-                fromStatus: null,
-                toStatus: 'PENDING',
-                reason: data.reason,
-                note: data.note,
-                changedById: adminId,
-            },
-        });
-
-        return created;
-    });
-
-    // 4. Notify reporter (background)
-    notificationService.createNotificationByAdmin({
-        userId: incident.reporterId,
-        type: 'INCIDENT',
-        title: `เปิดรายงานใหม่: ${newIncident.title}`,
-        body: `เจ้าหน้าที่ได้เปิดรายงาน "${newIncident.title}" ใหม่อีกครั้ง (ครั้งที่ ${newIncident.revisionNumber})\nเหตุผล: ${data.note}`,
-        link: `/myIncidents`,
-        metadata: { incidentId: newIncident.id, parentIncidentId: id },
-    }).catch(err => console.error('Failed to notify reporter on reopen:', err));
-
-    return newIncident;
-}
 
 async function getIncidentLogs(id, requesterId, requesterRole) {
     const incident = await prisma.incident.findUnique({ where: { id } });
@@ -376,7 +311,6 @@ module.exports = {
     getIncidentById,
     searchIncidentsAdmin,
     updateIncidentStatus,
-    reopenIncident,        
-    getIncidentLogs,       
+    getIncidentLogs,
     deleteIncident,
 };
