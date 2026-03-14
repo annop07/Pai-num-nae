@@ -218,9 +218,9 @@
                                     class="flex items-center block w-full px-4 py-2 text-left text-gray-700 transition-colors duration-200 hover:bg-blue-50 hover:text-blue-600">
                                     บัญชีของฉัน
                                 </NuxtLink>
-                                <NuxtLink v-if="user.role === 'DRIVER'" to="#"
+                                <NuxtLink v-if="user.role === 'DRIVER'" to="/check-payments"
                                     class="flex items-center block w-full px-4 py-2 text-left text-gray-700 transition-colors duration-200 hover:bg-blue-50 hover:text-blue-600">
-                                    ตรวจสอบและรับเงิน
+                                    ตรวจสอบการชำระเงิน
                                 </NuxtLink>
                                 <NuxtLink v-if="user.role === 'PASSENGER'" to="/my-payments"
                                     class="flex items-center block w-full px-4 py-2 text-left text-gray-700 transition-colors duration-200 hover:bg-blue-50 hover:text-blue-600">
@@ -375,9 +375,9 @@
                                     class="flex items-center block w-full px-3 py-2 text-left text-gray-600 transition-colors duration-200 rounded-md hover:bg-blue-50 hover:text-blue-600">
                                     บัญชีของฉัน
                                 </NuxtLink>
-                                <NuxtLink v-if="user.role === 'DRIVER'" to="#" @click="closeMobileMenu"
+                                <NuxtLink v-if="user.role === 'DRIVER'" to="/check-payments" @click="closeMobileMenu"
                                     class="flex items-center block w-full px-3 py-2 text-left text-gray-600 transition-colors duration-200 rounded-md hover:bg-blue-50 hover:text-blue-600">
-                                    ตรวจสอบและรับเงิน
+                                    ตรวจสอบการชำระเงิน
                                 </NuxtLink>
                                 <NuxtLink v-if="user.role === 'PASSENGER'" to="/my-payments" @click="closeMobileMenu"
                                     class="flex items-center block w-full px-3 py-2 text-left text-gray-600 transition-colors duration-200 rounded-md hover:bg-blue-50 hover:text-blue-600">
