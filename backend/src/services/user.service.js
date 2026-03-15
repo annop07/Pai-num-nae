@@ -207,6 +207,124 @@ const deleteUser = async (id) => {
     return safeDeletedUser;
 };
 
+const deleteCurrentUser = async (userId) => {
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId }
+    });
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (user.deletedAt) {
+        throw new ApiError(400, "Account deletion already scheduled.");
+    }
+
+    if (user.role === "PASSENGER") {
+        //  ตรวจ Active Booking
+        const activeBooking = await prisma.booking.findFirst({
+            where: {
+                passengerId: userId,
+                status: {
+                    in: ['PENDING', 'CONFIRMED']
+                }
+            }
+        });
+
+        if (activeBooking) {
+            throw new ApiError(
+                400,
+                "You cannot delete account while having active bookings."
+            );
+        }
+
+        //  ตรวจ Incident ที่ยังไม่ปิด
+        const openIncident = await prisma.incident.findFirst({
+            where: {
+                reporterId: userId,
+                status: {
+                    notIn: ['RESOLVED', 'DISMISSED']
+                }
+            }
+        });
+
+        if (openIncident) {
+            throw new ApiError(
+                400,
+                "You cannot delete account while having open incident cases."
+            );
+        }
+    }
+
+    else if (user.role === "DRIVER") {
+
+        // ตรวจ Active Route
+        const activeRoute = await prisma.route.findFirst({
+            where: {
+                driverId: userId,
+                status: {
+                    in: ['AVAILABLE', 'IN_TRANSIT']
+                }
+            }
+        });
+
+        if (activeRoute) {
+            throw new ApiError(
+                400,
+                "You cannot delete account while having active routes."
+            );
+        }
+
+        // ตรวจ Active Booking บน Route ของ Driver
+        const activeBookingOnRoute = await prisma.booking.findFirst({
+            where: {
+                route: {
+                    is: {
+                        driverId: userId
+                    }
+                },
+                status: {
+                    in: ['PENDING', 'CONFIRMED']
+                }
+            }
+        });
+
+        if (activeBookingOnRoute) {
+            throw new ApiError(
+                400,
+                "You cannot delete account while having active bookings on their routes."
+            );
+        }
+
+        // ตรวจ Incident ที่ยังไม่ปิด
+        const openIncident = await prisma.incident.findFirst({
+            where: {
+                reporterId: userId,
+                status: {
+                    notIn: ['RESOLVED', 'DISMISSED']
+                }
+            }
+        });
+
+        if (openIncident) {
+            throw new ApiError(
+                400,
+                "You cannot delete account while having open incident cases."
+            );
+        }
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            deletedAt: new Date(),
+            isActive: false
+        }
+    });
+
+    return updatedUser;
+};
 // const setUserStatusActive = async (id, isActive) => {
 //     const updatedUser = await prisma.user.update({
 //         where: { id },
@@ -237,6 +355,7 @@ module.exports = {
     comparePassword,
     updatePassword,
     deleteUser,
+    deleteCurrentUser,
     updateUserProfile,
     getUserPublicById,
 };
