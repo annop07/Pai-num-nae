@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <div class="flex items-center justify-center min-h-screen py-8 ">
             <div
                 class="flex w-full max-w-6xl mx-4 overflow-hidden bg-white border border-gray-300 rounded-lg shadow-lg">
@@ -143,8 +143,99 @@
                                 </button>
                             </div>
                         </form>
+
+                        <!-- Danger Zone -->
+                        <div class="pt-8 mt-8 border-t border-gray-200">
+                            <h3 class="mb-4 text-lg font-bold text-red-600">เขตอันตราย</h3>
+                            <div class="mb-4">
+                                <h4 class="mb-2 text-sm font-medium text-gray-700">ลบบัญชีนี้</h4>
+                                <div
+                                    class="flex flex-col items-center justify-between p-4 bg-white border border-gray-200 rounded-md sm:flex-row shadow-sm">
+                                    <span class="mb-3 text-sm text-gray-600 sm:mb-0">เมื่อคุณลบบัญชี
+                                        จะไม่มีวิธีย้อนกลับได้ โปรดตรวจสอบให้แน่ใจ</span>
+                                    <button type="button" @click="confirmDeleteAccount"
+                                        class="px-4 py-2 text-sm font-bold text-red-600 transition-colors bg-white border border-gray-200 rounded-md hover:bg-red-50 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-red-500 whitespace-nowrap">
+                                        ลบบัญชี
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4 mt-2 border border-red-100 rounded-lg bg-red-50">
+                                <p class="text-sm font-bold text-red-600 mb-1 flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    สำคัญ : การดำเนินการนี้มีผลถาวร
+                                </p>
+                                <ul class="text-xs text-red-500 list-disc pl-5 space-y-1">
+                                    <li>ข้อมูลโปรไฟล์และประวัติทั้งหมดจะถูกลบทิ้งทันที</li>
+                                    <li>คุณจะไม่สามารถเข้าสู่ระบบด้วยบัญชีนี้ได้อีก</li>
+                                    <li>ชื่อผู้ใช้เดิมอาจไม่สามารถนำกลับมาใช้ใหม่ได้</li>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </main>
+            </div>
+        </div>
+
+        <!-- Delete Account Modal -->
+        <div v-if="showDeleteModal"
+            class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-gray-500/30 backdrop-blur-md">
+            <div class="w-full max-w-md overflow-hidden bg-white shadow-xl rounded-xl">
+                <div class="p-8">
+                    <div class="flex justify-center mb-6">
+                        <div class="flex items-center justify-center w-20 h-20 bg-gray-200 rounded-full">
+                            <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2 class="mb-6 text-xl font-bold text-center text-gray-800">คุณยืนยันที่จะลบบัญชีหรือไม่?</h2>
+
+                    <div class="p-4 mb-6 border border-gray-200 rounded-lg bg-gray-50">
+                        <p class="mb-2 text-sm font-bold text-gray-800">
+                            เราจะลบบัญชีของคุณอย่างถาวรและข้อมูลที่เกี่ยวข้องทั้งหมด:</p>
+                        <ul class="pl-5 space-y-1 text-sm text-gray-700 list-disc font-medium">
+                            <li>ข้อมูลส่วนบุคคลทั้งหมด</li>
+                            <li>เนื้อหาและการเดินทางทั้งหมด</li>
+                            <li>การตั้งค่าและการปรับแต่งทั้งหมด</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="mb-2 text-sm font-bold text-gray-800">เพื่อยืนยัน โปรดพิมพ์ "<span
+                                class="text-red-600">delete my account</span>" ด้านล่าง:</p>
+                        <input type="text" v-model="deleteConfirmText" placeholder="delete my account"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500" />
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button @click="closeDeleteModal" type="button"
+                            class="w-1/2 px-4 py-3 text-sm font-bold text-white transition-colors bg-gray-300 rounded-md hover:bg-gray-400 focus:outline-none">
+                            ยกเลิก
+                        </button>
+                        <button @click="executeDeleteAccount" type="button"
+                            :disabled="deleteConfirmText !== 'delete my account' || isDeleting"
+                            class="flex items-center justify-center w-1/2 px-4 py-3 text-sm font-bold text-white transition-colors bg-red-600 rounded-md hover:bg-red-700 focus:outline-none disabled:bg-red-400 disabled:cursor-not-allowed">
+                            <svg v-if="isDeleting" class="w-5 h-5 mr-2 text-white animate-spin"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            {{ isDeleting ? 'กำลังลบ...' : 'ลบบัญชีนี้' }}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -165,13 +256,17 @@ definePageMeta({
 });
 
 const { $api } = useNuxtApp()
-const { user: userCookie } = useAuth()
+const { logout } = useAuth()
 const { toast } = useToast();
 
 const fileInput = ref(null)
 const previewUrl = ref('')
 const isLoading = ref(false)
 const showNameWarning = ref(false);
+
+const showDeleteModal = ref(false);
+const deleteConfirmText = ref('');
+const isDeleting = ref(false);
 
 const form = reactive({
     firstName: '',
@@ -209,6 +304,45 @@ const resetForm = () => {
         form.newPassword = '';
         form.confirmNewPassword = '';
         form.profilePictureFile = null;
+    }
+};
+
+const confirmDeleteAccount = () => {
+    showDeleteModal.value = true;
+    deleteConfirmText.value = '';
+};
+
+const closeDeleteModal = () => {
+    showDeleteModal.value = false;
+    deleteConfirmText.value = '';
+};
+
+const executeDeleteAccount = async () => {
+    if (deleteConfirmText.value !== 'delete my account') return;
+
+    isDeleting.value = true;
+    try {
+
+        // เรียก API backend
+        await $api('/users/me', {
+            method: 'DELETE'
+        });
+
+        toast.success('ลบบัญชีสำเร็จ', 'บัญชีของคุณจะถูกลบถาวรภายใน 90 วัน');
+
+        closeDeleteModal();
+
+        // logout user
+        logout();
+
+    } catch (err) {
+
+        toast.error('เกิดข้อผิดพลาด', err?.data?.message || 'ไม่สามารถลบบัญชีได้');
+
+    } finally {
+
+        isDeleting.value = false;
+
     }
 };
 
