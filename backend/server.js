@@ -15,6 +15,8 @@ const ensureAdmin = require('./src/bootstrap/ensureAdmin');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
+const cron = require('node-cron');
+const deleteUsersAfter90Days = require('./src/jobs/deleteUsers.job');
 
 promClient.collectDefaultMetrics();
 
@@ -95,6 +97,11 @@ if (require.main === module) {
         } catch (e) {
             console.error('Admin bootstrap failed:', e);
         }
+
+        cron.schedule('0 0 * * *', async () => {
+            console.log('Running daily user cleanup job...');
+            await deleteUsersAfter90Days();
+        });
 
         server.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);

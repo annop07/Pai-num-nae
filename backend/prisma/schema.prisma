@@ -25,6 +25,7 @@ model User {
   role                    Role                @default(PASSENGER)
   isVerified              Boolean             @default(false)
   isActive                Boolean             @default(true)
+  deletedAt               DateTime?
   otpCode                 String?
   lastLogin               DateTime?
   createdAt               DateTime            @default(now())

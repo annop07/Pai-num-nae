@@ -3,6 +3,8 @@ const userService = require("../services/user.service");
 const ApiError = require('../utils/ApiError');
 const { uploadToCloudinary } = require('../utils/cloudinary');
 const notifService = require('../services/notification.service');
+const prisma = require('../utils/prisma');
+
 
 const adminListUsers = asyncHandler(async (req, res) => {
     const result = await userService.searchUsers(req.query);
@@ -128,6 +130,20 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
     });
 });
 
+const deleteCurrentUser = asyncHandler(async (req, res) => {
+
+    const userId = req.user.sub;
+
+    const updatedUser = await userService.deleteCurrentUser(userId);
+
+    res.status(200).json({
+        success: true,
+        message: "Your account will be permanently deleted in 90 days.",
+        data: { userId: updatedUser.id }
+    });
+
+});
+
 const adminUpdateUser = asyncHandler(async (req, res) => {
     const updatedUser = await userService.updateUserProfile(req.params.id, req.body);
     res.status(200).json({
@@ -204,6 +220,7 @@ module.exports = {
     getUserPublicById,
     createUser,
     updateCurrentUserProfile,
+    deleteCurrentUser,
     adminUpdateUser,
     adminDeleteUser,
     setUserStatus,
