@@ -338,8 +338,16 @@ const upsertMyTaxProfile = async (driverId, payload) => {
 };
 
 const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passengerId }) => {
-  if (!evidenceFiles || evidenceFiles.length === 0) {
+  const hasEvidenceFiles = Array.isArray(evidenceFiles) && evidenceFiles.length > 0;
+  const isCashPayment = payload.paymentMethod === 'CASH';
+  const hasNote = typeof payload.note === 'string' && payload.note.trim().length > 0;
+
+  if (!isCashPayment && !hasEvidenceFiles) {
     throw new ApiError(400, 'At least one payment evidence file is required');
+  }
+
+  if (isCashPayment && !hasNote) {
+    throw new ApiError(400, 'Note is required for cash payment');
   }
 
   const booking = await ensureBookingForProof(bookingId, passengerId);
@@ -377,30 +385,35 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
     const action = submissionNo === 1 ? ACTION_PROOF_SUBMITTED : ACTION_PROOF_RESUBMITTED;
     const previousStatus = confirmation.status;
 
+    const submissionData = {
+      paymentConfirmationId: confirmation.id,
+      submittedById: passengerId,
+      submissionNo,
+      paymentMethod: payload.paymentMethod,
+      paidAt: payload.paidAt,
+      amount: payload.amount,
+      referenceNo: payload.referenceNo || null,
+      note: payload.note || null,
+      isCorporateRequest: payload.isCorporateRequest,
+      companyName: payload.companyName || null,
+      companyTaxId: payload.companyTaxId || null,
+      companyBranchCode: payload.companyBranchCode || null,
+      companyAddress: payload.companyAddress || null,
+    };
+
+    if (hasEvidenceFiles) {
+      submissionData.evidenceFiles = {
+        create: evidenceFiles.map((file) => ({
+          fileUrl: file.fileUrl,
+          mimeType: file.mimeType || null,
+          fileName: file.fileName || null,
+          fileSizeBytes: file.fileSizeBytes || null,
+        })),
+      };
+    }
+
     const submission = await tx.paymentProofSubmission.create({
-      data: {
-        paymentConfirmationId: confirmation.id,
-        submittedById: passengerId,
-        submissionNo,
-        paymentMethod: payload.paymentMethod,
-        paidAt: payload.paidAt,
-        amount: payload.amount,
-        referenceNo: payload.referenceNo || null,
-        note: payload.note || null,
-        isCorporateRequest: payload.isCorporateRequest,
-        companyName: payload.companyName || null,
-        companyTaxId: payload.companyTaxId || null,
-        companyBranchCode: payload.companyBranchCode || null,
-        companyAddress: payload.companyAddress || null,
-        evidenceFiles: {
-          create: evidenceFiles.map((file) => ({
-            fileUrl: file.fileUrl,
-            mimeType: file.mimeType || null,
-            fileName: file.fileName || null,
-            fileSizeBytes: file.fileSizeBytes || null,
-          })),
-        },
-      },
+      data: submissionData,
     });
 
     await tx.paymentConfirmation.update({
@@ -485,7 +498,7 @@ const listMyPaymentHistory = async ({ userId, userRole, scope, status, page, lim
   };
 };
 
-const confirmPaymentProof = async (id, driverId) => {
+const confirmPaymentProof = async (id, driverId, payload = {}) => {
   return prisma.$transaction(async (tx) => {
     const confirmation = await tx.paymentConfirmation.findUnique({
       where: { id },
@@ -507,6 +520,18 @@ const confirmPaymentProof = async (id, driverId) => {
       throw new ApiError(400, 'Payment proof is not awaiting review');
     }
 
+    const declaredPaymentMethod = confirmation.latestSubmission.paymentMethod;
+    const verifiedPaymentMethod = payload.verifiedPaymentMethod;
+    const isMethodMismatch = declaredPaymentMethod !== verifiedPaymentMethod;
+    const methodMismatchReason = payload.methodMismatchReason || null;
+
+    if (isMethodMismatch && !methodMismatchReason) {
+      throw new ApiError(
+        400,
+        'Method mismatch reason is required when verified payment method differs from declared payment method'
+      );
+    }
+
     const confirmedAt = new Date();
 
     await tx.paymentProofSubmission.update({
@@ -516,6 +541,8 @@ const confirmPaymentProof = async (id, driverId) => {
         reviewedById: driverId,
         reviewedAt: confirmedAt,
         rejectReason: null,
+        verifiedPaymentMethod,
+        methodMismatchReason: isMethodMismatch ? methodMismatchReason : null,
       },
     });
 
@@ -538,6 +565,12 @@ const confirmPaymentProof = async (id, driverId) => {
         toStatus: STATUS_CONFIRMED,
         action: ACTION_PROOF_CONFIRMED,
         actionById: driverId,
+        metadata: {
+          declaredPaymentMethod,
+          verifiedPaymentMethod,
+          isMethodMismatch,
+          methodMismatchReason: isMethodMismatch ? methodMismatchReason : null,
+        },
       },
     });
 
@@ -722,7 +755,8 @@ const issuePaymentDocument = async (id, driverId, payload) => {
         issuedToId: confirmation.passengerId,
         issuedAt,
         paidAt: confirmation.latestSubmission.paidAt,
-        paymentMethod: confirmation.latestSubmission.paymentMethod,
+        paymentMethod:
+          confirmation.latestSubmission.verifiedPaymentMethod || confirmation.latestSubmission.paymentMethod,
         referenceNo: confirmation.latestSubmission.referenceNo || null,
         subtotal,
         taxAmount,
@@ -733,6 +767,10 @@ const issuePaymentDocument = async (id, driverId, payload) => {
           note: payload.note || null,
           sourceSubmissionId: confirmation.latestSubmission.id,
           companyRequest: confirmation.latestSubmission.isCorporateRequest,
+          declaredPaymentMethod: confirmation.latestSubmission.paymentMethod,
+          verifiedPaymentMethod:
+            confirmation.latestSubmission.verifiedPaymentMethod || confirmation.latestSubmission.paymentMethod,
+          methodMismatchReason: confirmation.latestSubmission.methodMismatchReason || null,
         },
       },
     });

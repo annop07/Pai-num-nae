@@ -70,6 +70,14 @@ const submitPaymentProofSchema = z.object({
   companyBranchCode: optionalTrimmedString,
   companyAddress: optionalTrimmedString,
 }).superRefine((data, ctx) => {
+  if (data.paymentMethod === 'CASH' && !data.note) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['note'],
+      message: 'Note is required for cash payment',
+    });
+  }
+
   if (data.isCorporateRequest) {
     if (!data.companyName) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['companyName'], message: 'Company name is required' });
@@ -85,6 +93,16 @@ const submitPaymentProofSchema = z.object({
 
 const rejectPaymentProofSchema = z.object({
   reason: z.string().trim().min(3, 'Reject reason is required'),
+});
+
+const confirmPaymentProofSchema = z.object({
+  verifiedPaymentMethod: z.enum(OFF_APP_PAYMENT_METHODS, {
+    required_error: 'Verified payment method is required',
+  }),
+  methodMismatchReason: z.preprocess(
+    (value) => (typeof value === 'string' ? value.trim() || undefined : value),
+    z.string().min(3, 'Method mismatch reason must be at least 3 characters').optional()
+  ),
 });
 
 const paymentHistoryQuerySchema = z.object({
@@ -125,6 +143,7 @@ module.exports = {
   bookingIdParamSchema,
   paymentConfirmationIdParamSchema,
   submitPaymentProofSchema,
+  confirmPaymentProofSchema,
   rejectPaymentProofSchema,
   paymentHistoryQuerySchema,
   issuePaymentDocumentSchema,

@@ -82,7 +82,9 @@ describe('Payment flow integration (real DB)', () => {
     createdConfirmationIds.push(proof.id);
     expect(proof.status).toBe('PROOF_SUBMITTED');
 
-    const confirmed = await paymentService.confirmPaymentProof(proof.id, booking.route.driverId);
+    const confirmed = await paymentService.confirmPaymentProof(proof.id, booking.route.driverId, {
+      verifiedPaymentMethod: 'PROMPTPAY',
+    });
     expect(confirmed.status).toBe('CONFIRMED');
 
     const document = await paymentService.issuePaymentDocument(proof.id, booking.route.driverId, {
@@ -163,7 +165,9 @@ describe('Payment flow integration (real DB)', () => {
 
     createdConfirmationIds.push(proof.id);
 
-    await paymentService.confirmPaymentProof(proof.id, booking.route.driverId);
+    await paymentService.confirmPaymentProof(proof.id, booking.route.driverId, {
+      verifiedPaymentMethod: 'PROMPTPAY',
+    });
 
     await expect(
       paymentService.issuePaymentDocument(proof.id, booking.route.driverId, {

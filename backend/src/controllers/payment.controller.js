@@ -64,7 +64,7 @@ const listMyPaymentHistory = asyncHandler(async (req, res) => {
 });
 
 const confirmPaymentProof = asyncHandler(async (req, res) => {
-  const confirmation = await paymentService.confirmPaymentProof(req.params.id, req.user.sub);
+  const confirmation = await paymentService.confirmPaymentProof(req.params.id, req.user.sub, req.body);
   res.status(200).json({ success: true, data: confirmation });
 });
 

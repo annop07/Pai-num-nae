@@ -8,6 +8,7 @@ const {
   bookingIdParamSchema,
   paymentConfirmationIdParamSchema,
   submitPaymentProofSchema,
+  confirmPaymentProofSchema,
   rejectPaymentProofSchema,
   paymentHistoryQuerySchema,
   issuePaymentDocumentSchema,
@@ -57,7 +58,7 @@ router.post(
   '/confirmations/:id/confirm',
   protect,
   requireDriverVerified,
-  validate({ params: paymentConfirmationIdParamSchema }),
+  validate({ params: paymentConfirmationIdParamSchema, body: confirmPaymentProofSchema }),
   paymentController.confirmPaymentProof
 );
 
