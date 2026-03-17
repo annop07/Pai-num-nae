@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="document-page min-h-screen bg-zinc-100 py-8 px-4 sm:px-6 lg:px-8">
     <div class="document-shell max-w-5xl mx-auto space-y-4">
       <div class="flex w-full items-center gap-3 print-hidden">
@@ -289,8 +289,9 @@ const paymentMethodLabel = (method) => {
   if (method === 'CASH') return 'เงินสด'
   if (method === 'PROMPTPAY') return 'พร้อมเพย์'
   if (method === 'BANK_TRANSFER') return 'โอนผ่านธนาคาร'
-  if (method === 'QR_CODE') return 'QR Code'
+  if (method === 'CARD') return 'บัตรเครดิต/เดบิต'
   if (method === 'OTHER') return 'อื่น ๆ'
+  if (method === 'QR_CODE') return 'QR Code'
   return method
 }
 
@@ -530,3 +531,4 @@ onMounted(async () => {
   }
 }
 </style>
+

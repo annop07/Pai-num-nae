@@ -34,6 +34,9 @@ jest.mock('../../src/utils/prisma', () => ({
   notification: {
     create: jest.fn(),
   },
+  user: {
+    findUnique: jest.fn(),
+  },
 }));
 
 describe('payment.service', () => {
@@ -44,6 +47,15 @@ describe('payment.service', () => {
 
   afterEach(() => {
     jest.useRealTimers();
+    delete process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE;
+    delete process.env.PAYMENT_MOCK_TAXPAYER_TYPE;
+    delete process.env.PAYMENT_MOCK_TAXPAYER_NAME;
+    delete process.env.PAYMENT_MOCK_TAX_ID;
+    delete process.env.PAYMENT_MOCK_BRANCH_CODE;
+    delete process.env.PAYMENT_MOCK_IS_HEAD_OFFICE;
+    delete process.env.PAYMENT_MOCK_TAX_ADDRESS;
+    delete process.env.PAYMENT_MOCK_EMAIL;
+    delete process.env.PAYMENT_MOCK_PHONE_NUMBER;
   });
 
   it('submits the first payment proof and creates a confirmation record', async () => {
@@ -92,7 +104,7 @@ describe('payment.service', () => {
         paymentMethod: 'PROMPTPAY',
         paidAt: new Date('2026-03-14T10:00:00Z'),
         amount: 100,
-        requestedDocumentType: 'TAX_INVOICE',
+        requestedDocumentTypes: ['TAX_INVOICE', 'PAYMENT_VOUCHER'],
         isCorporateRequest: false,
       },
       evidenceFiles: [
@@ -124,6 +136,7 @@ describe('payment.service', () => {
           paymentMethod: 'PROMPTPAY',
           amount: 100,
           requestedDocumentType: 'TAX_INVOICE',
+          requestedDocumentTypes: ['TAX_INVOICE', 'PAYMENT_VOUCHER'],
         }),
       })
     );
@@ -475,6 +488,75 @@ describe('payment.service', () => {
           subtotal: 93.46,
           taxAmount: 6.54,
           totalAmount: 100,
+        }),
+      })
+    );
+  });
+
+  it('uses mock driver tax profile for TAX_INVOICE when enabled and profile is missing', async () => {
+    process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE = 'true';
+
+    jest.useFakeTimers().setSystemTime(new Date('2026-03-14T10:00:00Z'));
+
+    prisma.paymentConfirmation.findUnique.mockResolvedValue({
+      id: 'pc-3',
+      passengerId: 'passenger-1',
+      driverId: 'driver-1',
+      paidAmount: 100,
+      expectedAmount: 100,
+      status: 'CONFIRMED',
+      latestSubmission: {
+        id: 'pps-3',
+        paidAt: new Date('2026-03-14T09:30:00Z'),
+        paymentMethod: 'PROMPTPAY',
+        verifiedPaymentMethod: 'PROMPTPAY',
+        methodMismatchReason: null,
+        referenceNo: 'TXMOCK',
+        isCorporateRequest: false,
+      },
+      passenger: {
+        id: 'passenger-1',
+        firstName: 'Sara',
+        lastName: 'Passenger',
+        username: 'sara',
+        email: 'sara@example.com',
+      },
+      driver: {
+        id: 'driver-1',
+        firstName: 'Driver',
+        lastName: 'Boy',
+        username: 'driverboy',
+        email: 'driver@example.com',
+        phoneNumber: '0812345678',
+      },
+    });
+
+    prisma.paymentDocument.findFirst
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ documentNumber: 'TI-202603-0010' });
+
+    prisma.driverTaxProfile.findUnique.mockResolvedValue(null);
+
+    prisma.paymentDocument.create.mockResolvedValue({
+      id: 'doc-3',
+      documentNumber: 'TI-202603-0011',
+    });
+
+    await paymentService.issuePaymentDocument('pc-3', 'driver-1', {
+      documentType: 'TAX_INVOICE',
+      note: 'Use mock profile',
+    });
+
+    expect(prisma.paymentDocument.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          documentType: 'TAX_INVOICE',
+          payeeName: 'Driver Boy',
+          payeeTaxId: '0000000000000',
+          payeeAddress: 'Mock Address (Dev Only)',
+          templateData: expect.objectContaining({
+            driverTaxProfileSource: 'MOCK',
+          }),
         }),
       })
     );

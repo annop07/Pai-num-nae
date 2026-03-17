@@ -97,7 +97,7 @@
                   <option value="CASH">เงินสด (CASH)</option>
                   <option value="PROMPTPAY">PromptPay</option>
                   <option value="BANK_TRANSFER">โอนธนาคาร</option>
-                  <option value="QR_CODE">QR Code</option>
+                  <option value="CARD">บัตรเครดิต/เดบิต</option>
                   <option value="OTHER">อื่นๆ</option>
                 </select>
               </div>
@@ -145,7 +145,6 @@
                   v-model="documentType"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                 >
-                  <option value="RECEIPT">ใบเสร็จรับเงิน (RECEIPT)</option>
                   <option value="TAX_INVOICE">ใบกำกับภาษี (TAX_INVOICE)</option>
                   <option value="PAYMENT_VOUCHER">ใบสำคัญรับเงิน (PAYMENT_VOUCHER)</option>
                 </select>
@@ -162,7 +161,7 @@
             >
               <p>
                 Passenger requested:
-                <span class="font-semibold">{{ documentTypeLabel(requestedDocumentType) }}</span>
+                <span class="font-semibold">{{ requestedDocumentTypesLabel }}</span>
               </p>
               <p v-if="isRequestedDocumentMismatch" class="mt-1 text-xs">
                 Selected type is different from passenger request.
@@ -302,7 +301,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 definePageMeta({ middleware: 'auth' })
@@ -330,13 +329,15 @@ const evidenceUrl = ref('')
 const evidenceFiles = ref([])
 const selectedEvidenceIndex = ref(0)
 const documents = ref([])
-const requestedDocumentType = ref('')
+const requestedDocumentTypes = ref([])
 
-const documentType = ref('RECEIPT')
+const documentType = ref('TAX_INVOICE')
 const documentNote = ref('issued by driver')
 
 const showTaxProfileModal = ref(false)
 const shouldIssueAfterTaxProfile = ref(false)
+const driverDisplayName = ref('')
+const loadedTaxpayerName = ref('')
 const taxProfile = reactive({
   taxpayerType: 'INDIVIDUAL',
   taxpayerName: '',
@@ -349,25 +350,33 @@ const taxProfile = reactive({
 })
 
 const confirmationId = route.params.id
-const documentTypeOrder = ['RECEIPT', 'TAX_INVOICE', 'PAYMENT_VOUCHER']
+const documentTypeOrder = ['TAX_INVOICE', 'PAYMENT_VOUCHER']
 
 const issuedDocumentTypeSet = computed(() => new Set(documents.value.map(d => d.documentType)))
 const isSelectedDocumentAlreadyIssued = computed(() => issuedDocumentTypeSet.value.has(documentType.value))
-const hasRequestedDocumentType = computed(() => Boolean(requestedDocumentType.value))
+const hasRequestedDocumentType = computed(() => requestedDocumentTypes.value.length > 0)
 const isRequestedDocumentMismatch = computed(() => (
   hasRequestedDocumentType.value &&
-  documentType.value !== requestedDocumentType.value
+  !requestedDocumentTypes.value.includes(documentType.value)
 ))
+const requestedDocumentTypesLabel = computed(() => {
+  if (!requestedDocumentTypes.value.length) return '-'
+  return requestedDocumentTypes.value.map((type) => documentTypeLabel(type)).join(', ')
+})
 const roundCurrency = (value) => Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100
 const formatCurrency = (value) => Number(value || 0).toLocaleString('th-TH', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
 
-const nextAvailableDocumentType = (preferredType = '') => {
-  if (preferredType && !issuedDocumentTypeSet.value.has(preferredType)) return preferredType
+const nextAvailableDocumentType = (preferredTypes = []) => {
+  const preferredList = Array.isArray(preferredTypes) ? preferredTypes : []
+  const preferred = preferredList.find(
+    (type) => documentTypeOrder.includes(type) && !issuedDocumentTypeSet.value.has(type)
+  )
+  if (preferred) return preferred
   const nextType = documentTypeOrder.find(type => !issuedDocumentTypeSet.value.has(type))
-  return nextType || documentType.value || 'RECEIPT'
+  return nextType || documentType.value || 'TAX_INVOICE'
 }
 
 const autoTaxSummary = computed(() => {
@@ -470,7 +479,13 @@ const formatDateTime = (value) => (value ? new Date(value).toLocaleString('th-TH
 
 const goBack = () => router.push('/check-payments')
 
+const buildDisplayName = (user) => {
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim()
+  return fullName || user?.username || user?.email || ''
+}
+
 const fillTaxProfile = (profile = null) => {
+  loadedTaxpayerName.value = profile?.taxpayerName || ''
   taxProfile.taxpayerType = profile?.taxpayerType || 'INDIVIDUAL'
   taxProfile.taxpayerName = profile?.taxpayerName || ''
   taxProfile.taxId = profile?.taxId || ''
@@ -484,6 +499,7 @@ const fillTaxProfile = (profile = null) => {
 const loadConfirmation = async () => {
   try {
     const data = await $api(`/payments/confirmations/${confirmationId}`)
+    driverDisplayName.value = buildDisplayName(data?.driver)
     status.value = data?.status || ''
     documents.value = Array.isArray(data?.documents) ? data.documents : []
 
@@ -499,19 +515,37 @@ const loadConfirmation = async () => {
     methodMismatchReason.value = submission.methodMismatchReason || ''
     referenceNo.value = submission.referenceNo || ''
     note.value = submission.note || ''
-    requestedDocumentType.value = submission.requestedDocumentType || (
-      submission.isCorporateRequest ? 'TAX_INVOICE' : ''
-    )
+    const submissionRequestedDocumentTypes = Array.isArray(submission.requestedDocumentTypes)
+      ? submission.requestedDocumentTypes
+      : (submission.requestedDocumentType
+        ? [submission.requestedDocumentType]
+        : (submission.isCorporateRequest ? ['TAX_INVOICE'] : []))
+    requestedDocumentTypes.value = submissionRequestedDocumentTypes
     paidAtText.value = submission.paidAt ? new Date(submission.paidAt).toLocaleString('th-TH') : '-'
     evidenceFiles.value = Array.isArray(submission?.evidenceFiles) ? submission.evidenceFiles : []
     selectedEvidenceIndex.value = 0
     evidenceUrl.value = evidenceFiles.value[0]?.fileUrl || ''
-    documentType.value = nextAvailableDocumentType(requestedDocumentType.value)
+    documentType.value = nextAvailableDocumentType(requestedDocumentTypes.value)
   } catch (error) {
     console.error('load confirmation failed:', error)
     errorMessage.value = error?.statusMessage || 'ไม่สามารถโหลดข้อมูลการยืนยันการชำระเงินได้'
   }
 }
+
+watch(
+  () => taxProfile.taxpayerType,
+  (nextType, prevType) => {
+    if (nextType !== 'INDIVIDUAL' || prevType !== 'COMPANY') return
+
+    const currentName = String(taxProfile.taxpayerName || '').trim()
+    const previousLoadedName = String(loadedTaxpayerName.value || '').trim()
+    const suggestedIndividualName = String(driverDisplayName.value || '').trim()
+
+    if (!currentName || currentName === previousLoadedName) {
+      taxProfile.taxpayerName = suggestedIndividualName || currentName
+    }
+  }
+)
 
 const confirmPayment = async () => {
   errorMessage.value = ''
@@ -687,9 +721,13 @@ const issueDocument = async () => {
         await openTaxProfileModal()
         return
       }
-    } catch {
-      await openTaxProfileModal()
-      return
+    } catch (error) {
+      const message = String(error?.statusMessage || error?.data?.message || '')
+      if (/tax profile/i.test(message) || /not found/i.test(message)) {
+        await openTaxProfileModal()
+        return
+      }
+      throw error
     }
   }
 
@@ -712,3 +750,4 @@ const issueDocument = async () => {
 
 onMounted(loadConfirmation)
 </script>
+

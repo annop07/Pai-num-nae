@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="min-h-screen py-8 bg-gray-50">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <h1 class="mb-6 text-2xl font-bold text-gray-800" v-if="!isSuccess">แนบหลักฐานการชำระเงิน</h1>
@@ -59,7 +59,7 @@
                   <option value="CASH">เงินสด (CASH)</option>
                   <option value="PROMPTPAY">PromptPay</option>
                   <option value="BANK_TRANSFER">โอนธนาคาร</option>
-                  <option value="QR_CODE">QR Code</option>
+                  <option value="CARD">บัตรเครดิต/เดบิต</option>
                   <option value="OTHER">อื่นๆ</option>
                 </select>
               </div>
@@ -82,32 +82,25 @@
 
             <div>
               <label class="text-sm font-semibold text-gray-700 block mb-2">เอกสารที่ต้องการจากคนขับ</label>
-              <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
+              <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <button
                   type="button"
-                  @click="requestedDocumentType = 'RECEIPT'"
-                  :class="requestedDocumentType === 'RECEIPT' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700'"
-                  class="px-3 py-2 text-sm border rounded-md text-left"
-                >
-                  ใบเสร็จรับเงิน
-                </button>
-                <button
-                  type="button"
-                  @click="requestedDocumentType = 'TAX_INVOICE'"
-                  :class="requestedDocumentType === 'TAX_INVOICE' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700'"
+                  @click="toggleRequestedDocumentType('TAX_INVOICE')"
+                  :class="requestedDocumentTypes.includes('TAX_INVOICE') ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700'"
                   class="px-3 py-2 text-sm border rounded-md text-left"
                 >
                   ใบกำกับภาษี
                 </button>
                 <button
                   type="button"
-                  @click="requestedDocumentType = 'PAYMENT_VOUCHER'"
-                  :class="requestedDocumentType === 'PAYMENT_VOUCHER' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700'"
+                  @click="toggleRequestedDocumentType('PAYMENT_VOUCHER')"
+                  :class="requestedDocumentTypes.includes('PAYMENT_VOUCHER') ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 bg-white text-gray-700'"
                   class="px-3 py-2 text-sm border rounded-md text-left"
                 >
                   ใบสำคัญรับเงิน
                 </button>
               </div>
+              <p class="mt-2 text-xs text-gray-500">เลือกได้มากกว่า 1 รายการ</p>
             </div>
 
             <div>
@@ -121,7 +114,7 @@
             </div>
           </div>
 
-          <div v-if="requestedDocumentType === 'TAX_INVOICE'" class="p-6 bg-white border border-gray-200 rounded-xl">
+          <div v-if="hasTaxInvoiceRequest" class="p-6 bg-white border border-gray-200 rounded-xl">
             <div class="flex items-center mb-4">
               <input id="receiptReq" v-model="wantReceipt" type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded" />
               <label for="receiptReq" class="ml-2 text-sm text-gray-700">ต้องการออกใบกำกับภาษีในนามนิติบุคคล</label>
@@ -168,7 +161,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 definePageMeta({ middleware: 'auth' })
@@ -189,7 +182,9 @@ const paymentMethod = ref('PROMPTPAY')
 const paidAtLocal = ref('')
 const referenceNo = ref('')
 const note = ref('')
-const requestedDocumentType = ref('RECEIPT')
+const requestedDocumentTypes = ref(['TAX_INVOICE'])
+const hasTaxInvoiceRequest = computed(() => requestedDocumentTypes.value.includes('TAX_INVOICE'))
+const primaryRequestedDocumentType = computed(() => requestedDocumentTypes.value[0] || '')
 
 const wantReceipt = ref(false)
 const receiptType = ref('INDIVIDUAL')
@@ -200,6 +195,14 @@ const receiptForm = ref({
 })
 
 const bookingId = route.params.id
+
+const toggleRequestedDocumentType = (type) => {
+  if (requestedDocumentTypes.value.includes(type)) {
+    requestedDocumentTypes.value = requestedDocumentTypes.value.filter((item) => item !== type)
+    return
+  }
+  requestedDocumentTypes.value = [...requestedDocumentTypes.value, type]
+}
 
 const triggerFileInput = () => fileInput.value?.click()
 
@@ -229,7 +232,9 @@ const validateBeforeSubmit = () => {
     return 'กรณีชำระเงินสด กรุณาระบุหมายเหตุ'
   }
 
-  const isTaxInvoiceRequest = requestedDocumentType.value === 'TAX_INVOICE'
+  if (!requestedDocumentTypes.value.length) return 'กรุณาเลือกเอกสารที่ต้องการอย่างน้อย 1 รายการ'
+
+  const isTaxInvoiceRequest = hasTaxInvoiceRequest.value
 
   if (isTaxInvoiceRequest && wantReceipt.value && receiptType.value === 'CORPORATE') {
     if (!String(receiptForm.value.name || '').trim()) return 'กรุณาระบุชื่อบริษัท'
@@ -255,15 +260,15 @@ const submitProof = async () => {
     formData.append('paymentMethod', paymentMethod.value)
     formData.append('paidAt', new Date(paidAtLocal.value).toISOString())
     formData.append('amount', String(amount.value))
-    formData.append('requestedDocumentType', requestedDocumentType.value)
+    formData.append('requestedDocumentTypes', JSON.stringify(requestedDocumentTypes.value))
+    if (primaryRequestedDocumentType.value) {
+      formData.append('requestedDocumentType', primaryRequestedDocumentType.value)
+    }
 
     if (referenceNo.value) formData.append('referenceNo', referenceNo.value)
     if (note.value) formData.append('note', note.value)
 
-    const isCorporateRequest =
-      requestedDocumentType.value === 'TAX_INVOICE' &&
-      wantReceipt.value &&
-      receiptType.value === 'CORPORATE'
+    const isCorporateRequest = hasTaxInvoiceRequest.value && wantReceipt.value && receiptType.value === 'CORPORATE'
     formData.append('isCorporateRequest', String(isCorporateRequest))
 
     if (isCorporateRequest) {
@@ -306,9 +311,28 @@ onMounted(async () => {
   paidAtLocal.value = now.toISOString().slice(0, 16)
 })
 
-watch(requestedDocumentType, (nextType) => {
-  if (nextType === 'TAX_INVOICE') return
+watch(requestedDocumentTypes, (nextTypes) => {
+  if (Array.isArray(nextTypes) && nextTypes.includes('TAX_INVOICE')) return
   wantReceipt.value = false
+  receiptType.value = 'INDIVIDUAL'
+  receiptForm.value = {
+    name: '',
+    taxId: '',
+    address: '',
+  }
+}, { deep: true })
+
+watch(receiptType, (nextType) => {
+  if (nextType !== 'INDIVIDUAL') return
+  receiptForm.value = {
+    name: '',
+    taxId: '',
+    address: '',
+  }
+})
+
+watch(wantReceipt, (want) => {
+  if (want) return
   receiptType.value = 'INDIVIDUAL'
   receiptForm.value = {
     name: '',

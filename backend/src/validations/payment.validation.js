@@ -1,8 +1,9 @@
 const { z } = require('zod');
 
 const PAYMENT_CONFIRMATION_STATUSES = ['UNPAID', 'PROOF_SUBMITTED', 'CONFIRMED', 'DISPUTED'];
-const OFF_APP_PAYMENT_METHODS = ['CASH', 'BANK_TRANSFER', 'PROMPTPAY', 'QR_CODE', 'OTHER'];
+const OFF_APP_PAYMENT_METHODS = ['CASH', 'PROMPTPAY', 'BANK_TRANSFER', 'CARD', 'OTHER'];
 const PAYMENT_DOCUMENT_TYPES = ['RECEIPT', 'TAX_INVOICE', 'PAYMENT_VOUCHER'];
+const REQUESTABLE_DOCUMENT_TYPES = ['TAX_INVOICE', 'PAYMENT_VOUCHER'];
 const TAXPAYER_TYPES = ['INDIVIDUAL', 'COMPANY'];
 const HISTORY_SCOPES = ['driver', 'passenger'];
 
@@ -29,6 +30,33 @@ const toDate = (value) => {
   return value;
 };
 
+const toDocumentTypesArray = (value) => {
+  if (value == null) return undefined;
+  if (Array.isArray(value)) return value;
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (_error) {
+        return value;
+      }
+    }
+
+    if (trimmed.includes(',')) {
+      return trimmed.split(',').map((item) => item.trim()).filter(Boolean);
+    }
+
+    return [trimmed];
+  }
+
+  return value;
+};
+
 const optionalTrimmedString = z.preprocess(
   (value) => (typeof value === 'string' ? value.trim() || undefined : value),
   z.string().optional()
@@ -46,6 +74,16 @@ const paymentConfirmationIdParamSchema = z.object({
   id: cuidIdSchema,
 });
 
+const requestedDocumentTypesSchema = z.preprocess(
+  toDocumentTypesArray,
+  z
+    .array(z.enum(REQUESTABLE_DOCUMENT_TYPES))
+    .min(1, 'At least one requested document type is required')
+    .max(2, 'At most 2 requested document types are allowed')
+    .refine((types) => new Set(types).size === types.length, 'Requested document types must be unique')
+    .optional()
+);
+
 const submitPaymentProofSchema = z.object({
   paymentMethod: z.enum(OFF_APP_PAYMENT_METHODS, {
     required_error: 'Payment method is required',
@@ -61,7 +99,8 @@ const submitPaymentProofSchema = z.object({
   ),
   referenceNo: optionalTrimmedString,
   note: optionalTrimmedString,
-  requestedDocumentType: z.enum(PAYMENT_DOCUMENT_TYPES).optional(),
+  requestedDocumentType: z.enum(REQUESTABLE_DOCUMENT_TYPES).optional(),
+  requestedDocumentTypes: requestedDocumentTypesSchema,
   isCorporateRequest: z.preprocess(toBoolean, z.boolean().optional().default(false)),
   companyName: optionalTrimmedString,
   companyTaxId: z.preprocess(
@@ -79,7 +118,31 @@ const submitPaymentProofSchema = z.object({
     });
   }
 
+  const requestedDocumentTypes = Array.from(
+    new Set(
+      [
+        ...(Array.isArray(data.requestedDocumentTypes) ? data.requestedDocumentTypes : []),
+        ...(data.requestedDocumentType ? [data.requestedDocumentType] : []),
+      ].filter(Boolean)
+    )
+  );
+
+  if (requestedDocumentTypes.length > 0 && requestedDocumentTypes.length > 2) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['requestedDocumentTypes'],
+      message: 'At most 2 requested document types are allowed',
+    });
+  }
+
   if (data.isCorporateRequest) {
+    if (!requestedDocumentTypes.includes('TAX_INVOICE')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['isCorporateRequest'],
+        message: 'Corporate request requires TAX_INVOICE in requested documents',
+      });
+    }
     if (!data.companyName) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['companyName'], message: 'Company name is required' });
     }

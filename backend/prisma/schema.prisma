@@ -247,6 +247,7 @@ model PaymentProofSubmission {
   companyBranchCode     String?
   companyAddress        String?
   requestedDocumentType PaymentDocumentType?
+  requestedDocumentTypes Json?               @db.Json
   reviewStatus          ProofReviewStatus   @default(PENDING)
   rejectReason          String?             @db.Text
   verifiedPaymentMethod OffAppPaymentMethod?
@@ -510,10 +511,11 @@ enum PaymentConfirmationStatus {
 
 enum OffAppPaymentMethod {
   CASH
-  BANK_TRANSFER
   PROMPTPAY
-  QR_CODE
+  CARD
   OTHER
+  BANK_TRANSFER
+  QR_CODE
 }
 
 enum PaymentReceiverRole {

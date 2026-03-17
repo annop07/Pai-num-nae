@@ -13,6 +13,7 @@ const ACTION_PROOF_RESUBMITTED = 'PROOF_RESUBMITTED';
 const ACTION_PROOF_CONFIRMED = 'PROOF_CONFIRMED';
 const ACTION_PROOF_REJECTED = 'PROOF_REJECTED';
 const ACTION_DOCUMENT_ISSUED = 'DOCUMENT_ISSUED';
+const REQUESTABLE_DOCUMENT_TYPES = ['TAX_INVOICE', 'PAYMENT_VOUCHER'];
 
 const DOCUMENT_PREFIX = {
   RECEIPT: 'RC',
@@ -202,9 +203,44 @@ const formatYearMonth = (date) => {
   return `${year}${month}`;
 };
 
+const normalizeRequestedDocumentTypes = (payload = {}) => {
+  const merged = [
+    ...(Array.isArray(payload.requestedDocumentTypes) ? payload.requestedDocumentTypes : []),
+    ...(payload.requestedDocumentType ? [payload.requestedDocumentType] : []),
+  ];
+
+  return Array.from(
+    new Set(
+      merged.filter((type) => REQUESTABLE_DOCUMENT_TYPES.includes(type))
+    )
+  );
+};
+
 const fullName = (user) => {
   const name = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
   return name || user?.username || user?.email || 'Unknown';
+};
+
+const isTruthyEnv = (value) => ['1', 'true', 'yes', 'on'].includes(String(value || '').toLowerCase());
+
+const isMockDriverTaxProfileEnabled = () => isTruthyEnv(process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE);
+
+const buildMockDriverTaxProfile = (driver) => {
+  const configuredTaxpayerType = String(process.env.PAYMENT_MOCK_TAXPAYER_TYPE || 'INDIVIDUAL').toUpperCase();
+  const taxpayerType = configuredTaxpayerType === 'COMPANY' ? 'COMPANY' : 'INDIVIDUAL';
+  const configuredIsHeadOffice = process.env.PAYMENT_MOCK_IS_HEAD_OFFICE;
+
+  return {
+    taxpayerType,
+    taxpayerName: process.env.PAYMENT_MOCK_TAXPAYER_NAME || fullName(driver),
+    taxId: process.env.PAYMENT_MOCK_TAX_ID || '0000000000000',
+    branchCode: process.env.PAYMENT_MOCK_BRANCH_CODE || null,
+    isHeadOffice: configuredIsHeadOffice === undefined ? true : isTruthyEnv(configuredIsHeadOffice),
+    taxAddress: process.env.PAYMENT_MOCK_TAX_ADDRESS || 'Mock Address (Dev Only)',
+    email: process.env.PAYMENT_MOCK_EMAIL || driver?.email || null,
+    phoneNumber: process.env.PAYMENT_MOCK_PHONE_NUMBER || driver?.phoneNumber || null,
+    isMock: true,
+  };
 };
 
 const ensureParticipant = (confirmation, userId) => {
@@ -334,9 +370,31 @@ const nextDocumentNumber = async (tx, documentType, issuedAt) => {
 };
 
 const getMyTaxProfile = async (driverId) => {
-  return prisma.driverTaxProfile.findUnique({
+  const profile = await prisma.driverTaxProfile.findUnique({
     where: { driverId },
   });
+
+  if (profile || !isMockDriverTaxProfileEnabled()) {
+    return profile;
+  }
+
+  const driver = await prisma.user.findUnique({
+    where: { id: driverId },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
+    },
+  });
+
+  if (!driver) {
+    return buildMockDriverTaxProfile(null);
+  }
+
+  return buildMockDriverTaxProfile(driver);
 };
 
 const upsertMyTaxProfile = async (driverId, payload) => {
@@ -363,6 +421,8 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
   const hasEvidenceFiles = Array.isArray(evidenceFiles) && evidenceFiles.length > 0;
   const isCashPayment = payload.paymentMethod === 'CASH';
   const hasNote = typeof payload.note === 'string' && payload.note.trim().length > 0;
+  const requestedDocumentTypes = normalizeRequestedDocumentTypes(payload);
+  const primaryRequestedDocumentType = requestedDocumentTypes[0] || null;
 
   if (!isCashPayment && !hasEvidenceFiles) {
     throw new ApiError(400, 'At least one payment evidence file is required');
@@ -416,7 +476,8 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
       amount: payload.amount,
       referenceNo: payload.referenceNo || null,
       note: payload.note || null,
-      requestedDocumentType: payload.requestedDocumentType || null,
+      requestedDocumentType: primaryRequestedDocumentType,
+      requestedDocumentTypes: requestedDocumentTypes.length > 0 ? requestedDocumentTypes : null,
       isCorporateRequest: payload.isCorporateRequest,
       companyName: payload.companyName || null,
       companyTaxId: payload.companyTaxId || null,
@@ -753,9 +814,13 @@ const issuePaymentDocument = async (id, driverId, payload) => {
       throw new ApiError(409, 'This document type has already been issued for the payment');
     }
 
-    const driverTaxProfile = await tx.driverTaxProfile.findUnique({
+    const persistedDriverTaxProfile = await tx.driverTaxProfile.findUnique({
       where: { driverId },
     });
+
+    const driverTaxProfile =
+      persistedDriverTaxProfile ||
+      (isMockDriverTaxProfileEnabled() ? buildMockDriverTaxProfile(confirmation.driver) : null);
 
     if (payload.documentType === 'TAX_INVOICE' && !driverTaxProfile) {
       throw new ApiError(400, 'Driver tax profile is required before issuing a tax invoice');
@@ -799,7 +864,13 @@ const issuePaymentDocument = async (id, driverId, payload) => {
           note: payload.note || null,
           sourceSubmissionId: confirmation.latestSubmission.id,
           requestedDocumentType: confirmation.latestSubmission.requestedDocumentType || null,
+          requestedDocumentTypes: Array.isArray(confirmation.latestSubmission.requestedDocumentTypes)
+            ? confirmation.latestSubmission.requestedDocumentTypes
+            : (confirmation.latestSubmission.requestedDocumentType
+              ? [confirmation.latestSubmission.requestedDocumentType]
+              : []),
           companyRequest: confirmation.latestSubmission.isCorporateRequest,
+          driverTaxProfileSource: persistedDriverTaxProfile ? 'PROFILE' : (driverTaxProfile ? 'MOCK' : 'NONE'),
           declaredPaymentMethod: confirmation.latestSubmission.paymentMethod,
           verifiedPaymentMethod:
             confirmation.latestSubmission.verifiedPaymentMethod || confirmation.latestSubmission.paymentMethod,
