@@ -1,6 +1,7 @@
 const userService = require('../../src/services/user.service');
 const prisma = require('../../src/utils/prisma');
 const ApiError = require('../../src/utils/ApiError');
+const bcrypt = require('bcrypt');
 
 // mock prisma
 jest.mock('../../src/utils/prisma', () => ({
@@ -19,10 +20,57 @@ jest.mock('../../src/utils/prisma', () => ({
     }
 }));
 
+// mock bcrypt
+jest.mock('bcrypt', () => ({
+    compare: jest.fn()
+}));
+
+const CORRECT_PASSWORD = '123456789Test';
+const WRONG_PASSWORD = 'WrongPassword123';
+const HASHED_PASSWORD = '$2b$10$hashedpassword';
+
 describe('การทดสอบ Unit Test ของ User Service (Delete Account)', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+    });
+
+    describe('Password Validation', () => {
+        it('ควร throw error เมื่อไม่ส่ง password มา', async () => {
+            const userId = 'passenger-0';
+
+            prisma.user.findUnique.mockResolvedValue({
+                id: userId,
+                role: 'PASSENGER',
+                password: HASHED_PASSWORD,
+                deletedAt: null
+            });
+
+            await expect(
+                userService.deleteCurrentUser(userId, '')
+            ).rejects.toThrow('กรุณากรอกรหัสผ่าน');
+
+            expect(prisma.user.update).not.toHaveBeenCalled();
+        });
+
+        it('ควร throw error เมื่อ password ไม่ถูกต้อง', async () => {
+            const userId = 'passenger-0b';
+
+            prisma.user.findUnique.mockResolvedValue({
+                id: userId,
+                role: 'PASSENGER',
+                password: HASHED_PASSWORD,
+                deletedAt: null
+            });
+
+            bcrypt.compare.mockResolvedValue(false);
+
+            await expect(
+                userService.deleteCurrentUser(userId, WRONG_PASSWORD)
+            ).rejects.toThrow('รหัสผ่านไม่ถูกต้อง');
+
+            expect(prisma.user.update).not.toHaveBeenCalled();
+        });
     });
 
     describe('Passenger Delete Account', () => {
@@ -33,9 +81,11 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'PASSENGER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.booking.findFirst.mockResolvedValue(null);
             prisma.incident.findFirst.mockResolvedValue(null);
 
@@ -45,7 +95,7 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
                 isActive: false
             });
 
-            const result = await userService.deleteCurrentUser(userId);
+            const result = await userService.deleteCurrentUser(userId, CORRECT_PASSWORD);
 
             expect(prisma.user.update).toHaveBeenCalledWith({
                 where: { id: userId },
@@ -66,18 +116,20 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'PASSENGER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.booking.findFirst.mockResolvedValue({
                 id: 'booking-1',
                 status: 'PENDING'
             });
 
             await expect(
-                userService.deleteCurrentUser(userId)
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
             ).rejects.toThrow(
-                'You cannot delete account while having active bookings.'
+                'ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีการจองที่ยังไม่เสร็จสิ้นอยู่'
             );
 
             expect(prisma.user.update).not.toHaveBeenCalled();
@@ -91,9 +143,11 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'PASSENGER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.booking.findFirst.mockResolvedValue(null);
 
             prisma.incident.findFirst.mockResolvedValue({
@@ -102,9 +156,9 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             });
 
             await expect(
-                userService.deleteCurrentUser(userId)
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
             ).rejects.toThrow(
-                'You cannot delete account while having open incident cases.'
+                'ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเคสเหตุการณ์ที่ยังไม่ปิดอยู่'
             );
 
             expect(prisma.user.update).not.toHaveBeenCalled();
@@ -121,13 +175,13 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'DRIVER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.route.findFirst.mockResolvedValue(null);
-
             prisma.booking.findFirst.mockResolvedValue(null);
-
             prisma.incident.findFirst.mockResolvedValue(null);
 
             prisma.user.update.mockResolvedValue({
@@ -136,7 +190,7 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
                 isActive: false
             });
 
-            const result = await userService.deleteCurrentUser(userId);
+            const result = await userService.deleteCurrentUser(userId, CORRECT_PASSWORD);
 
             expect(prisma.user.update).toHaveBeenCalledWith({
                 where: { id: userId },
@@ -157,18 +211,20 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'DRIVER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.route.findFirst.mockResolvedValue({
                 id: 'route-1',
                 status: 'AVAILABLE'
             });
 
             await expect(
-                userService.deleteCurrentUser(userId)
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
             ).rejects.toThrow(
-                'You cannot delete account while having active routes.'
+                'ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเส้นทางเดินรถที่กำลังเปิดใช้งานอยู่'
             );
 
             expect(prisma.user.update).not.toHaveBeenCalled();
@@ -182,9 +238,11 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'DRIVER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.route.findFirst.mockResolvedValue(null);
 
             prisma.booking.findFirst.mockResolvedValue({
@@ -193,9 +251,39 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             });
 
             await expect(
-                userService.deleteCurrentUser(userId)
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
             ).rejects.toThrow(
-                'You cannot delete account while having active bookings on their routes.'
+                'ไม่สามารถลบบัญชีได้ เนื่องจากยังมีการจองบนเส้นทางเดินรถของคุณที่ยังไม่เสร็จสิ้นอยู่'
+            );
+
+            expect(prisma.user.update).not.toHaveBeenCalled();
+
+        });
+
+        it('Driver ไม่ควรถูก block โดย booking บน route ที่ COMPLETED แล้ว แต่ควร block โดย incident ที่ยังเปิดอยู่', async () => {
+
+            const userId = 'driver-5';
+
+            prisma.user.findUnique.mockResolvedValue({
+                id: userId,
+                role: 'DRIVER',
+                password: HASHED_PASSWORD,
+                deletedAt: null
+            });
+
+            bcrypt.compare.mockResolvedValue(true);
+            prisma.route.findFirst.mockResolvedValue(null);
+            prisma.booking.findFirst.mockResolvedValue(null); // route COMPLETED แล้ว booking ไม่ควรถูกนับ
+
+            prisma.incident.findFirst.mockResolvedValue({
+                id: 'incident-2',
+                status: 'PENDING'
+            });
+
+            await expect(
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
+            ).rejects.toThrow(
+                'ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเคสเหตุการณ์ที่ยังไม่ปิดอยู่'
             );
 
             expect(prisma.user.update).not.toHaveBeenCalled();
@@ -209,11 +297,12 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             prisma.user.findUnique.mockResolvedValue({
                 id: userId,
                 role: 'DRIVER',
+                password: HASHED_PASSWORD,
                 deletedAt: null
             });
 
+            bcrypt.compare.mockResolvedValue(true);
             prisma.route.findFirst.mockResolvedValue(null);
-
             prisma.booking.findFirst.mockResolvedValue(null);
 
             prisma.incident.findFirst.mockResolvedValue({
@@ -222,9 +311,9 @@ describe('การทดสอบ Unit Test ของ User Service (Delete Acco
             });
 
             await expect(
-                userService.deleteCurrentUser(userId)
+                userService.deleteCurrentUser(userId, CORRECT_PASSWORD)
             ).rejects.toThrow(
-                'You cannot delete account while having open incident cases.'
+                'ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเคสเหตุการณ์ที่ยังไม่ปิดอยู่'
             );
 
             expect(prisma.user.update).not.toHaveBeenCalled();

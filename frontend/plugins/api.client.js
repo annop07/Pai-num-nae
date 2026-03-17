@@ -18,7 +18,8 @@ export default defineNuxtPlugin(() => {
     },
 
     onResponse({ response }) {
-      if (response._data && Object.prototype.hasOwnProperty.call(response._data, 'data')) {
+      // แปลงเฉพาะ response สำเร็จ (2xx) เท่านั้น เพื่อไม่ให้ overwrite error body ที่มี message
+      if (response.ok && response._data && Object.prototype.hasOwnProperty.call(response._data, 'data')) {
         response._data = response._data.data
       }
     },

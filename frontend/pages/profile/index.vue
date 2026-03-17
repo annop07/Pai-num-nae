@@ -144,8 +144,8 @@
                             </div>
                         </form>
 
-                        <!-- Danger Zone -->
-                        <div class="pt-8 mt-8 border-t border-gray-200">
+                        <!-- Danger Zone (ไม่แสดงสำหรับ Admin) -->
+                        <div v-if="user?.role !== 'ADMIN'" class="pt-8 mt-8 border-t border-gray-200">
                             <h3 class="mb-4 text-lg font-bold text-red-600">เขตอันตราย</h3>
                             <div class="mb-4">
                                 <h4 class="mb-2 text-sm font-medium text-gray-700">ลบบัญชีนี้</h4>
@@ -210,9 +210,8 @@
                     </div>
 
                     <div class="mb-6">
-                        <p class="mb-2 text-sm font-bold text-gray-800">เพื่อยืนยัน โปรดพิมพ์ "<span
-                                class="text-red-600">delete my account</span>" ด้านล่าง:</p>
-                        <input type="text" v-model="deleteConfirmText" placeholder="delete my account"
+                        <p class="mb-2 text-sm font-bold text-gray-800">เพื่อยืนยันตัวตน โปรดกรอกรหัสผ่านปัจจุบันของคุณ:</p>
+                        <input type="password" v-model="deleteConfirmText" placeholder="กรอกรหัสผ่าน"
                             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500" />
                     </div>
 
@@ -222,7 +221,7 @@
                             ยกเลิก
                         </button>
                         <button @click="executeDeleteAccount" type="button"
-                            :disabled="deleteConfirmText !== 'delete my account' || isDeleting"
+                            :disabled="deleteConfirmText.trim() === '' || isDeleting"
                             class="flex items-center justify-center w-1/2 px-4 py-3 text-sm font-bold text-white transition-colors bg-red-600 rounded-md hover:bg-red-700 focus:outline-none disabled:bg-red-400 disabled:cursor-not-allowed">
                             <svg v-if="isDeleting" class="w-5 h-5 mr-2 text-white animate-spin"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -256,7 +255,7 @@ definePageMeta({
 });
 
 const { $api } = useNuxtApp()
-const { logout } = useAuth()
+const { logout, user } = useAuth()
 const { toast } = useToast();
 
 const fileInput = ref(null)
@@ -318,14 +317,15 @@ const closeDeleteModal = () => {
 };
 
 const executeDeleteAccount = async () => {
-    if (deleteConfirmText.value !== 'delete my account') return;
+    if (deleteConfirmText.value.trim() === '') return;
 
     isDeleting.value = true;
     try {
 
         // เรียก API backend
         await $api('/users/me', {
-            method: 'DELETE'
+            method: 'DELETE',
+            body: { password: deleteConfirmText.value }
         });
 
         toast.success('ลบบัญชีสำเร็จ', 'บัญชีของคุณจะถูกลบถาวรภายใน 90 วัน');
@@ -336,9 +336,14 @@ const executeDeleteAccount = async () => {
         logout();
 
     } catch (err) {
+        const backendMessage =
+            err?.data?.message ||          // payload JSON จาก backend
+            err?.statusMessage ||          // ข้อความที่ถูก map ใน plugin (เช่นจาก ApiError)
+            err?.response?._data?.message ||
+            err?.response?.data?.message ||
+            err?.message;
 
-        toast.error('เกิดข้อผิดพลาด', err?.data?.message || 'ไม่สามารถลบบัญชีได้');
-
+        toast.error('เกิดข้อผิดพลาด', backendMessage || 'ไม่สามารถลบบัญชีได้');
     } finally {
 
         isDeleting.value = false;

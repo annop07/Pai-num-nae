@@ -207,7 +207,7 @@ const deleteUser = async (id) => {
     return safeDeletedUser;
 };
 
-const deleteCurrentUser = async (userId) => {
+const deleteCurrentUser = async (userId, password) => {
 
     const user = await prisma.user.findUnique({
         where: { id: userId }
@@ -219,6 +219,15 @@ const deleteCurrentUser = async (userId) => {
 
     if (user.deletedAt) {
         throw new ApiError(400, "Account deletion already scheduled.");
+    }
+
+    if (!password) {
+        throw new ApiError(400, "กรุณากรอกรหัสผ่าน");
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+        throw new ApiError(400, "รหัสผ่านไม่ถูกต้อง");
     }
 
     if (user.role === "PASSENGER") {
@@ -235,7 +244,7 @@ const deleteCurrentUser = async (userId) => {
         if (activeBooking) {
             throw new ApiError(
                 400,
-                "You cannot delete account while having active bookings."
+                "ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีการจองที่ยังไม่เสร็จสิ้นอยู่"
             );
         }
 
@@ -252,7 +261,7 @@ const deleteCurrentUser = async (userId) => {
         if (openIncident) {
             throw new ApiError(
                 400,
-                "You cannot delete account while having open incident cases."
+                "ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเคสเหตุการณ์ที่ยังไม่ปิดอยู่"
             );
         }
     }
@@ -272,16 +281,19 @@ const deleteCurrentUser = async (userId) => {
         if (activeRoute) {
             throw new ApiError(
                 400,
-                "You cannot delete account while having active routes."
+                "ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเส้นทางเดินรถที่กำลังเปิดใช้งานอยู่"
             );
         }
 
-        // ตรวจ Active Booking บน Route ของ Driver
+        // ตรวจ Active Booking บน Route ของ Driver (เฉพาะ route ที่ยัง active อยู่)
         const activeBookingOnRoute = await prisma.booking.findFirst({
             where: {
                 route: {
                     is: {
-                        driverId: userId
+                        driverId: userId,
+                        status: {
+                            in: ['AVAILABLE', 'IN_TRANSIT']
+                        }
                     }
                 },
                 status: {
@@ -293,7 +305,7 @@ const deleteCurrentUser = async (userId) => {
         if (activeBookingOnRoute) {
             throw new ApiError(
                 400,
-                "You cannot delete account while having active bookings on their routes."
+                "ไม่สามารถลบบัญชีได้ เนื่องจากยังมีการจองบนเส้นทางเดินรถของคุณที่ยังไม่เสร็จสิ้นอยู่"
             );
         }
 
@@ -310,7 +322,7 @@ const deleteCurrentUser = async (userId) => {
         if (openIncident) {
             throw new ApiError(
                 400,
-                "You cannot delete account while having open incident cases."
+                "ไม่สามารถลบบัญชีได้ เนื่องจากคุณยังมีเคสเหตุการณ์ที่ยังไม่ปิดอยู่"
             );
         }
     }

@@ -133,8 +133,9 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
 const deleteCurrentUser = asyncHandler(async (req, res) => {
 
     const userId = req.user.sub;
+    const { password } = req.body;
 
-    const updatedUser = await userService.deleteCurrentUser(userId);
+    const updatedUser = await userService.deleteCurrentUser(userId, password);
 
     res.status(200).json({
         success: true,
