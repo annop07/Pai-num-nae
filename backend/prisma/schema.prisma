@@ -246,6 +246,7 @@ model PaymentProofSubmission {
   companyTaxId          String?
   companyBranchCode     String?
   companyAddress        String?
+  requestedDocumentType PaymentDocumentType?
   reviewStatus          ProofReviewStatus   @default(PENDING)
   rejectReason          String?             @db.Text
   verifiedPaymentMethod OffAppPaymentMethod?

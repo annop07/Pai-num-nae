@@ -223,6 +223,28 @@ const ensureDriverOwner = (confirmation, driverId) => {
 
 const calculateExpectedAmount = (booking) => Number(booking.route.pricePerSeat) * booking.numberOfSeats;
 
+const roundCurrency = (value) => Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
+
+const splitVatFromGross = (grossAmount) => {
+  const gross = roundCurrency(grossAmount);
+  if (gross <= 0) {
+    return {
+      base: 0,
+      vat: 0,
+      gross: 0,
+    };
+  }
+
+  const base = roundCurrency(gross / 1.07);
+  const vat = roundCurrency(gross - base);
+
+  return {
+    base,
+    vat,
+    gross,
+  };
+};
+
 const fetchDetailedConfirmationTx = (tx, id) =>
   tx.paymentConfirmation.findUnique({
     where: { id },
@@ -394,6 +416,7 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
       amount: payload.amount,
       referenceNo: payload.referenceNo || null,
       note: payload.note || null,
+      requestedDocumentType: payload.requestedDocumentType || null,
       isCorporateRequest: payload.isCorporateRequest,
       companyName: payload.companyName || null,
       companyTaxId: payload.companyTaxId || null,
@@ -740,9 +763,18 @@ const issuePaymentDocument = async (id, driverId, payload) => {
 
     const issuedAt = new Date();
     const documentNumber = await nextDocumentNumber(tx, payload.documentType, issuedAt);
-    const subtotal = Number(confirmation.paidAmount || confirmation.expectedAmount);
-    const taxAmount = Number(payload.taxAmount || 0);
-    const totalAmount = subtotal + taxAmount;
+    const paidAmount = Number(confirmation.paidAmount || confirmation.expectedAmount);
+
+    let subtotal = roundCurrency(paidAmount);
+    let taxAmount = 0;
+    let totalAmount = roundCurrency(paidAmount);
+
+    if (payload.documentType === 'TAX_INVOICE') {
+      const vatSplit = splitVatFromGross(paidAmount);
+      subtotal = vatSplit.base;
+      taxAmount = vatSplit.vat;
+      totalAmount = vatSplit.gross;
+    }
     const payerSnapshot = buildPayerSnapshot(confirmation);
     const payeeSnapshot = buildPayeeSnapshot(confirmation, driverTaxProfile);
 
@@ -766,6 +798,7 @@ const issuePaymentDocument = async (id, driverId, payload) => {
         templateData: {
           note: payload.note || null,
           sourceSubmissionId: confirmation.latestSubmission.id,
+          requestedDocumentType: confirmation.latestSubmission.requestedDocumentType || null,
           companyRequest: confirmation.latestSubmission.isCorporateRequest,
           declaredPaymentMethod: confirmation.latestSubmission.paymentMethod,
           verifiedPaymentMethod:

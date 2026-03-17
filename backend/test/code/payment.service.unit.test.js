@@ -92,6 +92,7 @@ describe('payment.service', () => {
         paymentMethod: 'PROMPTPAY',
         paidAt: new Date('2026-03-14T10:00:00Z'),
         amount: 100,
+        requestedDocumentType: 'TAX_INVOICE',
         isCorporateRequest: false,
       },
       evidenceFiles: [
@@ -122,6 +123,7 @@ describe('payment.service', () => {
           submissionNo: 1,
           paymentMethod: 'PROMPTPAY',
           amount: 100,
+          requestedDocumentType: 'TAX_INVOICE',
         }),
       })
     );
@@ -384,7 +386,6 @@ describe('payment.service', () => {
 
     const document = await paymentService.issuePaymentDocument('pc-1', 'driver-1', {
       documentType: 'RECEIPT',
-      taxAmount: 0,
       note: 'Paid in cash',
     });
 
@@ -403,6 +404,78 @@ describe('payment.service', () => {
       expect.objectContaining({
         id: 'doc-1',
         documentNumber: 'RC-202603-0010',
+      })
+    );
+  });
+
+  it('derives VAT from gross paid amount when issuing TAX_INVOICE', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-03-14T10:00:00Z'));
+
+    prisma.paymentConfirmation.findUnique.mockResolvedValue({
+      id: 'pc-2',
+      passengerId: 'passenger-1',
+      driverId: 'driver-1',
+      paidAmount: 100,
+      expectedAmount: 100,
+      status: 'CONFIRMED',
+      latestSubmission: {
+        id: 'pps-2',
+        paidAt: new Date('2026-03-14T09:30:00Z'),
+        paymentMethod: 'PROMPTPAY',
+        verifiedPaymentMethod: 'PROMPTPAY',
+        methodMismatchReason: null,
+        referenceNo: 'TX123',
+        isCorporateRequest: false,
+      },
+      passenger: {
+        id: 'passenger-1',
+        firstName: 'Sara',
+        lastName: 'Passenger',
+        username: 'sara',
+        email: 'sara@example.com',
+      },
+      driver: {
+        id: 'driver-1',
+        firstName: 'Driver',
+        lastName: 'Boy',
+        username: 'driverboy',
+        email: 'driver@example.com',
+        phoneNumber: '0812345678',
+      },
+    });
+
+    prisma.paymentDocument.findFirst
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ documentNumber: 'TI-202603-0009' });
+
+    prisma.driverTaxProfile.findUnique.mockResolvedValue({
+      driverId: 'driver-1',
+      taxpayerName: 'Driver Boy Co., Ltd.',
+      taxId: '1234567890123',
+      branchCode: '00000',
+      taxAddress: 'Khon Kaen',
+    });
+
+    prisma.paymentDocument.create.mockResolvedValue({
+      id: 'doc-2',
+      documentNumber: 'TI-202603-0010',
+    });
+
+    await paymentService.issuePaymentDocument('pc-2', 'driver-1', {
+      documentType: 'TAX_INVOICE',
+      note: 'Auto VAT from paid amount',
+    });
+
+    expect(prisma.paymentDocument.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          paymentConfirmationId: 'pc-2',
+          documentType: 'TAX_INVOICE',
+          documentNumber: 'TI-202603-0010',
+          subtotal: 93.46,
+          taxAmount: 6.54,
+          totalAmount: 100,
+        }),
       })
     );
   });

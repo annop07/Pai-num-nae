@@ -1,282 +1,434 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-kanit">
-    <div class="max-w-3xl mx-auto">
-      <!-- Header -->
-      <div class="mb-8 flex items-center justify-between no-print">
-        <div>
-          <button @click="$router.back()" class="text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center mb-2">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            ย้อนกลับ
-          </button>
-          <h1 class="text-2xl font-bold text-gray-900">เอกสารการเงิน</h1>
-        </div>
-        <button @click="printDocument" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-          </svg>
+  <div class="document-page min-h-screen bg-zinc-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="document-shell max-w-5xl mx-auto space-y-4">
+      <div class="flex w-full items-center gap-3 print-hidden">
+        <button @click="$router.back()" class="text-sm font-medium text-blue-700 hover:text-blue-600">← ย้อนกลับ</button>
+        <button @click="printDocument" class="ml-auto px-5 py-2.5 bg-blue-600 text-white rounded-md text-sm font-semibold hover:bg-blue-700">
           พิมพ์เอกสาร / PDF
         </button>
       </div>
 
-      <!-- Loading State -->
-      <div v-if="isLoading" class="py-20 text-center animate-pulse">
-        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-           <svg class="w-10 h-10 text-blue-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-           </svg>
-        </div>
-        <p class="text-gray-500 font-medium">กำลังเตรียมเอกสารของคุณ...</p>
+      <div v-if="isLoading" class="bg-white border border-zinc-300 rounded-md p-10 text-center text-zinc-500">
+        กำลังโหลดเอกสาร...
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="py-16 text-center bg-white rounded-2xl border border-gray-100 shadow-sm px-6">
-        <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </div>
-        <h2 class="text-xl font-bold text-gray-900 mb-2">ไม่พบข้อมูลเอกสาร</h2>
-        <p class="text-gray-500 max-w-xs mx-auto mb-8">ขณะนี้ยังไม่มีเอกสารที่ออกโดยผู้ขับขี่ กรุณารอผู้ขับขี่ยืนยันรายการอีกครั้ง</p>
-        <button @click="$router.back()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-colors">ย้อนกลับ</button>
+      <div v-else-if="errorMessage" class="bg-white border border-red-300 rounded-md p-8 text-center text-red-700">
+        {{ errorMessage }}
       </div>
 
-      <!-- Document Content -->
-      <div v-else class="bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden font-kanit doc-container relative">
-        <!-- Top accent -->
-        <div class="h-2 bg-blue-600 w-full no-print"></div>
+      <div v-else-if="!activeDocument" class="bg-white border border-zinc-300 rounded-md p-8 text-center text-zinc-500">
+        ยังไม่มีเอกสารการเงินสำหรับรายการนี้
+      </div>
 
-        <div class="p-8 sm:p-12">
-          <!-- Watermark for draft/demo if needed -->
-          <div v-if="isDemo" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] rotate-[-45deg] select-none text-9xl font-black no-print">
-            PAI-NUM-NAE
+      <div v-else class="space-y-4">
+        <div v-if="sortedDocuments.length > 1" class="bg-white border border-zinc-300 rounded-md px-4 py-3 print-hidden">
+          <p class="text-xs text-zinc-500 mb-2">เลือกประเภทเอกสาร</p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="doc in sortedDocuments"
+              :key="doc.id"
+              @click="selectDocument(doc.id)"
+              :class="[
+                'px-3 py-1.5 rounded-md border text-sm transition-colors',
+                activeDocument.id === doc.id
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-blue-700 border-blue-200 hover:bg-blue-50'
+              ]"
+            >
+              {{ titleByType(doc.documentType) }}
+            </button>
           </div>
+        </div>
 
-          <!-- Document Header -->
-          <div class="flex flex-col md:flex-row justify-between mb-12 gap-8 relative z-10">
-            <div class="text-center md:text-left">
-              <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
-                <div class="bg-blue-600 text-white p-1.5 rounded-lg">
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                  </svg>
-                </div>
-                <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">PAI-NUM-NAE</span>
-              </div>
-              <h1 class="text-2xl font-bold text-gray-900">{{ doc.documentType === 'tax' ? 'ใบกำกับภาษีอย่างย่อ' : 'ใบสำคัญรับเงิน' }}</h1>
-              <p class="text-gray-400 font-medium uppercase text-[10px] tracking-widest">{{ doc.documentType === 'tax' ? 'Abbreviated Tax Invoice' : 'Receipt Voucher' }}</p>
-            </div>
-            
-            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex-shrink-0 min-w-[200px]">
-              <div class="flex justify-between text-xs mb-1">
-                <span class="text-gray-400 uppercase font-bold">เลขที่ (No.)</span>
-                <span class="text-blue-600 font-mono font-bold">{{ doc.metadata.docNumber }}</span>
-              </div>
-              <div class="flex justify-between text-xs">
-                <span class="text-gray-400 uppercase font-bold">วันที่ (Date)</span>
-                <span class="text-gray-900 font-medium">{{ formatDate(doc.metadata.issuedAt) }}</span>
-              </div>
-            </div>
-          </div>
+        <article
+          v-if="activeDocument.documentType === 'PAYMENT_VOUCHER'"
+          class="print-one-page voucher-paper bg-white border border-black screen-shadow p-6 sm:p-8"
+        >
+          <header class="text-center mb-4">
+            <h1 class="text-xl font-bold tracking-wide">ใบสำคัญรับเงิน</h1>
+          </header>
 
-          <!-- Entities -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 text-sm relative z-10">
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-2">
-                <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                <h3 class="font-bold text-gray-900 uppercase text-xs">ผู้ขาย / ผู้รับเงิน (Seller)</h3>
-              </div>
-              <p class="font-bold text-lg text-gray-900 leading-tight">{{ doc.issuer.name }}</p>
-              <p class="text-gray-600 leading-relaxed text-xs">{{ doc.issuer.address || 'ที่อยู่ระบุในระบบทางฝั่งผู้ขับขี่' }}</p>
-              <div class="pt-2">
-                <p v-if="doc.documentType === 'tax'" class="text-[11px] font-bold text-gray-400">เลขประจำตัวผู้เสียภาษี: <span class="font-mono text-gray-900 ml-1">{{ doc.issuer.taxId || '-' }}</span></p>
-                <p v-else class="text-[11px] font-bold text-gray-400">เลขบัตรประชาชน: <span class="font-mono text-gray-900 ml-1">{{ doc.issuer.nationalId || '-' }}</span></p>
-              </div>
+          <section class="text-sm text-black leading-7 space-y-1">
+            <div class="flex justify-end gap-8">
+              <p>เลขที่ <span class="inline-block border-b border-black min-w-[140px] px-1">{{ activeDocument.documentNumber || '-' }}</span></p>
+              <p>วันที่ <span class="inline-block border-b border-black min-w-[140px] px-1">{{ formatDate(activeDocument.issuedAt) }}</span></p>
             </div>
 
-            <div class="space-y-3">
-              <div class="flex items-center gap-2 border-b border-gray-100 pb-2 mb-2">
-                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <h3 class="font-bold text-gray-900 uppercase text-xs">ผู้จ่ายเงิน (Payer / Customer)</h3>
-              </div>
-              <p class="font-bold text-lg text-gray-900 leading-tight">{{ doc.customer.name }}</p>
-              <p class="text-gray-500 text-xs">รหัสสมาชิก: #{{ doc.customer.id.substring(0,8) }}</p>
-            </div>
-          </div>
+            <p>
+              ข้าพเจ้า
+              <span class="inline-block border-b border-black min-w-[240px] px-1">{{ activeDocument.payeeName || '-' }}</span>
+              (ผู้ขายสินค้า / ผู้รับจ้าง)
+            </p>
 
-          <!-- Table -->
-          <div class="relative z-10 mb-12">
-            <table class="w-full text-sm">
+            <p>
+              อยู่บ้านเลขที่
+              <span class="inline-block border-b border-black min-w-[140px] px-1">{{ normalizeText(activeDocument.payeeAddress) }}</span>
+            </p>
+
+            <p>
+              ได้รับเงินจาก
+              <span class="inline-block border-b border-black min-w-[240px] px-1">{{ activeDocument.payerName || '-' }}</span>
+            </p>
+
+            <p>
+              เป็นเงินจำนวน
+              <span class="inline-block border-b border-black min-w-[160px] px-1 text-right">{{ formatMoney(totalAmount) }}</span>
+              บาท
+              ({{ toThaiBahtText(totalAmount) }})
+            </p>
+          </section>
+
+          <section class="mt-4 border border-black">
+            <table class="w-full text-sm border-collapse voucher-table">
               <thead>
-                <tr class="bg-gray-900 text-white">
-                  <th class="py-3 px-4 text-left font-medium rounded-tl-lg">รายการ (Description)</th>
-                  <th class="py-3 px-4 text-right font-medium rounded-tr-lg">จำนวนเงิน (Amount)</th>
+                <tr>
+                  <th class="border border-black p-1.5 w-[62%]">รายการ</th>
+                  <th class="border border-black p-1.5 text-center" colspan="2">จำนวนเงิน</th>
+                </tr>
+                <tr>
+                  <th class="border border-black p-1.5"></th>
+                  <th class="border border-black p-1.5 w-[19%] text-center">บาท</th>
+                  <th class="border border-black p-1.5 w-[19%] text-center">สต.</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100 border-x border-gray-100">
-                <template v-if="doc.documentType === 'receipt'">
-                  <tr v-for="(item, i) in doc.financials.items" :key="i" class="hover:bg-gray-50/50 transition-colors">
-                    <td class="py-5 px-4 text-gray-700">{{ item.description || 'ค่าโดยสาร' }}</td>
-                    <td class="py-5 px-4 text-right font-mono font-bold">{{ (Number(item.amount) || 0).toLocaleString() }} THB</td>
-                  </tr>
-                </template>
-                <tr v-else class="hover:bg-gray-50/50 transition-colors">
-                  <td class="py-5 px-4 text-gray-700 font-medium">ค่าบริการเดินทางโดยสาร</td>
-                  <td class="py-5 px-4 text-right font-mono font-bold">{{ (Number(doc.financials.total) || 0).toLocaleString() }} THB</td>
+              <tbody>
+                <tr v-for="(row, index) in voucherRows" :key="index">
+                  <td class="border border-black p-1.5 h-7">{{ row.description }}</td>
+                  <td class="border border-black p-1.5 h-7 text-right">{{ row.baht }}</td>
+                  <td class="border border-black p-1.5 h-7 text-right">{{ row.satang }}</td>
+                </tr>
+                <tr>
+                  <td class="border border-black p-1.5 text-right font-semibold">รวมเป็นเงิน</td>
+                  <td class="border border-black p-1.5 text-right font-semibold">{{ splitBahtSatang(totalAmount).baht }}</td>
+                  <td class="border border-black p-1.5 text-right font-semibold">{{ splitBahtSatang(totalAmount).satang }}</td>
                 </tr>
               </tbody>
-              <tfoot class="border border-gray-100">
-                <template v-if="doc.documentType === 'tax'">
-                  <tr class="bg-gray-50/30">
-                    <td class="py-2 px-4 text-right text-[10px] font-bold text-gray-400 uppercase">ฐานภาษี (Tax Base)</td>
-                    <td class="py-2 px-4 text-right font-mono text-xs text-gray-600">{{ (Number(doc.financials.base) || 0).toFixed(2) }}</td>
-                  </tr>
-                  <tr class="bg-gray-50/30">
-                    <td class="py-2 px-4 text-right text-[10px] font-bold text-gray-400 uppercase">ภาษีมูลค่าเพิ่ม (VAT 7%)</td>
-                    <td class="py-2 px-4 text-right font-mono text-xs text-gray-600">{{ (Number(doc.financials.vat) || 0).toFixed(2) }}</td>
-                  </tr>
-                </template>
-                <tr class="bg-blue-600 text-white">
-                  <td class="py-5 px-4 font-black text-lg uppercase tracking-tight">ยอดรวมทั้งสิ้น (Grand Total)</td>
-                  <td class="py-5 px-4 text-right font-black text-2xl font-mono">{{ (Number(doc.financials.total) || 0).toLocaleString() }} THB</td>
-                </tr>
-              </tfoot>
             </table>
-          </div>
+          </section>
 
-          <!-- Signature & Footer -->
-          <div class="flex flex-col md:flex-row justify-between items-end gap-12 mt-16 relative z-10">
-            <div class="text-[10px] text-gray-400 italic max-w-xs space-y-1">
-              <div class="p-3 bg-gray-50 rounded-lg border border-gray-100 no-print">
-                <p class="font-bold text-blue-600 not-italic mb-1">หมายเหตุ:</p>
-                <p>นี่คือเอกสารอิเล็กทรอนิกส์ ไม่จำเป็นต้องมีตราประทับ</p>
-                <p>เอกสารฉบับนี้ใช้สำหรับแสดงรายละเอียดการชำระเงินในระบบ PAI-NAM-NAE เท่านั้น</p>
+          <section class="mt-4 text-sm text-black leading-7">
+            <p>
+              จำนวนเงิน (ตัวอักษร)
+              <span class="inline-block border-b border-black min-w-[320px] px-1">{{ toThaiBahtText(totalAmount) }}</span>
+            </p>
+
+            <div class="grid grid-cols-2 gap-8 mt-6">
+              <div class="text-center">
+                <p>ผู้จ่ายเงิน</p>
+                <div class="mt-8 border-b border-black"></div>
+                <p class="mt-1">({{ activeDocument.payerName || '-' }})</p>
               </div>
-              <p class="mt-4">Electronic Document generated by PAI-NAM-NAE Platform.</p>
-              <p>Generated on: {{ new Date().toLocaleString('th-TH') }}</p>
+              <div class="text-center">
+                <p>ผู้รับเงิน</p>
+                <div class="mt-8 border-b border-black"></div>
+                <p class="mt-1">({{ activeDocument.payeeName || '-' }})</p>
+              </div>
             </div>
-            
-            <div class="text-center w-56 flex-shrink-0">
-               <div class="relative mb-4">
-                 <div class="h-24 border-b-2 border-dashed border-gray-200 flex items-center justify-center p-2 mb-2 group">
-                    <img v-if="doc.signature" :src="doc.signature" class="max-h-full transition-transform group-hover:scale-110" />
-                    <div v-else class="text-gray-200 text-xs italic">No digital signature</div>
-                    
-                    <!-- Seal decoration -->
-                    <div class="absolute -top-4 -right-4 w-12 h-12 border-2 border-blue-600/20 rounded-full flex items-center justify-center rotate-12 no-print">
-                      <span class="text-[8px] font-black text-blue-600/30 uppercase text-center leading-none">Verified By<br>PN-System</span>
-                    </div>
-                 </div>
-                 <p class="font-bold text-gray-900 leading-tight">({{ doc.issuer.name }})</p>
-                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">ผู้รับเงิน / ผู้ขับขี่ (Driver)</p>
-               </div>
-            </div>
+          </section>
+        </article>
+
+        <article v-else class="ticket-wrapper print-one-page">
+          <div class="ticket-paper bg-white border border-zinc-300 screen-shadow overflow-hidden">
+            <div class="ticket-corner"></div>
+
+            <header class="px-5 pt-5 pb-3 border-b border-zinc-300 text-center">
+              <div class="flex items-center justify-center gap-2 mb-1">
+                <div class="w-2.5 h-2.5 rounded-full bg-slate-700"></div>
+                <p class="font-semibold text-zinc-700 text-xs tracking-widest">PAI-NUM-NAE</p>
+              </div>
+              <h1 class="text-lg font-bold text-zinc-900">
+                {{ activeDocument.documentType === 'TAX_INVOICE' ? 'ใบกำกับภาษีอย่างย่อ' : 'ใบเสร็จรับเงิน' }}
+              </h1>
+              <p class="text-[11px] text-zinc-600 uppercase tracking-wide">
+                {{ activeDocument.documentType === 'TAX_INVOICE' ? 'Abbreviated Tax Invoice' : 'Receipt' }}
+              </p>
+            </header>
+
+            <section class="px-5 py-3 text-[12px] leading-5 text-zinc-800 border-b border-zinc-300">
+              <div
+                :class="[
+                  'rounded border p-2.5 text-center leading-4',
+                  activeDocument.documentType === 'TAX_INVOICE' ? 'border-sky-400 bg-sky-50' : 'border-zinc-300 bg-zinc-50'
+                ]"
+              >
+                <p class="font-semibold">{{ activeDocument.payeeName || 'ไปนำแหน่' }}</p>
+                <p>{{ normalizeText(activeDocument.payeeAddress) }}</p>
+                <p>
+                  เลขประจำตัวผู้เสียภาษี:
+                  {{ activeDocument.payeeTaxId || '-' }}
+                </p>
+              </div>
+
+              <div class="mt-3 space-y-1.5">
+                <p class="flex justify-between gap-2 border-b border-zinc-300 pb-1">
+                  <span class="text-zinc-600">เลขที่เอกสาร</span>
+                  <span class="font-semibold">{{ activeDocument.documentNumber || '-' }}</span>
+                </p>
+                <p class="flex justify-between gap-2 border-b border-zinc-300 pb-1">
+                  <span class="text-zinc-600">วันที่ออกเอกสาร</span>
+                  <span class="font-semibold">{{ formatDate(activeDocument.issuedAt) }}</span>
+                </p>
+                <p class="flex justify-between gap-2 border-b border-zinc-300 pb-1">
+                  <span class="text-zinc-600">ลูกค้า</span>
+                  <span class="font-semibold text-right">{{ activeDocument.payerName || '-' }}</span>
+                </p>
+              </div>
+            </section>
+
+            <section class="px-5 py-3 text-[12px]">
+              <table class="w-full text-[12px]">
+                <thead>
+                  <tr class="border-b border-zinc-400">
+                    <th class="text-left pb-1 font-semibold">รายการ</th>
+                    <th class="text-right pb-1 font-semibold">จำนวนเงิน</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-zinc-200">
+                    <td class="py-1.5">ค่าบริการเดินทาง</td>
+                    <td class="py-1.5 text-right">{{ formatMoney(subtotalAmount) }}</td>
+                  </tr>
+                  <tr v-if="taxAmountNumber > 0" class="border-b border-zinc-200">
+                    <td class="py-1.5">ภาษีมูลค่าเพิ่ม</td>
+                    <td class="py-1.5 text-right">{{ formatMoney(taxAmountNumber) }}</td>
+                  </tr>
+                  <tr class="font-semibold border-b border-zinc-300">
+                    <td class="py-1.5">จำนวนเงินรวม</td>
+                    <td class="py-1.5 text-right">{{ formatMoney(totalAmount) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="mt-3 space-y-1 text-[11px] text-zinc-700">
+                <p class="flex justify-between gap-2">
+                  <span>จำนวนเงินตัวอักษร</span>
+                  <span class="text-right">{{ toThaiBahtText(totalAmount) }}</span>
+                </p>
+                <p class="flex justify-between gap-2">
+                  <span>วิธีชำระเงิน</span>
+                  <span>{{ paymentMethodLabel(activeDocument.paymentMethod) }}</span>
+                </p>
+                <p class="flex justify-between gap-2">
+                  <span>เลขอ้างอิง</span>
+                  <span>{{ activeDocument.referenceNo || '-' }}</span>
+                </p>
+              </div>
+            </section>
+
+            <footer class="px-5 pt-3 pb-4 border-t border-zinc-300 text-center text-[11px] text-zinc-600">
+              <p v-if="activeDocument.documentType === 'TAX_INVOICE'" class="font-semibold">VAT INCLUDED</p>
+              <p>ใบเสร็จฉบับอิเล็กทรอนิกส์จากระบบไปนำแหน่</p>
+            </footer>
+          </div>
+        </article>
+
+        <div v-if="activeDocument.templateData" class="bg-white border border-zinc-300 rounded-md p-4 text-sm text-zinc-700 print-hidden">
+          <p class="font-semibold text-zinc-900 mb-2">บันทึกการตรวจสอบการชำระเงิน</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <p><span class="font-medium">วิธีที่ผู้โดยสารแจ้ง:</span> {{ paymentMethodLabel(activeDocument.templateData.declaredPaymentMethod) }}</p>
+            <p><span class="font-medium">วิธีที่คนขับยืนยัน:</span> {{ paymentMethodLabel(activeDocument.templateData.verifiedPaymentMethod || activeDocument.paymentMethod) }}</p>
+            <p class="md:col-span-2"><span class="font-medium">เหตุผลกรณีวิธีชำระไม่ตรงกัน:</span> {{ activeDocument.templateData.methodMismatchReason || '-' }}</p>
           </div>
         </div>
       </div>
-    </div>
-    
-    <!-- Toast style notification for printing -->
-    <div class="fixed bottom-8 right-8 no-print lg:block hidden">
-       <div class="bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-white/10">
-          <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">PDF</div>
-          <div class="text-sm">
-             <p class="font-bold">แนะนำการพิมพ์</p>
-             <p class="text-xs text-gray-400">เลือก "Save as PDF" เพื่อบันทึกเป็นไฟล์</p>
-          </div>
-       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import dayjs from 'dayjs'
-import 'dayjs/locale/th'
-import buddhistEra from 'dayjs/plugin/buddhistEra'
 
-dayjs.locale('th')
-dayjs.extend(buddhistEra)
+definePageMeta({ middleware: 'auth' })
 
+const { $api } = useNuxtApp()
 const route = useRoute()
+
 const isLoading = ref(true)
-const error = ref(null)
-const doc = ref(null)
-const isDemo = ref(false)
+const errorMessage = ref('')
+const documents = ref([])
+const selectedDocumentId = ref('')
 
-const formatDate = (dateStr) => {
-  return dayjs(dateStr).format('D MMMM BBBB')
+const documentTypeWeight = {
+  RECEIPT: 0,
+  PAYMENT_VOUCHER: 1,
+  TAX_INVOICE: 2,
 }
 
-const printDocument = () => {
-  window.print()
+const sortedDocuments = computed(() => {
+  return [...documents.value].sort((a, b) => {
+    const byType = (documentTypeWeight[a.documentType] ?? 99) - (documentTypeWeight[b.documentType] ?? 99)
+    if (byType !== 0) return byType
+
+    const timeA = new Date(a.issuedAt || 0).getTime()
+    const timeB = new Date(b.issuedAt || 0).getTime()
+    return timeB - timeA
+  })
+})
+
+const activeDocument = computed(() => {
+  return sortedDocuments.value.find((doc) => doc.id === selectedDocumentId.value) || sortedDocuments.value[0] || null
+})
+
+const subtotalAmount = computed(() => Number(activeDocument.value?.subtotal || 0))
+const taxAmountNumber = computed(() => Number(activeDocument.value?.taxAmount || 0))
+const totalAmount = computed(() => Number(activeDocument.value?.totalAmount || 0))
+
+const selectDocument = (id) => {
+  selectedDocumentId.value = id
 }
+
+const titleByType = (type) => {
+  if (type === 'TAX_INVOICE') return 'ใบกำกับภาษีอย่างย่อ'
+  if (type === 'PAYMENT_VOUCHER') return 'ใบสำคัญรับเงิน'
+  return 'ใบเสร็จรับเงิน'
+}
+
+const paymentMethodLabel = (method) => {
+  if (!method) return '-'
+  if (method === 'CASH') return 'เงินสด'
+  if (method === 'PROMPTPAY') return 'พร้อมเพย์'
+  if (method === 'BANK_TRANSFER') return 'โอนผ่านธนาคาร'
+  if (method === 'QR_CODE') return 'QR Code'
+  if (method === 'OTHER') return 'อื่น ๆ'
+  return method
+}
+
+const formatMoney = (value) => {
+  return Number(value || 0).toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
+const formatDate = (value) => {
+  return value ? new Date(value).toLocaleDateString('th-TH') : '-'
+}
+
+const splitBahtSatang = (value) => {
+  const amount = Number(value || 0)
+  const sign = amount < 0 ? '-' : ''
+  const absolute = Math.abs(amount)
+  const totalSatang = Math.round(absolute * 100)
+  const baht = Math.floor(totalSatang / 100)
+  const satang = totalSatang % 100
+
+  return {
+    baht: `${sign}${baht.toLocaleString('th-TH')}`,
+    satang: String(satang).padStart(2, '0'),
+  }
+}
+
+const normalizeText = (value) => {
+  const text = String(value || '').trim()
+  return text || '-'
+}
+
+const voucherRows = computed(() => {
+  const firstRowAmount = splitBahtSatang(totalAmount.value)
+  const rows = [
+    {
+      description: 'ค่าบริการเดินทาง',
+      baht: firstRowAmount.baht,
+      satang: firstRowAmount.satang,
+    },
+  ]
+
+  while (rows.length < 8) {
+    rows.push({ description: '', baht: '', satang: '' })
+  }
+
+  return rows
+})
+
+const thaiDigits = ['ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า']
+const thaiPlaces = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน']
+
+const readUnderMillion = (num) => {
+  const input = Number(num || 0)
+  if (!input) return ''
+
+  const numberString = String(Math.floor(input))
+  let output = ''
+
+  for (let i = 0; i < numberString.length; i += 1) {
+    const digit = Number(numberString[i])
+    const place = numberString.length - i - 1
+
+    if (digit === 0) continue
+
+    if (place === 0) {
+      if (digit === 1 && numberString.length > 1) {
+        output += 'เอ็ด'
+      } else {
+        output += thaiDigits[digit]
+      }
+      continue
+    }
+
+    if (place === 1) {
+      if (digit === 1) {
+        output += 'สิบ'
+      } else if (digit === 2) {
+        output += 'ยี่สิบ'
+      } else {
+        output += `${thaiDigits[digit]}สิบ`
+      }
+      continue
+    }
+
+    output += `${thaiDigits[digit]}${thaiPlaces[place]}`
+  }
+
+  return output
+}
+
+const readThaiInteger = (num) => {
+  const input = Number(num || 0)
+  if (input === 0) return 'ศูนย์'
+  if (input < 1000000) return readUnderMillion(input)
+
+  const front = Math.floor(input / 1000000)
+  const back = input % 1000000
+  return `${readThaiInteger(front)}ล้าน${back ? readUnderMillion(back) : ''}`
+}
+
+const toThaiBahtText = (value) => {
+  const amount = Number(value || 0)
+  if (!Number.isFinite(amount) || amount < 0) return '-'
+
+  const fixed = amount.toFixed(2)
+  const [integerPart, satangPart] = fixed.split('.')
+  const integerText = `${readThaiInteger(Number(integerPart))}บาท`
+  const satang = Number(satangPart)
+
+  if (satang === 0) return `${integerText}ถ้วน`
+  return `${integerText}${readUnderMillion(satang)}สตางค์`
+}
+
+const printDocument = () => window.print()
 
 onMounted(async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+
   try {
-    const bookingId = route.params.id
-    const { $api } = useNuxtApp()
-    
-    // 1. Check if we have issued document in localStorage (Demo/Prototype persistence)
-    if (typeof window !== 'undefined') {
-      const savedDoc = localStorage.getItem(`doc_${bookingId}`)
-      if (savedDoc) {
-        doc.value = JSON.parse(savedDoc)
-        isLoading.value = false
-        return
-      }
+    const confirmation = await $api(`/payments/confirmations/${route.params.id}`)
+    const docs = Array.isArray(confirmation?.documents) ? confirmation.documents : []
+
+    if (!docs.length) {
+      errorMessage.value = 'ยังไม่มีเอกสารการเงินสำหรับรายการนี้'
+      return
     }
 
-    // 2. Otherwise attempt real fetch or show dynamic mock
-    try {
-      const booking = await $api(`/bookings/${bookingId}`)
-      const user = await $api('/users/me')
-      
-      // We look for financial records in our simulated backend flow
-      // If none, we generate a high-quality mock for the demo/UI context
-      doc.value = {
-        documentType: booking.isReceiptRequested !== false ? 'tax' : 'receipt',
-        metadata: {
-          docNumber: `PN-${dayjs().format('YYMM')}-${bookingId.substring(0,4).toUpperCase()}`,
-          issuedAt: new Date().toISOString()
-        },
-        issuer: {
-          name: 'สมชาย คนขับประจำทาง',
-          address: 'เลขที่ 45/99 หมู่บ้านศรีเมือง ถ.เลี่ยงเมือง ต.ในเมือง อ.เมือง จ.ขอนแก่น 40000',
-          taxId: '1-4099-00123-45-6',
-          nationalId: '1409900123456'
-        },
-        customer: {
-          id: booking.passengerId || 'P-001',
-          name: `${booking.passenger?.firstName || user.firstName} ${booking.passenger?.lastName || user.lastName}`.trim()
-        },
-        financials: {
-          total: (booking.route?.pricePerSeat || 0) * (booking.numberOfSeats || 1) || 540,
-          vat: 0,
-          base: 0,
-          items: [
-            { description: 'ค่าบริการเดินทางตามเส้นทาง', amount: (booking.route?.pricePerSeat || 0) * (booking.numberOfSeats || 1) || 540 }
-          ]
-        },
-        signature: null // Signatures are usually generated and sent as URL/Base64
-      }
-      
-      // Calculate tax if needed
-      doc.value.financials.base = doc.value.financials.total / 1.07
-      doc.value.financials.vat = doc.value.financials.total - doc.value.financials.base
-      
-      isDemo.value = true
-    } catch (e) {
-      console.warn('Real data not found, showing draft/demo document.')
-      throw e
-    }
-  } catch (err) {
-    // If we can't fetch anything at all, show empty/error
-    // But for this task, we want to WOW the user, so let's always show a "Demo" document if it's confirmed
-    // error.value = 'ไม่พบข้อมูลเอกสาร'
-    isLoading.value = false
+    documents.value = docs
+
+    const requestedType = String(route.query.type || '').toUpperCase()
+    const preselected = docs.find((doc) => doc.documentType === requestedType)
+    selectedDocumentId.value = preselected?.id || docs[0].id
+  } catch (error) {
+    console.error('load document failed:', error)
+    errorMessage.value = error?.statusMessage || 'ไม่สามารถโหลดเอกสารการเงินได้'
   } finally {
     isLoading.value = false
   }
@@ -284,42 +436,97 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.font-kanit {
-  font-family: 'Kanit', sans-serif;
+.ticket-wrapper {
+  display: flex;
+  justify-content: center;
 }
 
-.doc-container {
-  min-height: 297mm; /* A4 aspect ratio height approx */
+.ticket-paper {
+  width: 360px;
+  max-width: 100%;
+  position: relative;
+}
+
+.ticket-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-left: 24px solid transparent;
+  border-top: 24px solid #0f172a;
+}
+
+.voucher-paper {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.voucher-table td,
+.voucher-table th {
+  line-height: 1.2;
+}
+
+.screen-shadow {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
 @media print {
-  .no-print {
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
+
+  .document-page {
+    min-height: auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .document-shell {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .document-shell.space-y-4 > * {
+    margin-top: 0 !important;
+  }
+
+  .print-one-page {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+  .print-hidden {
     display: none !important;
   }
-  body {
-    background: white;
-  }
-  .min-h-screen {
-    padding: 0 !important;
-    background: white !important;
-  }
-  .max-w-3xl {
-    max-width: none !important;
-    width: 100% !important;
-    margin: 0 !important;
-  }
-  .doc-container {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-  .shadow-2xl {
-     box-shadow: none !important;
-  }
-}
 
-/* Smooth transitions */
-.transition-all {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .screen-shadow {
+    box-shadow: none !important;
+  }
+
+  .ticket-paper {
+    width: 78mm;
+    margin: 0 auto;
+  }
+
+  .voucher-paper {
+    max-width: none;
+    width: 100%;
+    transform: scale(0.95);
+    transform-origin: top center;
+  }
+
+  .voucher-table td,
+  .voucher-table th {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 </style>

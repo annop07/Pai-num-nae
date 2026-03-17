@@ -67,6 +67,7 @@ describe('Payment flow integration (real DB)', () => {
         amount: 123.45,
         referenceNo: `INT-${Date.now()}`,
         note: 'integration-test',
+        requestedDocumentType: 'TAX_INVOICE',
         isCorporateRequest: false,
       },
       evidenceFiles: [
@@ -81,6 +82,7 @@ describe('Payment flow integration (real DB)', () => {
 
     createdConfirmationIds.push(proof.id);
     expect(proof.status).toBe('PROOF_SUBMITTED');
+    expect(proof.latestSubmission.requestedDocumentType).toBe('TAX_INVOICE');
 
     const confirmed = await paymentService.confirmPaymentProof(proof.id, booking.route.driverId, {
       verifiedPaymentMethod: 'PROMPTPAY',
@@ -89,7 +91,6 @@ describe('Payment flow integration (real DB)', () => {
 
     const document = await paymentService.issuePaymentDocument(proof.id, booking.route.driverId, {
       documentType: 'RECEIPT',
-      taxAmount: 0,
       note: 'integration-test',
     });
 
@@ -172,7 +173,6 @@ describe('Payment flow integration (real DB)', () => {
     await expect(
       paymentService.issuePaymentDocument(proof.id, booking.route.driverId, {
         documentType: 'TAX_INVOICE',
-        taxAmount: 0,
         note: 'integration-tax-profile',
       })
     ).rejects.toThrow('Driver tax profile is required before issuing a tax invoice');

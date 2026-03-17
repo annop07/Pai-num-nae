@@ -61,6 +61,7 @@ const submitPaymentProofSchema = z.object({
   ),
   referenceNo: optionalTrimmedString,
   note: optionalTrimmedString,
+  requestedDocumentType: z.enum(PAYMENT_DOCUMENT_TYPES).optional(),
   isCorporateRequest: z.preprocess(toBoolean, z.boolean().optional().default(false)),
   companyName: optionalTrimmedString,
   companyTaxId: z.preprocess(
@@ -116,10 +117,6 @@ const issuePaymentDocumentSchema = z.object({
   documentType: z.enum(PAYMENT_DOCUMENT_TYPES, {
     required_error: 'Document type is required',
   }),
-  taxAmount: z.preprocess(
-    (value) => (value === undefined ? 0 : toNumber(value)),
-    z.number({ invalid_type_error: 'Tax amount must be a number' }).min(0, 'Tax amount must be at least 0')
-  ).optional().default(0),
   note: optionalTrimmedString,
 });
 
