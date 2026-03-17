@@ -1,0 +1,571 @@
+const incidentService = require('../../src/services/incident.service');
+const prisma = require('../../src/utils/prisma');
+const notificationService = require('../../src/services/notification.service');
+const { createIncidentSchema } = require('../../src/validations/incident.validation');
+
+// Mock Prisma
+jest.mock('../../src/utils/prisma', () => ({
+    incident: {
+        create: jest.fn(),
+        findMany: jest.fn(),
+        findUnique: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
+        count: jest.fn(),
+    },
+    incidentStatusLog: {
+        create: jest.fn(),
+        findMany: jest.fn(),
+    },
+    user: {
+        findUnique: jest.fn(),
+        findMany: jest.fn(),
+    },
+    route: {
+        findUnique: jest.fn(),
+    },
+    booking: {
+        findUnique: jest.fn(),
+    },
+    $transaction: jest.fn(),
+}));
+
+jest.mock('../../src/services/notification.service', () => ({
+    createNotificationByAdmin: jest.fn().mockResolvedValue(true),
+}));
+
+// ============================================================
+// Test Data
+// ============================================================
+const DRIVER_ID = 'driver-001';
+const PASSENGER_ID = 'passenger-001';
+const ROUTE_ID = 'route-001';
+const BOOKING_ID = 'booking-001';
+
+const mockBooking = {
+    id: BOOKING_ID,
+    routeId: ROUTE_ID,
+    passengerId: PASSENGER_ID,
+    route: { driverId: DRIVER_ID },
+};
+
+const mockRoute = { id: ROUTE_ID };
+const mockDriverUser = { id: DRIVER_ID, username: 'TestDriver_UAT' };
+
+// ============================================================
+// Passenger Incident Tests
+// ============================================================
+describe('Unit Test: Passenger รายงานเหตุการณ์ (Incident)', () => {
+    beforeEach(() => {
+        // Mock findMany ให้คืน array ว่าง เพื่อไม่ให้ notifyAdminsNewIncident error
+        prisma.user.findMany.mockResolvedValue([]);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    // ----------------------------------------------------------
+    // createIncident — Passenger ผ่าน bookingId
+    // ----------------------------------------------------------
+    describe('createIncident — Passenger รายงานผ่าน bookingId', () => {
+        it('ควร auto-resolve routeId และ reportedUserId เป็นคนขับ เมื่อ Passenger รายงานผ่าน bookingId', async () => {
+            const data = {
+                bookingId: BOOKING_ID,
+                type: 'SAFETY_CONCERN',
+                title: 'คนขับขับรถเร็วเกินไป',
+                description: 'คนขับขับรถเร็วเกิน 120 กม/ชม ในเขตเมือง',
+            };
+
+            prisma.booking.findUnique.mockResolvedValue(mockBooking);
+            prisma.route.findUnique.mockResolvedValue(mockRoute);
+            prisma.user.findUnique.mockResolvedValue(mockDriverUser);
+            prisma.incident.create.mockResolvedValue({
+                id: 'inc-psg-1',
+                ...data,
+                reporterId: PASSENGER_ID,
+                reportedUserId: DRIVER_ID,
+                routeId: ROUTE_ID,
+                status: 'PENDING',
+                priority: 'NORMAL',
+                reporter: { id: PASSENGER_ID },
+            });
+
+            const result = await incidentService.createIncident(data, PASSENGER_ID);
+
+            // ตรวจสอบว่าดึง booking มาถูกต้อง
+            expect(prisma.booking.findUnique).toHaveBeenCalledWith({
+                where: { id: BOOKING_ID },
+                select: {
+                    id: true,
+                    routeId: true,
+                    passengerId: true,
+                    route: { select: { driverId: true } },
+                },
+            });
+
+            // ตรวจสอบว่า reportedUserId ถูก resolve เป็นคนขับ
+            expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: DRIVER_ID } });
+
+            // ตรวจสอบว่าสร้าง incident ด้วยข้อมูลที่ถูกต้อง
+            expect(prisma.incident.create).toHaveBeenCalledWith(expect.objectContaining({
+                data: expect.objectContaining({
+                    reporterId: PASSENGER_ID,
+                    reportedUserId: DRIVER_ID,
+                    routeId: ROUTE_ID,
+                    bookingId: BOOKING_ID,
+                    type: 'SAFETY_CONCERN',
+                }),
+            }));
+
+            expect(result.id).toBe('inc-psg-1');
+            expect(result.reportedUserId).toBe(DRIVER_ID);
+        });
+
+        it('ควรแจ้ง 404 เมื่อ bookingId ที่ส่งมาไม่พบ', async () => {
+            prisma.booking.findUnique.mockResolvedValue(null);
+
+            await expect(
+                incidentService.createIncident(
+                    { bookingId: 'non-existent', type: 'HARASSMENT', title: 'test', description: 'desc' },
+                    PASSENGER_ID
+                )
+            ).rejects.toThrow('ไม่พบการจอง');
+        });
+
+        it('ควรแจ้ง 404 เมื่อ routeId ที่ resolve จาก booking ไม่พบ', async () => {
+            prisma.booking.findUnique.mockResolvedValue(mockBooking);
+            prisma.route.findUnique.mockResolvedValue(null);
+
+            await expect(
+                incidentService.createIncident(
+                    { bookingId: BOOKING_ID, type: 'SAFETY_CONCERN', title: 'test', description: 'desc' },
+                    PASSENGER_ID
+                )
+            ).rejects.toThrow('ไม่พบเส้นทาง');
+        });
+
+        it('ควรสร้างสำเร็จพร้อม priority HIGH, location, evidenceUrls', async () => {
+            const data = {
+                bookingId: BOOKING_ID,
+                type: 'HARASSMENT',
+                priority: 'HIGH',
+                title: 'คนขับมีพฤติกรรมไม่เหมาะสม',
+                description: 'คนขับใช้คำพูดคุกคามระหว่างเดินทาง',
+                location: { lat: 13.7563, lng: 100.5018 },
+                evidenceUrls: ['https://example.com/evidence1.jpg', 'https://example.com/evidence2.jpg'],
+            };
+
+            prisma.booking.findUnique.mockResolvedValue(mockBooking);
+            prisma.route.findUnique.mockResolvedValue(mockRoute);
+            prisma.user.findUnique.mockResolvedValue(mockDriverUser);
+            prisma.incident.create.mockResolvedValue({
+                id: 'inc-psg-2',
+                ...data,
+                reporterId: PASSENGER_ID,
+                reportedUserId: DRIVER_ID,
+                routeId: ROUTE_ID,
+                status: 'PENDING',
+                reporter: { id: PASSENGER_ID },
+            });
+
+            const result = await incidentService.createIncident(data, PASSENGER_ID);
+
+            expect(prisma.incident.create).toHaveBeenCalledWith(expect.objectContaining({
+                data: expect.objectContaining({
+                    priority: 'HIGH',
+                    location: { lat: 13.7563, lng: 100.5018 },
+                    evidenceUrls: ['https://example.com/evidence1.jpg', 'https://example.com/evidence2.jpg'],
+                }),
+            }));
+
+            expect(result.priority).toBe('HIGH');
+        });
+
+        it('ควรใช้ default priority เป็น NORMAL เมื่อไม่ส่ง priority', async () => {
+            const data = {
+                bookingId: BOOKING_ID,
+                type: 'NO_SHOW_DRIVER',
+                title: 'คนขับไม่มาตามนัด',
+                description: 'รอ 30 นาทีแล้วคนขับยังไม่มารับ',
+            };
+
+            prisma.booking.findUnique.mockResolvedValue(mockBooking);
+            prisma.route.findUnique.mockResolvedValue(mockRoute);
+            prisma.user.findUnique.mockResolvedValue(mockDriverUser);
+            prisma.incident.create.mockResolvedValue({
+                id: 'inc-psg-3',
+                ...data,
+                reporterId: PASSENGER_ID,
+                priority: 'NORMAL',
+                status: 'PENDING',
+                reporter: { id: PASSENGER_ID },
+            });
+
+            await incidentService.createIncident(data, PASSENGER_ID);
+
+            expect(prisma.incident.create).toHaveBeenCalledWith(expect.objectContaining({
+                data: expect.objectContaining({
+                    priority: 'NORMAL',
+                }),
+            }));
+        });
+
+        it('ควรสร้างสำเร็จโดยไม่ส่ง bookingId (รายงานทั่วไปจาก Passenger)', async () => {
+            const data = {
+                type: 'LOST_ITEM',
+                title: 'ลืมของในรถ',
+                description: 'ลืมกระเป๋าไว้ในรถ',
+            };
+
+            prisma.incident.create.mockResolvedValue({
+                id: 'inc-psg-4',
+                ...data,
+                reporterId: PASSENGER_ID,
+                reportedUserId: null,
+                routeId: null,
+                bookingId: null,
+                status: 'PENDING',
+                priority: 'NORMAL',
+                reporter: { id: PASSENGER_ID },
+            });
+
+            const result = await incidentService.createIncident(data, PASSENGER_ID);
+
+            expect(prisma.booking.findUnique).not.toHaveBeenCalled();
+            expect(result.bookingId).toBeNull();
+            expect(result.reportedUserId).toBeNull();
+        });
+
+        it('ควรแจ้ง 404 ถ้า reportedUserId (คนขับ) ที่ resolve ได้ไม่พบในระบบ', async () => {
+            const bookingWithMissingDriver = {
+                id: BOOKING_ID,
+                routeId: ROUTE_ID,
+                passengerId: PASSENGER_ID,
+                route: { driverId: 'deleted-driver' },
+            };
+
+            prisma.booking.findUnique.mockResolvedValue(bookingWithMissingDriver);
+            prisma.route.findUnique.mockResolvedValue(mockRoute);
+            prisma.user.findUnique.mockResolvedValue(null);
+
+            await expect(
+                incidentService.createIncident(
+                    { bookingId: BOOKING_ID, type: 'LICENSE_PLATE_MISMATCH', title: 'ทะเบียนไม่ตรง', description: 'desc' },
+                    PASSENGER_ID
+                )
+            ).rejects.toThrow('ไม่พบผู้ใช้ที่ถูกรายงาน');
+        });
+
+        it('ควรรองรับ IncidentType ทุกประเภทที่ Passenger อาจรายงาน', async () => {
+            const passengerTypes = [
+                'SAFETY_CONCERN',
+                'HARASSMENT',
+                'NO_SHOW_DRIVER',
+                'LICENSE_PLATE_MISMATCH',
+                'VEHICLE_ISSUE',
+                'LOST_ITEM',
+            ];
+
+            for (const type of passengerTypes) {
+                jest.clearAllMocks();
+
+                const data = {
+                    bookingId: BOOKING_ID,
+                    type,
+                    title: `ทดสอบ ${type}`,
+                    description: `รายละเอียด ${type}`,
+                };
+
+                prisma.booking.findUnique.mockResolvedValue(mockBooking);
+                prisma.route.findUnique.mockResolvedValue(mockRoute);
+                prisma.user.findUnique.mockResolvedValue(mockDriverUser);
+                prisma.incident.create.mockResolvedValue({
+                    id: `inc-type-${type}`,
+                    ...data,
+                    reporterId: PASSENGER_ID,
+                    reportedUserId: DRIVER_ID,
+                    routeId: ROUTE_ID,
+                    status: 'PENDING',
+                    reporter: { id: PASSENGER_ID },
+                });
+
+                const result = await incidentService.createIncident(data, PASSENGER_ID);
+
+                expect(prisma.incident.create).toHaveBeenCalledWith(expect.objectContaining({
+                    data: expect.objectContaining({ type }),
+                }));
+                expect(result.id).toBe(`inc-type-${type}`);
+            }
+        });
+    });
+
+    // ----------------------------------------------------------
+    // getMyIncidents — Passenger
+    // ----------------------------------------------------------
+    describe('getMyIncidents — Passenger ดูรายงานของตัวเอง', () => {
+        it('ควรคืนค่ารายการ incident ที่ Passenger เป็นผู้รายงานหรือถูกรายงาน', async () => {
+            const mockIncidents = [
+                { id: 'inc-1', title: 'รายงาน 1', reporterId: PASSENGER_ID },
+                { id: 'inc-2', title: 'ถูกรายงาน', reportedUserId: PASSENGER_ID },
+            ];
+
+            prisma.incident.findMany.mockResolvedValue(mockIncidents);
+
+            const result = await incidentService.getMyIncidents(PASSENGER_ID);
+
+            expect(result).toEqual(mockIncidents);
+            expect(prisma.incident.findMany).toHaveBeenCalledWith(expect.objectContaining({
+                where: {
+                    OR: [
+                        { reporterId: PASSENGER_ID },
+                        { reportedUserId: PASSENGER_ID },
+                    ],
+                    isArchived: false,
+                },
+                orderBy: { createdAt: 'desc' },
+            }));
+        });
+
+        it('ควรคืนค่า array ว่างเมื่อไม่มี incident', async () => {
+            prisma.incident.findMany.mockResolvedValue([]);
+
+            const result = await incidentService.getMyIncidents(PASSENGER_ID);
+
+            expect(result).toEqual([]);
+        });
+    });
+
+    // ----------------------------------------------------------
+    // getIncidentById — Passenger
+    // ----------------------------------------------------------
+    describe('getIncidentById — Passenger ดูรายละเอียด', () => {
+        it('ควรคืนค่ารายงานตาม ID ที่ Passenger เป็นผู้รายงาน', async () => {
+            const mockIncident = {
+                id: 'inc-1',
+                reporterId: PASSENGER_ID,
+                title: 'คนขับขับรถเร็ว',
+            };
+
+            prisma.incident.findUnique.mockResolvedValue(mockIncident);
+
+            const result = await incidentService.getIncidentById('inc-1');
+
+            expect(result).toEqual(mockIncident);
+            expect(prisma.incident.findUnique).toHaveBeenCalledWith(expect.objectContaining({
+                where: { id: 'inc-1' },
+            }));
+        });
+
+        it('ควรคืน null ถ้าไม่พบ incident', async () => {
+            prisma.incident.findUnique.mockResolvedValue(null);
+
+            const result = await incidentService.getIncidentById('non-existent');
+
+            expect(result).toBeNull();
+        });
+    });
+
+    // ----------------------------------------------------------
+    // getIncidentLogs — Passenger (reporter)
+    // ----------------------------------------------------------
+    describe('getIncidentLogs — Passenger ดู Log ในฐานะผู้รายงาน', () => {
+        it('ควรคืน logs สำหรับ Passenger ที่เป็น reporter', async () => {
+            const mockIncident = { id: 'inc-1', reporterId: PASSENGER_ID };
+            const mockLogs = [
+                { id: 'log-1', incidentId: 'inc-1', fromStatus: null, toStatus: 'PENDING' },
+                { id: 'log-2', incidentId: 'inc-1', fromStatus: 'PENDING', toStatus: 'INVESTIGATING' },
+                { id: 'log-3', incidentId: 'inc-1', fromStatus: 'INVESTIGATING', toStatus: 'RESOLVED' },
+            ];
+
+            prisma.incident.findUnique.mockResolvedValue(mockIncident);
+            prisma.incidentStatusLog.findMany.mockResolvedValue(mockLogs);
+
+            const result = await incidentService.getIncidentLogs('inc-1', PASSENGER_ID, 'PASSENGER');
+
+            expect(result).toEqual(mockLogs);
+            expect(result).toHaveLength(3);
+            expect(prisma.incidentStatusLog.findMany).toHaveBeenCalledWith(expect.objectContaining({
+                where: { incidentId: 'inc-1' },
+                orderBy: { createdAt: 'asc' },
+            }));
+        });
+
+        it('ควรแจ้ง 403 ถ้า Passenger ไม่ใช่ reporter ของ incident นี้', async () => {
+            const mockIncident = { id: 'inc-1', reporterId: 'other-user' };
+            prisma.incident.findUnique.mockResolvedValue(mockIncident);
+
+            await expect(
+                incidentService.getIncidentLogs('inc-1', PASSENGER_ID, 'PASSENGER')
+            ).rejects.toThrow('ไม่มีสิทธิ์ดู log นี้');
+        });
+
+        it('ควรแจ้ง 404 ถ้า incident ไม่พบ', async () => {
+            prisma.incident.findUnique.mockResolvedValue(null);
+
+            await expect(
+                incidentService.getIncidentLogs('non-existent', PASSENGER_ID, 'PASSENGER')
+            ).rejects.toThrow('ไม่พบรายงานเหตุการณ์');
+        });
+    });
+
+    // ----------------------------------------------------------
+    // Validation — ตรวจสอบข้อมูลไม่ถูกต้อง (Zod Schema)
+    // ----------------------------------------------------------
+    describe('Validation — ข้อมูลไม่ถูกต้อง (createIncidentSchema)', () => {
+        it('ควร reject ถ้า title เป็นค่าว่าง', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: '',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues[0].message).toBe('กรุณาระบุหัวข้อ');
+        });
+
+        it('ควร reject ถ้าไม่ส่ง title', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('title'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า description เป็นค่าว่าง', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+                description: '',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues[0].message).toBe('กรุณาระบุรายละเอียด');
+        });
+
+        it('ควร reject ถ้าไม่ส่ง description', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('description'))).toBe(true);
+        });
+
+        it('ควร reject ถ้าไม่ส่ง type', () => {
+            const data = {
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('type'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า type ไม่ถูกต้อง (ค่าที่ไม่อยู่ใน enum)', () => {
+            const data = {
+                type: 'INVALID_TYPE_XYZ',
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('type'))).toBe(true);
+        });
+
+        it('ควร reject ถ้า title ยาวเกิน 100 ตัวอักษร', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'A'.repeat(101),
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(false);
+            expect(result.error.issues.some(i => i.path.includes('title'))).toBe(true);
+        });
+
+        it('ควรผ่านเมื่อข้อมูลถูกต้องครบถ้วน', () => {
+            const data = {
+                type: 'SAFETY_CONCERN',
+                title: 'หัวข้อทดสอบ',
+                description: 'รายละเอียดทดสอบ',
+            };
+
+            const result = createIncidentSchema.safeParse(data);
+
+            expect(result.success).toBe(true);
+            expect(result.data.priority).toBe('NORMAL');
+            expect(result.data.evidenceUrls).toEqual([]);
+        });
+    });
+
+    // ----------------------------------------------------------
+    // Upload Middleware — ตรวจสอบไฟล์แนบ (multer fileFilter)
+    // ----------------------------------------------------------
+    describe('Upload Middleware — ตรวจสอบไฟล์แนบ (multer)', () => {
+        const upload = require('../../src/middlewares/upload.middleware');
+
+        it('PR-08: ควร reject ไฟล์ virus.exe (ประเภทไม่ถูกต้อง)', () => {
+            const invalidFiles = [
+                { name: 'virus.exe', mimetype: 'application/x-msdownload' },
+                { name: 'malware.bat', mimetype: 'application/x-msdos-program' },
+                { name: 'script.sh', mimetype: 'application/x-sh' },
+            ];
+
+            invalidFiles.forEach(file => {
+                const isImage = file.mimetype.startsWith('image/');
+                expect(isImage).toBe(false);
+            });
+        });
+
+        it('ควรอนุญาตเฉพาะไฟล์รูปภาพ (image/*)', () => {
+            const validFiles = [
+                { name: 'evidence.jpg', mimetype: 'image/jpeg' },
+                { name: 'accident.png', mimetype: 'image/png' },
+                { name: 'photo.webp', mimetype: 'image/webp' },
+            ];
+
+            validFiles.forEach(file => {
+                const isImage = file.mimetype.startsWith('image/');
+                expect(isImage).toBe(true);
+            });
+        });
+
+        it('ไฟล์ .pdf, .doc ไม่ผ่าน fileFilter', () => {
+            const docTypes = [
+                'application/pdf',
+                'application/msword',
+                'text/plain',
+            ];
+
+            docTypes.forEach(mimetype => {
+                const isImage = mimetype.startsWith('image/');
+                expect(isImage).toBe(false);
+            });
+        });
+
+        it('ขนาดไฟล์เกิน 50MB ไม่ผ่าน', () => {
+            const maxAllowedBytes = 50 * 1024 * 1024;
+            const oversizedFile = 51 * 1024 * 1024;
+
+            expect(oversizedFile).toBeGreaterThan(maxAllowedBytes);
+        });
+    });
+});

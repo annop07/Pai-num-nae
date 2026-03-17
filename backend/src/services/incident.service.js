@@ -20,6 +20,46 @@ const INCIDENT_INCLUDE = {
     },
 };
 
+// Incident types that are directed AT a specific person (auto-assign reportedUserId)
+const PERSON_RELATED_TYPES = [
+    'INAPPROPRIATE_BEHAVIOR',
+    'HARASSMENT',
+    'FRAUD',
+    'NO_SHOW_DRIVER',
+    'NO_SHOW_PASSENGER',
+    'LICENSE_PLATE_MISMATCH',
+    'SAFETY_CONCERN',
+    'PAYMENT_DISPUTE',
+    'LOST_ITEM',
+];
+
+// Incident types that are general situation reports (do NOT auto-assign reportedUserId)
+// ACCIDENT, VEHICLE_ISSUE, ROUTE_ISSUE, OTHER
+const SITUATION_RELATED_TYPES = [
+    'ACCIDENT',
+    'VEHICLE_ISSUE',
+    'ROUTE_ISSUE',
+    'OTHER',
+];
+
+//Allowed status transitions
+const ALLOWED_TRANSITIONS = {
+    PENDING: ['INVESTIGATING', 'DISMISSED'],
+    INVESTIGATING: ['RESOLVED', 'DISMISSED', 'ESCALATED'],
+    ESCALATED: ['RESOLVED', 'DISMISSED'],
+    RESOLVED: [],
+    DISMISSED: [],
+};
+
+// Human-readable status labels for notifications
+const STATUS_LABELS = {
+    PENDING: 'รอดำเนินการ',
+    INVESTIGATING: 'กำลังตรวจสอบ',
+    RESOLVED: 'แก้ไขแล้ว',
+    DISMISSED: 'ปฏิเสธ',
+    ESCALATED: 'ส่งต่อผู้รับผิดชอบ',
+};
+
 // User Functions
 async function createIncident(data, reporterId) {
     let routeIdToUse = data.routeId || null;
@@ -31,14 +71,20 @@ async function createIncident(data, reporterId) {
             select: { id: true, routeId: true, passengerId: true, route: { select: { driverId: true } } },
         });
         if (!booking) throw new ApiError(404, 'ไม่พบการจอง');
-        // ดึง routeId จาก booking อัตโนมัติเมื่อไม่ได้ส่งมา
+        // ดึง routeId จาก booking อัตโนมัติเมื่อไม่ได้ส่งมา (ทุก type)
         if (!routeIdToUse) routeIdToUse = booking.routeId;
-        // ดึง reportedUserId จากฝั่งตรงข้ามของ booking (ผู้รายงานเป็นคนขับ → target เป็นผู้โดยสาร, และในทางกลับกัน)
-        if (!reportedUserIdToUse && reporterId === booking.route?.driverId) {
-            reportedUserIdToUse = booking.passengerId;
-        } else if (!reportedUserIdToUse && reporterId === booking.passengerId) {
-            reportedUserIdToUse = booking.route?.driverId || null;
+        // auto-assign reportedUserId เฉพาะ type ที่เกี่ยวข้องกับบุคคล (PERSON_RELATED_TYPES)
+        // type ที่เป็นการรายงานสถานการณ์ทั่วไป (SITUATION_RELATED_TYPES) จะไม่ assign target
+        if (!reportedUserIdToUse && PERSON_RELATED_TYPES.includes(data.type)) {
+            if (reporterId === booking.route?.driverId) {
+                // ผู้แจ้งเป็นคนขับ → target คือผู้โดยสารของ booking นี้
+                reportedUserIdToUse = booking.passengerId;
+            } else if (reporterId === booking.passengerId) {
+                // ผู้แจ้งเป็นผู้โดยสาร → target คือคนขับ
+                reportedUserIdToUse = booking.route?.driverId || null;
+            }
         }
+        // SITUATION_RELATED_TYPES: ไม่ auto-assign reportedUserId (null) แม้จะมี bookingId
     }
 
     if (routeIdToUse) {
@@ -98,17 +144,17 @@ async function notifyAdminsNewIncident(incident) {
 }
 
 async function getMyIncidents(userId) {
-    const incidents = await prisma.incident.findMany({
+    return prisma.incident.findMany({
         where: {
             OR: [
                 { reporterId: userId },
                 { reportedUserId: userId },
             ],
+            isArchived: false,    // ซ่อนเคสเก่าที่ถูก archive หลัง reopen
         },
         include: INCIDENT_INCLUDE,
         orderBy: { createdAt: 'desc' },
     });
-    return incidents;
 }
 
 async function getIncidentById(id) {
@@ -132,7 +178,7 @@ async function searchIncidentsAdmin(opts = {}) {
         sortOrder = 'desc',
     } = opts;
 
-    const where = {};
+    const where = { isArchived: false };
 
     if (status) where.status = status;
     if (type) where.type = type;
@@ -180,57 +226,75 @@ async function updateIncidentStatus(id, data, adminId) {
     const incident = await prisma.incident.findUnique({ where: { id } });
     if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
 
-    const updateData = {};
+    // Block archived incidents
+    if (incident.isArchived) throw new ApiError(400, 'ไม่สามารถแก้ไขเหตุการณ์ที่ถูก archive แล้ว');
 
-    if (data.status) {
-        updateData.status = data.status;
-        if (data.status === 'RESOLVED') {
-            updateData.resolvedBy = adminId;
-            updateData.resolvedAt = new Date();
-        }
+    // Validate transition
+    const allowed = ALLOWED_TRANSITIONS[incident.status] || [];
+    if (!allowed.includes(data.status)) {
+        throw new ApiError(400, `ไม่สามารถเปลี่ยนสถานะจาก ${incident.status} ไปเป็น ${data.status} ได้`);
     }
 
-    if (data.priority) updateData.priority = data.priority;
-    if (data.resolution) updateData.resolution = data.resolution;
+    const updateData = {
+        status: data.status,
+        ...(data.priority && { priority: data.priority }),
+        ...(data.resolution && { resolution: data.resolution }),
+        ...(data.status === 'RESOLVED' && { resolvedBy: adminId, resolvedAt: new Date() }),
+    };
 
-    const updated = await prisma.incident.update({
-        where: { id },
-        data: updateData,
-        include: INCIDENT_INCLUDE,
-    });
+    const [updated] = await prisma.$transaction([
+        prisma.incident.update({
+            where: { id },
+            data: updateData,
+            include: INCIDENT_INCLUDE,
+        }),
+        prisma.incidentStatusLog.create({
+            data: {
+                incidentId: id,
+                fromStatus: incident.status,
+                toStatus: data.status,
+                reason: data.reason,
+                note: data.note,
+                changedById: adminId,
+            },
+        }),
+    ]);
 
-    // Notify user if status is updated by admin
-    if (data.status && incident.reporterId) {
-        let title = `อัปเดตสถานะ: ${updated.title}`;
-        let body = `สถานะรายงานของคุณเปลี่ยนเป็น ${data.status}`;
-        
-        if (data.status === 'INVESTIGATING') {
-            body = `เจ้าหน้าที่กำลังตรวจสอบรายงานเหตุการณ์ "${updated.title}" ของคุณ`;
-        } else if (data.status === 'RESOLVED') {
-            title = `รายงานได้รับการแก้ไขแล้ว: ${updated.title}`;
-            body = `รายงานเหตุการณ์ "${updated.title}" ได้รับการแก้ไขแล้ว`;
-            if (updated.resolution) {
-                body += `\nผลการดำเนินการ: ${updated.resolution}`;
-            }
-        } else if (data.status === 'DISMISSED') {
-            title = `รายงานถูกปฏิเสธ: ${updated.title}`;
-            body = `รายงานเหตุการณ์ "${updated.title}" ถูกปฏิเสธ`;
-             if (updated.resolution) {
-                body += `\nเหตุผล: ${updated.resolution}`;
-            }
-        }
-
-        await notificationService.createNotificationByAdmin({
+    // Notify reporter (background, non-blocking)
+    if (incident.reporterId) {
+        const statusLabel = STATUS_LABELS[data.status] || data.status;
+        notificationService.createNotificationByAdmin({
             userId: incident.reporterId,
             type: 'INCIDENT',
-            title,
-            body,
-            link: `/incidents/${updated.id}`,
-            metadata: { incidentId: updated.id, status: data.status }
-        });
+            title: `อัปเดตสถานะ: ${updated.title}`,
+            body: `สถานะรายงาน "${updated.title}" เปลี่ยนเป็น "${statusLabel}"\nหมายเหตุ: ${data.note}`,
+            link: `/myIncidents`,
+            metadata: { incidentId: updated.id, status: data.status },
+        }).catch(err => console.error('Failed to notify reporter:', err));
     }
 
     return updated;
+}
+
+
+async function getIncidentLogs(id, requesterId, requesterRole) {
+    const incident = await prisma.incident.findUnique({ where: { id } });
+    if (!incident) throw new ApiError(404, 'ไม่พบรายงานเหตุการณ์');
+
+    // Allow only reporter or admin
+    if (requesterRole !== 'ADMIN' && incident.reporterId !== requesterId) {
+        throw new ApiError(403, 'ไม่มีสิทธิ์ดู log นี้');
+    }
+
+    return prisma.incidentStatusLog.findMany({
+        where: { incidentId: id },
+        orderBy: { createdAt: 'asc' },
+        include: {
+            changedBy: {
+                select: { id: true, firstName: true, lastName: true, role: true },
+            },
+        },
+    });
 }
 
 async function deleteIncident(id) {
@@ -247,5 +311,6 @@ module.exports = {
     getIncidentById,
     searchIncidentsAdmin,
     updateIncidentStatus,
+    getIncidentLogs,
     deleteIncident,
 };

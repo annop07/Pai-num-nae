@@ -64,12 +64,27 @@ router.get(
     incidentController.getMyIncidents
 );
 
+// GET /api/incidents/evidence-proxy?url=... (โปรกซีดาวน์โหลดหลักฐานจาก Cloudinary)
+router.get(
+    '/evidence-proxy',
+    protect,
+    incidentController.proxyEvidence
+);
+
 // GET /api/incidents/:id
 router.get(
     '/:id',
     protect,
     validate({ params: idParamSchema }),
     incidentController.getIncidentById
+);
+
+// GET /api/incidents/:id/logs
+router.get(
+    '/:id/logs',
+    protect,
+    validate({ params: idParamSchema }),
+    incidentController.getIncidentLogs
 );
 
 module.exports = router;

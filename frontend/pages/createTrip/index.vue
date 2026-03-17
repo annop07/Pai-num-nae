@@ -332,9 +332,19 @@ const closeAndRefresh = async () => {
 const handleSubmit = async () => {
     if (isLoading.value) return
 
-    // Basic validation (ตามเดิม)
+    // Basic validation
     if (!form.vehicleId || !form.date || !form.time || !form.availableSeats || !form.pricePerSeat) {
         toast.error('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน')
+        return
+    }
+
+    // ตรวจสอบว่าเลือกสถานที่จาก Autocomplete หรือแผนที่แล้ว (ต้องมี lat/lng)
+    if (!startMeta.value.lat || !startMeta.value.lng) {
+        toast.error('กรุณาระบุจุดเริ่มต้น', 'โปรดพิมพ์ชื่อสถานที่แล้วเลือกจากรายการที่แสดง หรือกดไอคอนแผนที่เพื่อเลือกตำแหน่ง')
+        return
+    }
+    if (!endMeta.value.lat || !endMeta.value.lng) {
+        toast.error('กรุณาระบุจุดปลายทาง', 'โปรดพิมพ์ชื่อสถานที่แล้วเลือกจากรายการที่แสดง หรือกดไอคอนแผนที่เพื่อเลือกตำแหน่ง')
         return
     }
 
