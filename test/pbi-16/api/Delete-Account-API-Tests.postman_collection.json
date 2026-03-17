@@ -1,0 +1,496 @@
+{
+  "info": {
+    "_postman_id": "pbi16-delete-account-api-tests",
+    "name": "Delete Account API Tests (PBI-16)",
+    "description": "API Tests สำหรับ Product Backlog Item 16 — ลบบัญชีผู้ใช้\n\nTest Scenarios:\n- TS-API-USER-DELETE-01: Passenger ลบบัญชีตนเองสำเร็จ\n- TS-API-USER-DELETE-02: Passenger ลบบัญชีไม่ได้เมื่อมี Booking Active\n- TS-API-USER-DELETE-03: Passenger ลบบัญชีไม่ได้เมื่อมี Incident ที่ยังไม่ปิด\n- TS-API-USER-DELETE-04: Driver ลบบัญชีตนเองสำเร็จ\n- TS-API-USER-DELETE-05: Driver ลบบัญชีไม่ได้เมื่อมี Route Active\n- TS-API-USER-DELETE-06: Driver ลบบัญชีไม่ได้เมื่อมี Booking บน Route\n- TS-API-USER-DELETE-07: Driver ลบบัญชีไม่ได้เมื่อมี Incident เปิดอยู่",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33092733"
+  },
+  "item": [
+    {
+      "name": "0. Setup - Login เตรียม Token",
+      "item": [
+        {
+          "name": "0.1 Login Passenger",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Passenger สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('passengerToken', json.data.token);",
+                  "    pm.collectionVariables.set('passengerId', json.data.user.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{passengerEmail}}\",\n    \"password\": \"{{passengerPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "0.2 Login Driver",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Driver สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('driverToken', json.data.token);",
+                  "    pm.collectionVariables.set('driverId', json.data.user.id);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{driverEmail}}\",\n    \"password\": \"{{driverPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Passenger ลบบัญชี",
+      "item": [
+        {
+          "name": "TS-API-USER-DELETE-01 — Passenger ลบบัญชีตนเองสำเร็จ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชี Passenger สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.message).to.include('permanently');",
+                  "});",
+                  "",
+                  "pm.test('Response มี userId', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('userId');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TS-API-USER-DELETE-02 — Passenger ลบบัญชีไม่ได้เมื่อมี Booking Active",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชีไม่ได้เมื่อมี Booking Active (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "    pm.expect(json.message).to.include('active bookings');",
+                  "});",
+                  "",
+                  "pm.test('data เป็น null', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TS-API-USER-DELETE-03 — Passenger ลบบัญชีไม่ได้เมื่อมี Incident ที่ยังไม่ปิด",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชีไม่ได้เมื่อมี Incident เปิดอยู่ (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "    pm.expect(json.message).to.include('open incident');",
+                  "});",
+                  "",
+                  "pm.test('data เป็น null', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{passengerToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Driver ลบบัญชี",
+      "item": [
+        {
+          "name": "TS-API-USER-DELETE-04 — Driver ลบบัญชีตนเองสำเร็จ",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชี Driver สำเร็จ (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.message).to.include('permanently deleted in 90 days');",
+                  "});",
+                  "",
+                  "pm.test('Response มี userId', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.have.property('userId');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TS-API-USER-DELETE-05 — Driver ลบบัญชีไม่ได้เมื่อมี Route Active",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชีไม่ได้เมื่อมี Route Active (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "    pm.expect(json.message).to.include('active routes');",
+                  "});",
+                  "",
+                  "pm.test('data เป็น null', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TS-API-USER-DELETE-06 — Driver ลบบัญชีไม่ได้เมื่อมี Booking บน Route",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชีไม่ได้เมื่อมี Booking บน Route (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "    pm.expect(json.message).to.include('active bookings on their routes');",
+                  "});",
+                  "",
+                  "pm.test('data เป็น null', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TS-API-USER-DELETE-07 — Driver ลบบัญชีไม่ได้เมื่อมี Incident เปิดอยู่",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('ลบบัญชีไม่ได้เมื่อมี Incident เปิดอยู่ (400)', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.false;",
+                  "});",
+                  "",
+                  "pm.test('data เป็น null', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.data).to.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "passengerEmail",
+      "value": "passenger@gmail.com",
+      "type": "string"
+    },
+    {
+      "key": "passengerPassword",
+      "value": "0611044772ZA",
+      "type": "string"
+    },
+    {
+      "key": "driverEmail",
+      "value": "driver@gmail.com",
+      "type": "string"
+    },
+    {
+      "key": "driverPassword",
+      "value": "0611044772za",
+      "type": "string"
+    },
+    {
+      "key": "passengerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "passengerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driverId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
