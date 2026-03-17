@@ -38,19 +38,19 @@ model User {
   vehicles                Vehicle[]
 
   //Relations
-  reportedIncidents    Incident[]          @relation("ReporterIncidents")
-  incidentsAgainst     Incident[]          @relation("ReportedUserIncidents")
-  resolvedIncidents    Incident[]          @relation("ResolverIncidents")
-  incidentStatusLogs   IncidentStatusLog[] @relation("AdminStatusChanges")
-  driverTaxProfile     DriverTaxProfile?
-  paymentConfirmationsAsPassenger PaymentConfirmation[] @relation("PaymentConfirmationPassenger")
-  paymentConfirmationsAsDriver    PaymentConfirmation[] @relation("PaymentConfirmationDriver")
-  paymentConfirmationsConfirmed   PaymentConfirmation[] @relation("PaymentConfirmationConfirmer")
+  reportedIncidents               Incident[]               @relation("ReporterIncidents")
+  incidentsAgainst                Incident[]               @relation("ReportedUserIncidents")
+  resolvedIncidents               Incident[]               @relation("ResolverIncidents")
+  incidentStatusLogs              IncidentStatusLog[]      @relation("AdminStatusChanges")
+  driverTaxProfile                DriverTaxProfile?
+  paymentConfirmationsAsPassenger PaymentConfirmation[]    @relation("PaymentConfirmationPassenger")
+  paymentConfirmationsAsDriver    PaymentConfirmation[]    @relation("PaymentConfirmationDriver")
+  paymentConfirmationsConfirmed   PaymentConfirmation[]    @relation("PaymentConfirmationConfirmer")
   paymentProofSubmissions         PaymentProofSubmission[] @relation("PaymentProofSubmittedBy")
   paymentProofReviews             PaymentProofSubmission[] @relation("PaymentProofReviewedBy")
-  issuedPaymentDocuments          PaymentDocument[] @relation("PaymentDocumentIssuer")
-  receivedPaymentDocuments        PaymentDocument[] @relation("PaymentDocumentReceiver")
-  paymentAuditLogs                PaymentAuditLog[] @relation("PaymentAuditActor")
+  issuedPaymentDocuments          PaymentDocument[]        @relation("PaymentDocumentIssuer")
+  receivedPaymentDocuments        PaymentDocument[]        @relation("PaymentDocumentReceiver")
+  paymentAuditLogs                PaymentAuditLog[]        @relation("PaymentAuditActor")
 
   @@index([role])
   @@index([isActive])
@@ -340,22 +340,22 @@ model PaymentAuditLog {
 }
 
 model Incident {
-  id             String           @id @default(cuid())
-  reporterId     String
-  reportedUserId String?
-  routeId        String?
-  bookingId      String?
-  type           IncidentType
-  status         IncidentStatus   @default(PENDING)
-  priority       IncidentPriority @default(NORMAL)
-  title          String
-  description    String           @db.Text
-  location       Json?            @db.Json
-  evidenceUrls   String[]
-  metadata       Json?            @db.Json
-  resolvedBy     String?
-  resolvedAt     DateTime?
-  resolution     String?          @db.Text
+  id               String           @id @default(cuid())
+  reporterId       String
+  reportedUserId   String?
+  routeId          String?
+  bookingId        String?
+  type             IncidentType
+  status           IncidentStatus   @default(PENDING)
+  priority         IncidentPriority @default(NORMAL)
+  title            String
+  description      String           @db.Text
+  location         Json?            @db.Json
+  evidenceUrls     String[]
+  metadata         Json?            @db.Json
+  resolvedBy       String?
+  resolvedAt       DateTime?
+  resolution       String?          @db.Text
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   parentIncidentId String?
@@ -363,14 +363,14 @@ model Incident {
   isArchived       Boolean          @default(false)
 
   //Relations
-  reporter      User           @relation("ReporterIncidents", fields: [reporterId], references: [id], onDelete: Cascade)
-  reportedUser  User?          @relation("ReportedUserIncidents", fields: [reportedUserId], references: [id], onDelete: SetNull)
-  resolver      User?          @relation("ResolverIncidents", fields: [resolvedBy], references: [id], onDelete: SetNull)
-  route         Route?         @relation(fields: [routeId], references: [id], onDelete: SetNull)
-  booking       Booking?       @relation(fields: [bookingId], references: [id], onDelete: SetNull)
-  notifications Notification[] @relation("IncidentNotifications")
-  parent        Incident?       @relation("IncidentLineage", fields: [parentIncidentId], references: [id], onDelete: SetNull)
-  children      Incident[]      @relation("IncidentLineage")
+  reporter      User                @relation("ReporterIncidents", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser  User?               @relation("ReportedUserIncidents", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  resolver      User?               @relation("ResolverIncidents", fields: [resolvedBy], references: [id], onDelete: SetNull)
+  route         Route?              @relation(fields: [routeId], references: [id], onDelete: SetNull)
+  booking       Booking?            @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  notifications Notification[]      @relation("IncidentNotifications")
+  parent        Incident?           @relation("IncidentLineage", fields: [parentIncidentId], references: [id], onDelete: SetNull)
+  children      Incident[]          @relation("IncidentLineage")
   statusLogs    IncidentStatusLog[]
 
   @@index([reporterId])
@@ -387,14 +387,14 @@ model Incident {
 }
 
 model IncidentStatusLog {
-  id          String               @id @default(cuid())
+  id          String             @id @default(cuid())
   incidentId  String
   fromStatus  IncidentStatus?
   toStatus    IncidentStatus
   reason      StatusChangeReason
-  note        String?              @db.Text
+  note        String?            @db.Text
   changedById String
-  createdAt   DateTime             @default(now())
+  createdAt   DateTime           @default(now())
 
   incident  Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
   changedBy User     @relation("AdminStatusChanges", fields: [changedById], references: [id], onDelete: Cascade)
@@ -551,4 +551,3 @@ enum PaymentAuditAction {
   DOCUMENT_ISSUED
   STATUS_UPDATED
 }
-
