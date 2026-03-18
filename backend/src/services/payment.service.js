@@ -224,6 +224,7 @@ const fullName = (user) => {
 const isTruthyEnv = (value) => ['1', 'true', 'yes', 'on'].includes(String(value || '').toLowerCase());
 
 const isMockDriverTaxProfileEnabled = () => isTruthyEnv(process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE);
+const isMockReferenceNoEnabled = () => isTruthyEnv(process.env.PAYMENT_USE_MOCK_REFERENCE_NO);
 
 const envStringOrNull = (value) => {
   if (value === undefined || value === null) return null;
@@ -292,6 +293,47 @@ const mockTaxAddresses = [
 const pickMockTaxAddress = (seed) => {
   const index = hashString(`${seed}:address`) % mockTaxAddresses.length;
   return mockTaxAddresses[index];
+};
+
+const formatDateYmd = (dateValue) => {
+  const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return formatYearMonth(new Date()) + '01';
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}${month}${day}`;
+};
+
+const buildMockReferenceNo = ({ paymentMethod, paidAt, bookingId, submissionNo }) => {
+  if (paymentMethod === 'CASH') return null;
+
+  const prefixByMethod = {
+    PROMPTPAY: 'PP',
+    BANK_TRANSFER: 'BT',
+    CARD: 'CD',
+    OTHER: 'OT',
+  };
+
+  const prefix = prefixByMethod[paymentMethod] || 'RF';
+  const datePart = formatDateYmd(paidAt || new Date());
+  const seed = `${bookingId}:${paymentMethod}:${submissionNo}:${datePart}`;
+  const runningNo = String((hashString(seed) % 9000) + 1000).padStart(4, '0');
+
+  return `${prefix}-${datePart}-${runningNo}`;
+};
+
+const resolveSubmissionReferenceNo = ({ payload, bookingId, submissionNo }) => {
+  const providedReferenceNo = envStringOrNull(payload.referenceNo);
+  if (providedReferenceNo) return providedReferenceNo;
+  if (!isMockReferenceNoEnabled()) return null;
+
+  return buildMockReferenceNo({
+    paymentMethod: payload.paymentMethod,
+    paidAt: payload.paidAt,
+    bookingId,
+    submissionNo,
+  });
 };
 
 const buildMockDriverTaxProfile = (driver) => {
@@ -549,6 +591,11 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
     const submissionNo = (latestSubmission?.submissionNo || 0) + 1;
     const action = submissionNo === 1 ? ACTION_PROOF_SUBMITTED : ACTION_PROOF_RESUBMITTED;
     const previousStatus = confirmation.status;
+    const resolvedReferenceNo = resolveSubmissionReferenceNo({
+      payload,
+      bookingId,
+      submissionNo,
+    });
 
     const submissionData = {
       paymentConfirmationId: confirmation.id,
@@ -557,7 +604,7 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
       paymentMethod: payload.paymentMethod,
       paidAt: payload.paidAt,
       amount: payload.amount,
-      referenceNo: payload.referenceNo || null,
+      referenceNo: resolvedReferenceNo,
       note: payload.note || null,
       requestedDocumentType: primaryRequestedDocumentType,
       requestedDocumentTypes: requestedDocumentTypes.length > 0 ? requestedDocumentTypes : null,
@@ -909,6 +956,27 @@ const issuePaymentDocument = async (id, driverId, payload) => {
       throw new ApiError(400, 'Driver tax profile is required before issuing a tax invoice');
     }
 
+    const resolvedPaymentMethod =
+      confirmation.latestSubmission.verifiedPaymentMethod || confirmation.latestSubmission.paymentMethod;
+    const existingSubmissionReferenceNo = envStringOrNull(confirmation.latestSubmission.referenceNo);
+    const generatedReferenceNo = buildMockReferenceNo({
+      paymentMethod: resolvedPaymentMethod,
+      paidAt: confirmation.latestSubmission.paidAt,
+      bookingId: confirmation.bookingId,
+      submissionNo: confirmation.latestSubmission.submissionNo || 1,
+    });
+    const resolvedReferenceNo = existingSubmissionReferenceNo || (
+      isMockReferenceNoEnabled() ? generatedReferenceNo : null
+    );
+
+    if (!existingSubmissionReferenceNo && resolvedReferenceNo) {
+      await tx.paymentProofSubmission.update({
+        where: { id: confirmation.latestSubmission.id },
+        data: { referenceNo: resolvedReferenceNo },
+      });
+      confirmation.latestSubmission.referenceNo = resolvedReferenceNo;
+    }
+
     const issuedAt = new Date();
     const documentNumber = await nextDocumentNumber(tx, payload.documentType, issuedAt);
     const paidAmount = Number(confirmation.paidAmount || confirmation.expectedAmount);
@@ -935,9 +1003,8 @@ const issuePaymentDocument = async (id, driverId, payload) => {
         issuedToId: confirmation.passengerId,
         issuedAt,
         paidAt: confirmation.latestSubmission.paidAt,
-        paymentMethod:
-          confirmation.latestSubmission.verifiedPaymentMethod || confirmation.latestSubmission.paymentMethod,
-        referenceNo: confirmation.latestSubmission.referenceNo || null,
+        paymentMethod: resolvedPaymentMethod,
+        referenceNo: resolvedReferenceNo,
         subtotal,
         taxAmount,
         totalAmount,
