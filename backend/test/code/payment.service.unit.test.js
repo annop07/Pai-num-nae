@@ -48,6 +48,7 @@ describe('payment.service', () => {
   afterEach(() => {
     jest.useRealTimers();
     delete process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE;
+    delete process.env.PAYMENT_USE_MOCK_REFERENCE_NO;
     delete process.env.PAYMENT_MOCK_TAXPAYER_TYPE;
     delete process.env.PAYMENT_MOCK_TAXPAYER_NAME;
     delete process.env.PAYMENT_MOCK_TAX_ID;
@@ -155,6 +156,70 @@ describe('payment.service', () => {
         id: 'pc-1',
       })
     );
+  });
+
+  it('auto-generates referenceNo for non-cash proof when mock reference is enabled', async () => {
+    process.env.PAYMENT_USE_MOCK_REFERENCE_NO = 'true';
+
+    prisma.booking.findUnique.mockResolvedValue({
+      id: 'booking-ref-1',
+      routeId: 'route-1',
+      passengerId: 'passenger-1',
+      numberOfSeats: 1,
+      status: 'CONFIRMED',
+      route: {
+        id: 'route-1',
+        driverId: 'driver-1',
+        pricePerSeat: 90,
+      },
+      passenger: {
+        id: 'passenger-1',
+        username: 'passenger',
+      },
+    });
+
+    prisma.paymentConfirmation.findUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({
+        id: 'pc-ref-1',
+        bookingId: 'booking-ref-1',
+        status: 'PROOF_SUBMITTED',
+      });
+
+    prisma.paymentConfirmation.create.mockResolvedValue({
+      id: 'pc-ref-1',
+      bookingId: 'booking-ref-1',
+      status: 'UNPAID',
+    });
+
+    prisma.paymentProofSubmission.findFirst.mockResolvedValue(null);
+    prisma.paymentProofSubmission.create.mockResolvedValue({
+      id: 'pps-ref-1',
+      paymentConfirmationId: 'pc-ref-1',
+      submissionNo: 1,
+    });
+
+    await paymentService.submitPaymentProof({
+      bookingId: 'booking-ref-1',
+      passengerId: 'passenger-1',
+      payload: {
+        paymentMethod: 'PROMPTPAY',
+        paidAt: new Date('2026-03-18T10:00:00Z'),
+        amount: 90,
+        isCorporateRequest: false,
+      },
+      evidenceFiles: [
+        {
+          fileUrl: 'https://example.com/slip-ref.jpg',
+          mimeType: 'image/jpeg',
+          fileName: 'slip-ref.jpg',
+          fileSizeBytes: 1111,
+        },
+      ],
+    });
+
+    const createArgs = prisma.paymentProofSubmission.create.mock.calls[0][0];
+    expect(createArgs.data.referenceNo).toMatch(/^PP-\d{8}-\d{4}$/);
   });
 
   it('allows CASH proof without evidence file when note is provided', async () => {
@@ -564,5 +629,68 @@ describe('payment.service', () => {
     const createCall = prisma.paymentDocument.create.mock.calls[0][0];
     expect(createCall.data.payeeTaxId).not.toBe('0000000000000');
     expect(createCall.data.payeeAddress).not.toBe('Mock Address (Dev Only)');
+  });
+
+  it('generates and persists referenceNo during issue document when submission has no reference and mock is enabled', async () => {
+    process.env.PAYMENT_USE_MOCK_REFERENCE_NO = 'true';
+    process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE = 'true';
+
+    jest.useFakeTimers().setSystemTime(new Date('2026-03-18T10:00:00Z'));
+
+    prisma.paymentConfirmation.findUnique.mockResolvedValue({
+      id: 'pc-ref-doc-1',
+      bookingId: 'booking-ref-doc-1',
+      passengerId: 'passenger-1',
+      driverId: 'driver-1',
+      paidAmount: 250,
+      expectedAmount: 250,
+      status: 'CONFIRMED',
+      latestSubmission: {
+        id: 'pps-ref-doc-1',
+        submissionNo: 3,
+        paidAt: new Date('2026-03-18T09:45:00Z'),
+        paymentMethod: 'PROMPTPAY',
+        verifiedPaymentMethod: 'PROMPTPAY',
+        referenceNo: null,
+        isCorporateRequest: false,
+      },
+      passenger: {
+        id: 'passenger-1',
+        username: 'sara',
+        email: 'sara@example.com',
+      },
+      driver: {
+        id: 'driver-1',
+        username: 'driverboy',
+        email: 'driver@example.com',
+      },
+    });
+
+    prisma.paymentDocument.findFirst
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ documentNumber: 'PV-202603-0008' });
+
+    prisma.driverTaxProfile.findUnique.mockResolvedValue(null);
+    prisma.paymentDocument.create.mockResolvedValue({
+      id: 'doc-ref-1',
+      documentNumber: 'PV-202603-0009',
+    });
+
+    await paymentService.issuePaymentDocument('pc-ref-doc-1', 'driver-1', {
+      documentType: 'PAYMENT_VOUCHER',
+      note: 'Issue with mocked reference',
+    });
+
+    expect(prisma.paymentProofSubmission.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'pps-ref-doc-1' },
+        data: expect.objectContaining({
+          referenceNo: expect.stringMatching(/^PP-\d{8}-\d{4}$/),
+        }),
+      })
+    );
+
+    const docCreateArgs = prisma.paymentDocument.create.mock.calls[0][0];
+    expect(docCreateArgs.data.referenceNo).toMatch(/^PP-\d{8}-\d{4}$/);
   });
 });
