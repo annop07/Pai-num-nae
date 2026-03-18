@@ -668,6 +668,9 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
     );
 
     return fetchDetailedConfirmationTx(tx, confirmation.id);
+  }, {
+    maxWait: 5000,
+    timeout: 15000,
   });
 };
 
