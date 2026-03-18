@@ -11,32 +11,32 @@
     >
       <header class="page-header">
         <div class="title-group">
-          <h1 class="main-title">Incident Management</h1>
+          <h1 class="main-title">จัดการเหตุการณ์</h1>
           <p class="subtitle">จัดการและติดตามสถานะเหตุการณ์ที่ได้รับแจ้ง</p>
         </div>
         <button class="btn-refresh" @click="fetchData">
-          <i class="fas fa-sync-alt"></i> Refresh Data
+          <i class="fas fa-sync-alt"></i> รีเฟรชข้อมูล
         </button>
       </header>
 
       <section class="stats-container">
         <div class="kpi-card">
           <div class="kpi-content">
-            <span class="kpi-label">Total Incidents</span>
+            <span class="kpi-label">เหตุการณ์ทั้งหมด</span>
             <span class="kpi-value">{{ incidents.length }}</span>
           </div>
           <div class="kpi-icon blue"><i class="fas fa-file-invoice"></i></div>
         </div>
         <div class="kpi-card border-amber">
           <div class="kpi-content">
-            <span class="kpi-label">Pending</span>
+            <span class="kpi-label">รอดำเนินการ</span>
             <span class="kpi-value text-amber">{{ pendingCount }}</span>
           </div>
           <div class="kpi-icon amber"><i class="fas fa-clock"></i></div>
         </div>
         <div class="kpi-card border-red">
           <div class="kpi-content">
-            <span class="kpi-label">Urgent</span>
+            <span class="kpi-label">เร่งด่วน</span>
             <span class="kpi-value text-red">{{ urgentCount }}</span>
           </div>
           <div class="kpi-icon red">
@@ -47,7 +47,7 @@
 
       <div class="content-card filter-section">
         <div class="input-group">
-          <label>Search</label>
+          <label>ค้นหา</label>
           <input
             v-model="searchQuery"
             type="text"
@@ -56,22 +56,24 @@
           />
         </div>
         <div class="input-group">
-          <label>Status</label>
+          <label>สถานะ</label>
           <select v-model="filterStatus" class="smooth-select">
-            <option value="">All Status</option>
-            <option>PENDING</option>
-            <option>INVESTIGATING</option>
-            <option>RESOLVED</option>
+            <option value="">ทุกสถานะ</option>
+            <option value="PENDING">รอดำเนินการ</option>
+            <option value="INVESTIGATING">กำลังตรวจสอบ</option>
+            <option value="ESCALATED">ส่งต่อ</option>
+            <option value="RESOLVED">แก้ไขแล้ว</option>
+            <option value="DISMISSED">ยุติเรื่อง</option>
           </select>
         </div>
         <div class="input-group">
-          <label>Priority</label>
+          <label>ระดับความเร่งด่วน</label>
           <select v-model="filterPriority" class="smooth-select">
-            <option value="">All Priority</option>
-            <option>LOW</option>
-            <option>NORMAL</option>
-            <option>HIGH</option>
-            <option>URGENT</option>
+            <option value="">ทุกระดับ</option>
+            <option value="LOW">ต่ำ</option>
+            <option value="NORMAL">ปกติ</option>
+            <option value="HIGH">สูง</option>
+            <option value="URGENT">เร่งด่วน</option>
           </select>
         </div>
         <button
@@ -82,7 +84,7 @@
             searchQuery = '';
           "
         >
-          Clear Filters
+          ล้างตัวกรอง
         </button>
       </div>
 
@@ -118,12 +120,12 @@
         <table class="smooth-table">
           <thead>
             <tr>
-              <th width="120">Username</th>
-              <th>Reporter & Target</th>
-              <th width="160">Issue Type</th>
-              <th width="110">Priority</th>
-              <th width="170">Status</th>
-              <th class="text-center" width="200">Action</th>
+              <th width="120">ชื่อผู้ใช้</th>
+              <th>ผู้รายงานและผู้ถูกรายงาน</th>
+              <th width="160">ประเภทปัญหา</th>
+              <th width="110">ความเร่งด่วน</th>
+              <th width="170">สถานะ</th>
+              <th class="text-center" width="200">การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
@@ -148,28 +150,28 @@
                     {{ incident.reporter.role }}
                   </span>
                   <span class="target-text">
-                    Target: {{ incident.reportedUser?.email || "—" }}
+                    ผู้ถูกรายงาน: {{ incident.reportedUser?.email || "—" }}
                   </span>
                 </div>
               </td>
               <td>
                 <span class="type-tag">{{
-                  incident.type.replace("_", " ")
+                  formatIssueType(incident.type)
                 }}</span>
               </td>
               <td>
                 <span :class="['badge', incident.priority.toLowerCase()]">{{
-                  incident.priority
+                  formatPriority(incident.priority)
                 }}</span>
               </td>
               <td>
                 <span :class="['badge', incident.status.toLowerCase()]">{{
-                  incident.status
+                  formatStatus(incident.status)
                 }}</span>
               </td>
               <td class="text-center">
                 <button class="btn-action" @click="openDetail(incident)">
-                  View & Take Action
+                  ดูรายละเอียดและดำเนินการ
                 </button>
               </td>
             </tr>
@@ -191,7 +193,7 @@
               :disabled="currentPage === 1"
               class="px-3 py-1.5 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <i class="fa-solid fa-chevron-left"></i> Previous
+              <i class="fa-solid fa-chevron-left"></i> ก่อนหน้า
             </button>
 
             <div class="flex gap-1">
@@ -215,7 +217,7 @@
               :disabled="currentPage === pagination.totalPages"
               class="px-3 py-1.5 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Next <i class="fa-solid fa-chevron-right"></i>
+              ถัดไป <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
         </div>
@@ -262,7 +264,7 @@
                   {{ ['RESOLVED', 'DISMISSED'].includes(selectedIncident.status) ? 'แบบฟอร์มเปิดเคสใหม่' : 'แบบฟอร์มดำเนินการและอัปเดตสถานะเหตุการณ์' }}
                 </h3>
                 <p class="text-xs text-gray-500 mt-1 font-medium">
-                  {{ ['RESOLVED', 'DISMISSED'].includes(selectedIncident.status) ? 'แบบฟอร์มบันทึกเปิดเคสใหม่ (Re-Opened)' : 'แบบฟอร์มบันทึกการดำเนินการและเปลี่ยนสถานะ (Admin Only)' }}
+                  {{ ['RESOLVED', 'DISMISSED'].includes(selectedIncident.status) ? 'แบบฟอร์มบันทึกเปิดเคสใหม่ (เปิดเคสใหม่อีกครั้ง)' : 'แบบฟอร์มบันทึกการดำเนินการและเปลี่ยนสถานะ (เฉพาะแอดมิน)' }}
                 </p>
               </div>
               
@@ -271,44 +273,44 @@
               <!-- Read-only Details -->
               <div class="space-y-4 mb-6">
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Incident ID</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-1">รหัสเหตุการณ์</label>
                   <input type="text" readonly :value="selectedIncident.reporter?.email || selectedIncident.id" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none" />
                 </div>
                 
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Issue Type</label>
-                  <input type="text" readonly :value="selectedIncident.type.replace('_', ' ')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none" />
+                  <label class="block text-xs font-bold text-gray-800 mb-1">ประเภทปัญหา</label>
+                  <input type="text" readonly :value="formatIssueType(selectedIncident.type)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none" />
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">Priority Level</label>
-                    <input type="text" readonly :value="selectedIncident.priority" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
+                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">ระดับความเร่งด่วน</label>
+                    <input type="text" readonly :value="formatPriority(selectedIncident.priority)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">Reporter Name</label>
-                    <input type="text" readonly :value="selectedIncident.reporter?.firstName || selectedIncident.reporter?.email || 'Unknown'" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
+                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">ผู้รายงาน</label>
+                    <input type="text" readonly :value="selectedIncident.reporter?.firstName || selectedIncident.reporter?.email || 'ไม่ระบุ'" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">Current Status</label>
-                    <input type="text" readonly :value="selectedIncident.status" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
+                    <label class="block text-xs font-bold text-gray-800 mb-1 text-center sm:text-left">สถานะปัจจุบัน</label>
+                    <input type="text" readonly :value="formatStatus(selectedIncident.status)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none text-center" />
                   </div>
                 </div>
 
                 <div class="w-full sm:w-1/3">
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Time</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-1">เวลา</label>
                   <input type="text" readonly :value="formatDate(selectedIncident.createdAt)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none" />
                 </div>
                 
                 <!-- Original Description -->
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Incident Description</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-1">รายละเอียดเหตุการณ์</label>
                   <textarea readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 text-sm focus:outline-none resize-none" rows="3" :value="selectedIncident.description"></textarea>
                 </div>
 
                 <!-- Evidence Section -->
                 <div v-if="selectedIncident.evidenceUrls?.length" class="mt-4">
-                  <label class="block text-xs font-bold text-gray-800 mb-2">Media Evidence</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-2">หลักฐานแนบ</label>
                   <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <template v-for="(url, idx) in selectedIncident.evidenceUrls" :key="idx">
                       <!-- PDF: ใช้ไอคอน + ลิงก์ (ไม่ใช้ img เพื่อให้ Chrome แสดงถูกต้อง) -->
@@ -362,7 +364,7 @@
 
                 <!-- Map Section -->
                 <div v-if="selectedIncident.location" class="mt-4">
-                  <label class="block text-xs font-bold text-gray-800 mb-2"><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> Location</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-2"><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> ตำแหน่งเหตุการณ์</label>
                   <div class="rounded-xl overflow-hidden border border-gray-200">
                     <iframe
                       width="100%"
@@ -381,14 +383,14 @@
               <div v-if="allowedNextStatuses.length > 0" class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-bold text-gray-800 mb-1">New Status <span class="text-red-500">*</span></label>
+                    <label class="block text-xs font-bold text-gray-800 mb-1">สถานะใหม่ <span class="text-red-500">*</span></label>
                     <select v-model="statusForm.newStatus" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                       <option value="">-- เลือกสถานะใหม่ --</option>
-                      <option v-for="s in allowedNextStatuses" :key="s" :value="s">{{ s }}</option>
+                      <option v-for="s in allowedNextStatuses" :key="s" :value="s">{{ formatStatus(s) }}</option>
                     </select>
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-800 mb-1">Reason Category <span class="text-red-500">*</span></label>
+                    <label class="block text-xs font-bold text-gray-800 mb-1">หมวดหมู่เหตุผล <span class="text-red-500">*</span></label>
                     <select v-model="statusForm.reason" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
                       <option value="">-- เลือกเหตุผล --</option>
                       <option value="EVIDENCE_REVIEWED">ตรวจสอบหลักฐานแล้ว</option>
@@ -397,18 +399,18 @@
                       <option value="FALSE_REPORT">รายงานเท็จ</option>
                       <option value="MATTER_RESOLVED">แก้ไขปัญหาได้แล้ว</option>
                       <option value="REQUIRES_ESCALATION">ต้องส่งต่อ</option>
-                      <option value="OTHER">อื่นๆ</option>
+                      <option value="OTHER">อื่น ๆ</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Description <span class="text-red-500">*</span></label>
+                  <label class="block text-xs font-bold text-gray-800 mb-1">รายละเอียด <span class="text-red-500">*</span></label>
                   <textarea v-model="statusForm.note" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" rows="4" placeholder="โปรดอธิบายสิ่งที่แก้ไข..."></textarea>
                 </div>
 
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1">Resolution Note (Internal Only)</label>
+                  <label class="block text-xs font-bold text-gray-800 mb-1">บันทึกสรุปภายใน (เฉพาะแอดมิน)</label>
                   <textarea v-model="statusForm.resolution" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" rows="2" placeholder="บันทึกภายในสำหรับแอดมิน..."></textarea>
                 </div>
 
@@ -449,7 +451,7 @@
                     <option value="">-- เลือกหมวดหมู่เหตุผล --</option>
                     <option value="REOPENED">เปิดใหม่ (ข้อมูลเพิ่มเติม)</option>
                     <option value="INSUFFICIENT_EVIDENCE">หลักฐานไม่เพียงพอในครั้งแรก</option>
-                    <option value="OTHER">อื่นๆ</option>
+                    <option value="OTHER">อื่น ๆ</option>
                   </select>
                   <textarea v-model="reopenForm.note" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition" rows="4" placeholder="โปรดอธิบายทำไมถึงเปิดเคสใหม่"></textarea>
                 </div>
@@ -1224,7 +1226,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Incident Management • Admin",
+  title: "จัดการเหตุการณ์ • แอดมิน",
   link: [
     {
       rel: "stylesheet",
@@ -1289,6 +1291,44 @@ const allowedNextStatuses = computed(() => {
 })
 
 const filteredIncidents = computed(() => incidents.value);
+
+const STATUS_LABELS = {
+  PENDING: "รอดำเนินการ",
+  INVESTIGATING: "กำลังตรวจสอบ",
+  ESCALATED: "ส่งต่อ",
+  RESOLVED: "แก้ไขแล้ว",
+  DISMISSED: "ยุติเรื่อง",
+}
+
+const PRIORITY_LABELS = {
+  LOW: "ต่ำ",
+  NORMAL: "ปกติ",
+  HIGH: "สูง",
+  URGENT: "เร่งด่วน",
+}
+
+const ISSUE_TYPE_LABELS = {
+  SAFETY_CONCERN: "ความกังวลด้านความปลอดภัย",
+  HARASSMENT: "การคุกคาม",
+  FRAUD_SUSPECTED: "สงสัยการฉ้อโกง",
+  PAYMENT_ISSUE: "ปัญหาการชำระเงิน",
+  OTHER: "อื่น ๆ",
+}
+
+function formatStatus(status) {
+  if (!status) return "-"
+  return STATUS_LABELS[status] || status
+}
+
+function formatPriority(priority) {
+  if (!priority) return "-"
+  return PRIORITY_LABELS[priority] || priority
+}
+
+function formatIssueType(type) {
+  if (!type) return "-"
+  return ISSUE_TYPE_LABELS[type] || type.replace(/_/g, " ")
+}
 
 function formatDate(dateStr) {
   if (!dateStr) return '-'

@@ -61,12 +61,21 @@ Verify Category Priority
     # กรอกข้อมูลเพิ่มเติมเพื่อทดสอบการส่งฟอร์ม (End-to-End)
     Input Text    xpath=//input[@maxlength='100']    ทดสอบหมวดหมู่ ${category}
     Input Text    xpath=//textarea    ทดสอบการส่งฟอร์มด้วยหมวดหมู่ ${category} แบบ E2E
-    
+
+    # อัปโหลดรูปภาพ
+    Choose File    xpath=//input[@type='file']    ${CURDIR}${/}..${/}..${/}..${/}pbi-11${/}uat${/}robot${/}resources${/}small_image.jpg
+    Sleep    1s
+
+    # รับตำแหน่งปัจจุบัน
+    Execute JavaScript    window.scrollTo(0, 600)
+    Click Element    xpath=//button[contains(text(),'รับตำแหน่งปัจจุบัน')]
+    Sleep    3s
+
     # กดส่งข้อมูล
     Execute JavaScript    window.scrollTo(0, document.body.scrollHeight)
     Sleep    0.5s
     Click Element    xpath=//button[contains(text(),'รายงานเหตุการณ์')]
-    
+
     # ตรวจสอบการส่งสำเร็จ
     Wait Until Element Is Visible    xpath=//*[contains(text(),'บันทึกสำเร็จ')]    timeout=15s
     

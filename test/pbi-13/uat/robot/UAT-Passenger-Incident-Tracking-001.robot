@@ -3,7 +3,7 @@ Library           SeleniumLibrary
 Suite Teardown    Close All Browsers
 
 *** Variables ***
-${BASE_URL}             http://localhost:3001
+${BASE_URL}             https://cssekku3-5.cpkku.com/
 ${PASSENGER_USERNAME}   TestPassenger_UAT
 ${PASSENGER_PASSWORD}   12345678Test
 ${BROWSER}              chrome
@@ -23,7 +23,7 @@ Step 1 - Login As Passenger
     Input Text    id=password    ${PASSENGER_PASSWORD}
     Click Button    xpath=//button[@type='submit']
     Wait Until Location Does Not Contain    /login    timeout=10s
-    Location Should Be    ${BASE_URL}/
+    Location Should Be    ${BASE_URL}
 
 Step 2 - Navigate To Tracking Page
     [Documentation]    เข้าสู่หน้าติดตามสถานะแจ้งเหตุการณ์

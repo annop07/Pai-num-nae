@@ -1,0 +1,2 @@
+ALTER TYPE "OffAppPaymentMethod"
+ADD VALUE IF NOT EXISTS 'CARD';
