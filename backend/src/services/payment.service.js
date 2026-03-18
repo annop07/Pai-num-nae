@@ -225,20 +225,103 @@ const isTruthyEnv = (value) => ['1', 'true', 'yes', 'on'].includes(String(value 
 
 const isMockDriverTaxProfileEnabled = () => isTruthyEnv(process.env.PAYMENT_USE_MOCK_DRIVER_TAX_PROFILE);
 
+const envStringOrNull = (value) => {
+  if (value === undefined || value === null) return null;
+  const normalized = String(value).trim();
+  return normalized || null;
+};
+
+const hashString = (value) => {
+  const input = String(value || '');
+  let hash = 0;
+  for (let index = 0; index < input.length; index += 1) {
+    hash = ((hash << 5) - hash + input.charCodeAt(index)) | 0;
+  }
+  return Math.abs(hash);
+};
+
+const buildSeedDigits = (seed, length) => {
+  const digits = [];
+  let state = hashString(seed) || 1;
+
+  for (let index = 0; index < length; index += 1) {
+    state = (state * 1103515245 + 12345) & 0x7fffffff;
+    digits.push(String(state % 10));
+  }
+
+  return digits.join('');
+};
+
+const buildThaiTaxIdFromSeed = (seed) => {
+  const twelveDigits = buildSeedDigits(`${seed}:tax-id`, 12).split('').map((digit) => Number(digit));
+  if (twelveDigits.every((digit) => digit === 0)) {
+    twelveDigits[0] = 1;
+  }
+
+  const weightedSum = twelveDigits.reduce((sum, digit, index) => sum + (digit * (13 - index)), 0);
+  const checkDigit = (11 - (weightedSum % 11)) % 10;
+
+  return `${twelveDigits.join('')}${checkDigit}`;
+};
+
+const formatThaiPhoneNumber = (rawPhone, seed) => {
+  let digits = String(rawPhone || '').replace(/\D/g, '');
+
+  if (digits.length < 9) {
+    digits = `09${buildSeedDigits(`${seed}:phone`, 8)}`;
+  } else if (digits.length === 9) {
+    digits = `0${digits}`;
+  } else if (digits.length > 10) {
+    digits = digits.slice(-10);
+  }
+
+  if (!digits.startsWith('0')) {
+    digits = `0${digits.slice(-9)}`;
+  }
+
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+};
+
+const mockTaxAddresses = [
+  '99/9 Sukhumvit Rd, Khlong Toei, Bangkok 10110',
+  '88/12 Mittraphap Rd, Mueang Khon Kaen, Khon Kaen 40000',
+  '120/5 Phahonyothin Rd, Mueang Chiang Rai, Chiang Rai 57000',
+  '45/7 Superhighway Rd, Mueang Chiang Mai, Chiang Mai 50000',
+];
+
+const pickMockTaxAddress = (seed) => {
+  const index = hashString(`${seed}:address`) % mockTaxAddresses.length;
+  return mockTaxAddresses[index];
+};
+
 const buildMockDriverTaxProfile = (driver) => {
   const configuredTaxpayerType = String(process.env.PAYMENT_MOCK_TAXPAYER_TYPE || 'INDIVIDUAL').toUpperCase();
   const taxpayerType = configuredTaxpayerType === 'COMPANY' ? 'COMPANY' : 'INDIVIDUAL';
-  const configuredIsHeadOffice = process.env.PAYMENT_MOCK_IS_HEAD_OFFICE;
+  const configuredTaxpayerName = envStringOrNull(process.env.PAYMENT_MOCK_TAXPAYER_NAME);
+  const configuredTaxId = envStringOrNull(process.env.PAYMENT_MOCK_TAX_ID);
+  const configuredBranchCode = envStringOrNull(process.env.PAYMENT_MOCK_BRANCH_CODE);
+  const configuredIsHeadOffice = envStringOrNull(process.env.PAYMENT_MOCK_IS_HEAD_OFFICE);
+  const configuredTaxAddress = envStringOrNull(process.env.PAYMENT_MOCK_TAX_ADDRESS);
+  const configuredEmail = envStringOrNull(process.env.PAYMENT_MOCK_EMAIL);
+  const configuredPhoneNumber = envStringOrNull(process.env.PAYMENT_MOCK_PHONE_NUMBER);
+  const seed = String(driver?.id || driver?.email || driver?.username || 'mock-driver');
+  const resolvedName = fullName(driver);
+  const isHeadOffice = configuredIsHeadOffice === null ? true : isTruthyEnv(configuredIsHeadOffice);
+  const defaultCompanyName = resolvedName === 'Unknown'
+    ? 'Demo Transport Co., Ltd.'
+    : `${resolvedName} Transport Co., Ltd.`;
 
   return {
     taxpayerType,
-    taxpayerName: process.env.PAYMENT_MOCK_TAXPAYER_NAME || fullName(driver),
-    taxId: process.env.PAYMENT_MOCK_TAX_ID || '0000000000000',
-    branchCode: process.env.PAYMENT_MOCK_BRANCH_CODE || null,
-    isHeadOffice: configuredIsHeadOffice === undefined ? true : isTruthyEnv(configuredIsHeadOffice),
-    taxAddress: process.env.PAYMENT_MOCK_TAX_ADDRESS || 'Mock Address (Dev Only)',
-    email: process.env.PAYMENT_MOCK_EMAIL || driver?.email || null,
-    phoneNumber: process.env.PAYMENT_MOCK_PHONE_NUMBER || driver?.phoneNumber || null,
+    taxpayerName: configuredTaxpayerName || (taxpayerType === 'COMPANY' ? defaultCompanyName : resolvedName),
+    taxId: configuredTaxId || buildThaiTaxIdFromSeed(seed),
+    branchCode: taxpayerType === 'COMPANY'
+      ? (isHeadOffice ? null : (configuredBranchCode || '00001'))
+      : null,
+    isHeadOffice,
+    taxAddress: configuredTaxAddress || pickMockTaxAddress(seed),
+    email: configuredEmail || driver?.email || `billing+${seed.slice(-6)}@demo.painamnae.app`,
+    phoneNumber: formatThaiPhoneNumber(configuredPhoneNumber || driver?.phoneNumber, seed),
     isMock: true,
   };
 };

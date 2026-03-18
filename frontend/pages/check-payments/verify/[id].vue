@@ -105,10 +105,6 @@
 
             <div class="grid grid-cols-1 gap-4">
               <div>
-                <label class="block mb-1 text-sm font-semibold text-gray-700">เลขอ้างอิง</label>
-                <input :value="referenceNo || '-'" type="text" disabled class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100" />
-              </div>
-              <div>
                 <label class="block mb-1 text-sm font-semibold text-gray-700">เวลาโอน/จ่าย</label>
                 <input :value="paidAtText" type="text" disabled class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100" />
               </div>
@@ -322,7 +318,6 @@ const declaredPaymentMethod = ref('')
 const verifiedPaymentMethod = ref('')
 const methodMismatchReason = ref('')
 const rejectReason = ref('')
-const referenceNo = ref('')
 const note = ref('')
 const paidAtText = ref('')
 const evidenceUrl = ref('')
@@ -513,7 +508,6 @@ const loadConfirmation = async () => {
     declaredPaymentMethod.value = submission.paymentMethod || ''
     verifiedPaymentMethod.value = submission.verifiedPaymentMethod || submission.paymentMethod || 'CASH'
     methodMismatchReason.value = submission.methodMismatchReason || ''
-    referenceNo.value = submission.referenceNo || ''
     note.value = submission.note || ''
     const submissionRequestedDocumentTypes = Array.isArray(submission.requestedDocumentTypes)
       ? submission.requestedDocumentTypes

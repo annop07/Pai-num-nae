@@ -552,13 +552,17 @@ describe('payment.service', () => {
         data: expect.objectContaining({
           documentType: 'TAX_INVOICE',
           payeeName: 'Driver Boy',
-          payeeTaxId: '0000000000000',
-          payeeAddress: 'Mock Address (Dev Only)',
+          payeeTaxId: expect.stringMatching(/^\d{13}$/),
+          payeeAddress: expect.any(String),
           templateData: expect.objectContaining({
             driverTaxProfileSource: 'MOCK',
           }),
         }),
       })
     );
+
+    const createCall = prisma.paymentDocument.create.mock.calls[0][0];
+    expect(createCall.data.payeeTaxId).not.toBe('0000000000000');
+    expect(createCall.data.payeeAddress).not.toBe('Mock Address (Dev Only)');
   });
 });

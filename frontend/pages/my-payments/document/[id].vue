@@ -145,12 +145,7 @@
             </header>
 
             <section class="px-5 py-3 text-[12px] leading-5 text-zinc-800 border-b border-zinc-300">
-              <div
-                :class="[
-                  'rounded border p-2.5 text-center leading-4',
-                  activeDocument.documentType === 'TAX_INVOICE' ? 'border-sky-400 bg-sky-50' : 'border-zinc-300 bg-zinc-50'
-                ]"
-              >
+              <div class="rounded border border-zinc-300 bg-zinc-50 p-2.5 text-center leading-4">
                 <p class="font-semibold">{{ activeDocument.payeeName || 'ไปนำแหน่' }}</p>
                 <p>{{ normalizeText(activeDocument.payeeAddress) }}</p>
                 <p>

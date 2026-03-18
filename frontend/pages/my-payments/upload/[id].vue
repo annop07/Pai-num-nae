@@ -69,14 +69,10 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
               <div>
                 <label class="text-sm font-semibold text-gray-700 block mb-1">จำนวนเงิน (บาท)</label>
                 <input v-model.number="amount" type="number" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
-              </div>
-              <div>
-                <label class="text-sm font-semibold text-gray-700 block mb-1">เลขอ้างอิง (ถ้ามี)</label>
-                <input v-model="referenceNo" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500" />
               </div>
             </div>
 
@@ -121,24 +117,8 @@
             </div>
 
             <div v-if="wantReceipt" class="space-y-4">
-              <div class="flex gap-2">
-                <button
-                  @click="receiptType = 'INDIVIDUAL'"
-                  :class="receiptType === 'INDIVIDUAL' ? 'border-gray-300 text-gray-800 font-bold bg-white' : 'border-gray-200 text-gray-400 bg-gray-50'"
-                  class="px-4 py-2 text-sm border rounded-md"
-                >
-                  บุคคลธรรมดา
-                </button>
-                <button
-                  @click="receiptType = 'CORPORATE'"
-                  :class="receiptType === 'CORPORATE' ? 'border-gray-300 text-gray-800 font-bold bg-white' : 'border-gray-200 text-gray-400 bg-gray-50'"
-                  class="px-4 py-2 text-sm border rounded-md"
-                >
-                  นิติบุคคล/บริษัท
-                </button>
-              </div>
-
-              <div v-if="receiptType === 'CORPORATE'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="text-sm font-semibold text-gray-700">ข้อมูลนิติบุคคล/บริษัท</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="text-sm font-semibold text-gray-700 block mb-1">ชื่อบริษัท</label>
                   <input v-model="receiptForm.name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md" />
@@ -180,14 +160,12 @@ const errorMessage = ref('')
 const amount = ref(0)
 const paymentMethod = ref('PROMPTPAY')
 const paidAtLocal = ref('')
-const referenceNo = ref('')
 const note = ref('')
 const requestedDocumentTypes = ref(['TAX_INVOICE'])
 const hasTaxInvoiceRequest = computed(() => requestedDocumentTypes.value.includes('TAX_INVOICE'))
 const primaryRequestedDocumentType = computed(() => requestedDocumentTypes.value[0] || '')
 
 const wantReceipt = ref(false)
-const receiptType = ref('INDIVIDUAL')
 const receiptForm = ref({
   name: '',
   taxId: '',
@@ -236,7 +214,7 @@ const validateBeforeSubmit = () => {
 
   const isTaxInvoiceRequest = hasTaxInvoiceRequest.value
 
-  if (isTaxInvoiceRequest && wantReceipt.value && receiptType.value === 'CORPORATE') {
+  if (isTaxInvoiceRequest && wantReceipt.value) {
     if (!String(receiptForm.value.name || '').trim()) return 'กรุณาระบุชื่อบริษัท'
     if (!/^\d{13}$/.test(String(receiptForm.value.taxId || '').trim())) return 'เลขผู้เสียภาษีต้องมี 13 หลัก'
     if (!String(receiptForm.value.address || '').trim()) return 'กรุณาระบุที่อยู่ตามทะเบียนภาษี'
@@ -265,10 +243,9 @@ const submitProof = async () => {
       formData.append('requestedDocumentType', primaryRequestedDocumentType.value)
     }
 
-    if (referenceNo.value) formData.append('referenceNo', referenceNo.value)
     if (note.value) formData.append('note', note.value)
 
-    const isCorporateRequest = hasTaxInvoiceRequest.value && wantReceipt.value && receiptType.value === 'CORPORATE'
+    const isCorporateRequest = hasTaxInvoiceRequest.value && wantReceipt.value
     formData.append('isCorporateRequest', String(isCorporateRequest))
 
     if (isCorporateRequest) {
@@ -314,7 +291,6 @@ onMounted(async () => {
 watch(requestedDocumentTypes, (nextTypes) => {
   if (Array.isArray(nextTypes) && nextTypes.includes('TAX_INVOICE')) return
   wantReceipt.value = false
-  receiptType.value = 'INDIVIDUAL'
   receiptForm.value = {
     name: '',
     taxId: '',
@@ -322,18 +298,8 @@ watch(requestedDocumentTypes, (nextTypes) => {
   }
 }, { deep: true })
 
-watch(receiptType, (nextType) => {
-  if (nextType !== 'INDIVIDUAL') return
-  receiptForm.value = {
-    name: '',
-    taxId: '',
-    address: '',
-  }
-})
-
 watch(wantReceipt, (want) => {
   if (want) return
-  receiptType.value = 'INDIVIDUAL'
   receiptForm.value = {
     name: '',
     taxId: '',
