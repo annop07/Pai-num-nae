@@ -1,6 +1,7 @@
 *** Settings ***
 Library    SeleniumLibrary
 Library    OperatingSystem
+Library    String
 Resource   common.resource
 Resource   variables.resource
 
@@ -40,6 +41,31 @@ Navigate To Upload Slip Page
     Go To    ${BASE_URL}/my-payments/upload/${booking_id}
     Wait Until Location Contains    /my-payments/upload    ${TIMEOUT}
     Wait For Element    xpath=//h1[contains(text(), 'แนบหลักฐานการชำระเงิน')]
+
+Open First Unpaid Upload Slip Page
+    [Documentation]    เปิดหน้าแนบหลักฐานของรายการแรกที่ยังแนบได้ (UNPAID) แล้วคืนค่า booking_id
+    Navigate To My Payments
+    # เลือกแท็บ "ยังไม่ยืนยัน" ถ้ามี
+    ${has_unpaid_tab}=    Run Keyword And Return Status
+    ...    Wait Until Element Is Visible
+    ...    xpath=//*[self::button or self::a][contains(.,'ยังไม่ยืนยัน')]
+    ...    2s
+    IF    ${has_unpaid_tab}
+        Click Element    xpath=//*[self::button or self::a][contains(.,'ยังไม่ยืนยัน')]
+    END
+    ${has_attach}=    Run Keyword And Return Status
+    ...    Wait Until Element Is Visible
+    ...    xpath=(//*[self::a or self::button][contains(.,'แนบหลักฐาน')])[1]
+    ...    5s
+    IF    not ${has_attach}
+        Fail    ไม่พบปุ่ม "แนบหลักฐาน" ในหน้า การชำระเงินของฉัน (ต้องมี booking UNPAID ที่ยังไม่เคยส่งหลักฐาน)
+    END
+    Click Element    xpath=(//*[self::a or self::button][contains(.,'แนบหลักฐาน')])[1]
+    Wait Until Location Contains    /my-payments/upload/    ${TIMEOUT}
+    ${url}=    Get Location
+    ${booking_id}=    Replace String Using Regexp    ${url}    .*/my-payments/upload/([^/?#]+).*    \\1
+    Should Not Be Equal    ${booking_id}    ${url}
+    RETURN    ${booking_id}
 
 Navigate To Payment Document Page
     [Documentation]    Navigate to document page (requires confirmation id)
@@ -234,7 +260,8 @@ Open First Payment Verification Confirmed
     Wait Until Location Contains    /check-payments/verify/    ${TIMEOUT}
     Wait For Element    xpath=//h4[contains(text(), 'หลักฐาน')]
 
-Select Document Type For Issue    ${doc_type}
+Select Document Type For Issue
+    [Arguments]    ${doc_type}
     [Documentation]    เลือกประเภทเอกสารในหน้า verify (TAX_INVOICE / PAYMENT_VOUCHER)
     Wait Until Element Is Visible    xpath=//label[contains(.,'ประเภทเอกสาร')]/following::select[1]    ${TIMEOUT}
     Select From List By Value    xpath=//label[contains(.,'ประเภทเอกสาร')]/following::select[1]    ${doc_type}
@@ -245,7 +272,8 @@ Click Issue Document Button
     Scroll Element Into View    xpath=//button[.//*[contains(.,'ออกเอกสาร')] or contains(.,'ออกเอกสาร')]
     Click Element    xpath=//button[.//*[contains(.,'ออกเอกสาร')] or contains(.,'ออกเอกสาร')]
 
-Verify Document Issued List Contains    ${expected_type_th}
+Verify Document Issued List Contains
+    [Arguments]    ${expected_type_th}
     [Documentation]    ตรวจว่าในส่วน \"เอกสารที่ออกแล้ว\" มีรายการตามประเภทที่คาดหวัง
     Wait Until Page Contains    เอกสารที่ออกแล้ว    ${TIMEOUT}
     Wait Until Page Contains    ${expected_type_th}    ${TIMEOUT}

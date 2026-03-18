@@ -71,7 +71,8 @@ TC-006 Corporate Validation Missing Address
 
 TC-007 Corporate Submit Success
     [Documentation]    ส่งหลักฐานพร้อม corporate info (ถ้า booking นี้ยังไม่ถูกส่งมาก่อน)
-    Navigate To Upload Slip Page    ${BOOKING_ID_UNPAID}
+    Login As Passenger
+    ${booking_id}=    Open First Unpaid Upload Slip Page
     Upload Slip File    ${SLIP_JPG}
     Select Payment Method    ${METHOD_PROMPTPAY}
     Input Payment Amount    100
@@ -83,7 +84,7 @@ TC-007 Corporate Submit Success
     Click Submit Proof Button
     ${ok}=    Run Keyword And Return Status    Verify Upload Success
     IF    not ${ok}
-        Skip    ส่งหลักฐานไม่สำเร็จ (อาจส่งไปแล้ว/สถานะไม่ตรง) กรุณาเตรียม booking UNPAID ใหม่
+        Fail    ส่งหลักฐานไม่สำเร็จสำหรับ booking_id=${booking_id} (ตรวจ log.html/output.xml เพื่อดูสาเหตุจริง)
     END
 
 TC-008 Post Submit Status Under Review
