@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.11.8 on darwin)" generated="2026-03-18T18:41:33.113207" rpa="false" schemaversion="5">
+<suite id="s1" name="Tax Invoice" source="/Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-Bonus/uat/robot/tax_invoice.robot">
+<kw name="Open Browser To Website" owner="common" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:33.248213" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3001'.</msg>
+<arg>${BASE_URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-18T18:41:33.248106" elapsed="2.001537"/>
+</kw>
+<kw name="Set Selenium Implicit Wait" owner="SeleniumLibrary">
+<arg>${IMPLICIT_WAIT}</arg>
+<doc>Sets the implicit wait value used by Selenium.</doc>
+<status status="PASS" start="2026-03-18T18:41:35.250321" elapsed="0.001743"/>
+</kw>
+<kw name="Set Selenium Timeout" owner="SeleniumLibrary">
+<arg>${TIMEOUT}</arg>
+<doc>Sets the timeout that is used by various keywords.</doc>
+<status status="PASS" start="2026-03-18T18:41:35.252273" elapsed="0.000986"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DEMO_SPEED}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-18T18:41:35.253417" elapsed="0.000250"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-18T18:41:35.253794" elapsed="0.545089"/>
+</kw>
+<doc>Open browser and navigate to base URL</doc>
+<status status="PASS" start="2026-03-18T18:41:33.247716" elapsed="2.551368"/>
+</kw>
+<test id="s1-t1" name="TC-001 Driver Login" line="18">
+<kw name="Login As Driver" owner="payment">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:35.800345" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-18T18:41:35.800227" elapsed="0.332187"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-18T18:41:36.132869" elapsed="0.440958"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:36.574667" level="INFO">Typing text 'annop.sa@gmail.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${DRIVER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:36.574217" elapsed="0.775797"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:37.350704" level="INFO">Typing text '0611044772za' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${DRIVER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:37.350328" elapsed="0.688611"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:38.040027" level="INFO">Clicking button 'xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']'.</msg>
+<arg>xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:38.039448" elapsed="1.114558"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:49.866508" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-117.png"&gt;&lt;img src="selenium-screenshot-117.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-18T18:41:49.866691" level="FAIL">Location did contain '/login' in 10 seconds.</msg>
+<arg>/login</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="FAIL" start="2026-03-18T18:41:39.154610" elapsed="10.716865">Location did contain '/login' in 10 seconds.</status>
+</kw>
+<doc>Login with driver credentials</doc>
+<status status="FAIL" start="2026-03-18T18:41:35.799997" elapsed="14.072173">Location did contain '/login' in 10 seconds.</status>
+</kw>
+<kw name="Get Location" owner="SeleniumLibrary">
+<var>${url}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="NOT RUN" start="2026-03-18T18:41:49.872918" elapsed="0.000024"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${url}</arg>
+<arg>/login</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="NOT RUN" start="2026-03-18T18:41:49.873030" elapsed="0.000015"/>
+</kw>
+<kw name="Run Keyword If Test Failed" owner="BuiltIn" type="TEARDOWN">
+<kw name="Take Screenshot On Failure" owner="common">
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:50.153651" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-118.png"&gt;&lt;img src="selenium-screenshot-118.png" width="800px"&gt;&lt;/a&gt;</msg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-18T18:41:49.873739" elapsed="0.279992"/>
+</kw>
+<doc>Capture screenshot when test fails</doc>
+<status status="PASS" start="2026-03-18T18:41:49.873605" elapsed="0.280198"/>
+</kw>
+<arg>Take Screenshot On Failure</arg>
+<doc>Runs the given keyword with the given arguments, if the test failed.</doc>
+<status status="PASS" start="2026-03-18T18:41:49.873226" elapsed="0.280612"/>
+</kw>
+<doc>Login ด้วยบัญชี Driver</doc>
+<status status="FAIL" start="2026-03-18T18:41:35.799330" elapsed="14.354583">Location did contain '/login' in 10 seconds.</status>
+</test>
+<test id="s1-t2" name="TC-002 Open Confirmed Verification Case" line="24">
+<kw name="Login As Driver" owner="payment">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:50.154933" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-18T18:41:50.154828" elapsed="0.352655"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-18T18:41:50.507620" elapsed="0.414823"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:50.922758" level="INFO">Typing text 'annop.sa@gmail.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${DRIVER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:50.922594" elapsed="0.760158"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:51.683767" level="INFO">Typing text '0611044772za' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${DRIVER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:51.683326" elapsed="0.677685"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:41:52.361393" level="INFO">Clicking button 'xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']'.</msg>
+<arg>xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:41:52.361208" elapsed="1.058289"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:04.087768" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-119.png"&gt;&lt;img src="selenium-screenshot-119.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-18T18:42:04.088658" level="FAIL">Location did contain '/login' in 10 seconds.</msg>
+<arg>/login</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="FAIL" start="2026-03-18T18:41:53.419831" elapsed="10.669789">Location did contain '/login' in 10 seconds.</status>
+</kw>
+<doc>Login with driver credentials</doc>
+<status status="FAIL" start="2026-03-18T18:41:50.154656" elapsed="13.935234">Location did contain '/login' in 10 seconds.</status>
+</kw>
+<kw name="Open First Payment Verification Confirmed" owner="payment">
+<doc>เปิดหน้า Verify ของเคสแรกที่สถานะ "ยืนยันแล้ว" อัตโนมัติ (มี confirmationId)</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:04.090438" elapsed="0.000067"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ออกเอกสารการเงิน</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:04.090641" elapsed="0.000014"/>
+</kw>
+<kw name="Run Keyword If Test Failed" owner="BuiltIn" type="TEARDOWN">
+<kw name="Take Screenshot On Failure" owner="common">
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:04.390294" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-120.png"&gt;&lt;img src="selenium-screenshot-120.png" width="800px"&gt;&lt;/a&gt;</msg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-18T18:42:04.091478" elapsed="0.298945"/>
+</kw>
+<doc>Capture screenshot when test fails</doc>
+<status status="PASS" start="2026-03-18T18:42:04.091324" elapsed="0.299206"/>
+</kw>
+<arg>Take Screenshot On Failure</arg>
+<doc>Runs the given keyword with the given arguments, if the test failed.</doc>
+<status status="PASS" start="2026-03-18T18:42:04.090859" elapsed="0.299727"/>
+</kw>
+<doc>เปิดเคสสถานะยืนยันแล้ว (CONFIRMED) อัตโนมัติ</doc>
+<status status="FAIL" start="2026-03-18T18:41:50.154143" elapsed="14.236556">Location did contain '/login' in 10 seconds.</status>
+</test>
+<test id="s1-t3" name="TC-003 Issue Tax Invoice Success" line="30">
+<kw name="Login As Driver" owner="payment">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:04.392295" level="INFO">Opening url 'http://localhost:3001/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-18T18:42:04.392158" elapsed="0.428541"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-18T18:42:04.820853" elapsed="0.422230"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:05.243513" level="INFO">Typing text 'annop.sa@gmail.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${DRIVER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:42:05.243301" elapsed="0.667157"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:05.911360" level="INFO">Typing text '0611044772za' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${DRIVER_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-18T18:42:05.910896" elapsed="0.685380"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:06.597475" level="INFO">Clicking button 'xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']'.</msg>
+<msg time="2026-03-18T18:42:06.721724" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107201cd0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.724738" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072337d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.725844" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107259b90&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.731767" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725a290&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</msg>
+<arg>xpath=//button[contains(text(), 'เข้าสู่ระบบ') or @type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-18T18:42:06.596844" elapsed="0.140878">Execution terminated by signal</status>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>${TIMEOUT}</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.737955" elapsed="0.000037"/>
+</kw>
+<doc>Login with driver credentials</doc>
+<status status="FAIL" start="2026-03-18T18:42:04.391927" elapsed="2.346172">Execution terminated by signal</status>
+</kw>
+<kw name="Open First Payment Verification Confirmed" owner="payment">
+<doc>เปิดหน้า Verify ของเคสแรกที่สถานะ "ยืนยันแล้ว" อัตโนมัติ (มี confirmationId)</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.738350" elapsed="0.000029"/>
+</kw>
+<kw name="Select Document Type For Issue" owner="payment">
+<arg>TAX_INVOICE</arg>
+<doc>เลือกประเภทเอกสารในหน้า verify (TAX_INVOICE / PAYMENT_VOUCHER)</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.738500" elapsed="0.000020"/>
+</kw>
+<kw name="Click Issue Document Button" owner="payment">
+<doc>กดปุ่ม "ออกเอกสาร" (ต้องอยู่สถานะ CONFIRMED)</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.738634" elapsed="0.000019"/>
+</kw>
+<kw name="Handle Tax Profile Modal If Present" owner="payment">
+<doc>ถ้า modal "กรอกข้อมูลภาษีครั้งแรก" โผล่ขึ้นมา ให้กรอกขั้นต่ำและบันทึก</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.738801" elapsed="0.000018"/>
+</kw>
+<kw name="Verify Document Issued List Contains" owner="payment">
+<arg>ใบกำกับภาษี</arg>
+<doc>ตรวจว่าในส่วน "เอกสารที่ออกแล้ว" มีรายการตามประเภทที่คาดหวัง</doc>
+<status status="NOT RUN" start="2026-03-18T18:42:06.738919" elapsed="0.000017"/>
+</kw>
+<kw name="Run Keyword If Test Failed" owner="BuiltIn" type="TEARDOWN">
+<kw name="Take Screenshot On Failure" owner="common">
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:06.744644" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072035d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.745363" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072536d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.748191" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107253850&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.755572" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1071c6f90&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.756343" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725b110&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.756909" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725b690&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.757264" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107258b90&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</msg>
+<msg time="2026-03-18T18:42:06.757382" level="FAIL">MaxRetryError: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107252b50&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</msg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="FAIL" start="2026-03-18T18:42:06.739852" elapsed="0.023880">MaxRetryError: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107252b50&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</status>
+</kw>
+<doc>Capture screenshot when test fails</doc>
+<status status="FAIL" start="2026-03-18T18:42:06.739446" elapsed="0.024404">MaxRetryError: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107252b50&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</status>
+</kw>
+<arg>Take Screenshot On Failure</arg>
+<doc>Runs the given keyword with the given arguments, if the test failed.</doc>
+<status status="FAIL" start="2026-03-18T18:42:06.739150" elapsed="0.024742">MaxRetryError: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107252b50&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</status>
+</kw>
+<doc>เลือก TAX_INVOICE และออกเอกสารสำเร็จ (ถ้ามี modal tax profile ให้กรอก)</doc>
+<status status="FAIL" start="2026-03-18T18:42:04.391047" elapsed="2.372910">Execution terminated by signal
+
+Also teardown failed:
+MaxRetryError: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107252b50&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</status>
+</test>
+<test id="s1-t4" name="TC-004 Issue Tax Invoice Without Confirm Should Be Blocked" line="40">
+<doc>ถ้าเคสยังไม่ CONFIRMED ปุ่มออกเอกสารควรถูกบล็อก/มีข้อความแจ้งเตือน</doc>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-18T18:42:06.764121" elapsed="0.000596">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t5" name="TC-005 Tax Profile Modal Validation (TaxId 13 digits)" line="47">
+<doc>กรณี modal tax profile โผล่ ให้ตรวจ validation เลขผู้เสียภาษี 13 หลัก</doc>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-18T18:42:06.764816" elapsed="0.000412">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t6" name="TC-006 Duplicate Tax Invoice Should Be Blocked" line="61">
+<doc>ออก TAX_INVOICE ซ้ำควรขึ้นข้อความว่าเอกสารถูกออกแล้ว หรือปุ่มถูก disable</doc>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-18T18:42:06.765319" elapsed="0.000488">Test execution stopped due to a fatal error.</status>
+</test>
+<kw name="Close Browser Session" owner="common" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<msg time="2026-03-18T18:42:06.768301" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107371950&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+<msg time="2026-03-18T18:42:06.770345" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107371f50&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+<msg time="2026-03-18T18:42:06.771332" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1073038d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-18T18:42:06.766422" elapsed="0.005726"/>
+</kw>
+<doc>Close the browser</doc>
+<status status="PASS" start="2026-03-18T18:42:06.766272" elapsed="0.005934"/>
+</kw>
+<doc>UAT-Bonus-TaxInvoice-001: ออกใบกำกับภาษี (TAX_INVOICE)
+ทดสอบการออกใบกำกับภาษีในหน้า Driver ตรวจสอบการชำระเงิน
+รวมทั้งกรณีต้องกรอก Tax Profile ครั้งแรก
+
+Total: 6 test cases</doc>
+<status status="FAIL" start="2026-03-18T18:41:33.113985" elapsed="33.658244"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="6" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat info="combined" combined="NOT robot:exit" pass="0" fail="3" skip="0">NOT robot:exit</stat>
+</tag>
+<suite>
+<stat name="Tax Invoice" id="s1" pass="0" fail="6" skip="0">Tax Invoice</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-18T18:42:06.721724" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107201cd0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.724738" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072337d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.725844" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107259b90&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.731767" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725a290&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</msg>
+<msg time="2026-03-18T18:42:06.744644" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072035d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.745363" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1072536d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.748191" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107253850&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.755572" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1071c6f90&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.756343" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725b110&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.756909" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x10725b690&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot</msg>
+<msg time="2026-03-18T18:42:06.757264" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=50114): Max retries exceeded with url: /session/9741c46b92c0f5f2c1ab025776a6c31a/screenshot (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107258b90&gt;: Failed to establish a new connection: [Errno 61] Connection refused'))</msg>
+<msg time="2026-03-18T18:42:06.768301" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107371950&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+<msg time="2026-03-18T18:42:06.770345" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x107371f50&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+<msg time="2026-03-18T18:42:06.771332" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0x1073038d0&gt;: Failed to establish a new connection: [Errno 61] Connection refused')': /session/9741c46b92c0f5f2c1ab025776a6c31a</msg>
+</errors>
+</robot>
