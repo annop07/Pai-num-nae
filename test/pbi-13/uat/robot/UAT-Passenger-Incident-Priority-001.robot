@@ -7,14 +7,12 @@ Suite Teardown    Close All Browsers
 ${BASE_URL}             http://localhost:3001
 ${PASSENGER_USERNAME}   TestPassenger_UAT
 ${PASSENGER_PASSWORD}   12345678Test
-${CHROMEDRIVER}         C:\\Users\\porap\\.wdm\\drivers\\chromedriver\\win64\\145.0.7632.117\\chromedriver-win32\\chromedriver.exe
 
 *** Keywords ***
 Login And Go To Form
     [Documentation]    เปิด Browser, Login ด้วย Passenger, แล้วไปหน้า formIncident
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys
-    ${service}=    Evaluate    sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')    sys
-    Create Webdriver    Chrome    options=${options}    service=${service}
+    Create Webdriver    Chrome    options=${options}
     Go To    ${BASE_URL}/login
     Maximize Browser Window
     Set Selenium Speed    0.5s
