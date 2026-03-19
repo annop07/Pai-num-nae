@@ -2,28 +2,28 @@
 Library    SeleniumLibrary
 
 *** Variables ***
-${BASE_URL}                 http://localhost:3001
+${BASE_URL}                 https://cssekku3-5.cpkku.com/
 ${BROWSER}                  chrome
 
-${PASSENGER_EMAIL_NORMAL}      TestPassenger_UAT@gmail.com
+${PASSENGER_EMAIL_NORMAL}      TestPassengerDelete@gmail.com
 ${PASSENGER_EMAIL_BOOKING}     TestPassenger_Block@gmail.com
 ${PASSENGER_EMAIL_INCIDENT}    TestPassenger_Incident@gmail.com
 ${PASSENGER_PASSWORD}          12345678Test
 
-${DRIVER_USERNAME_NORMAL}      TestDriver_UAT
+${DRIVER_USERNAME_NORMAL}      TestDriverDelete@gmail.com
 ${DRIVER_USERNAME_ROUTE}       TestDriver_Block@gmail.com
 ${DRIVER_USERNAME_INCIDENT}    TestDriver_Incident@gmail.com
 ${DRIVER_PASSWORD}             12345678Test
 
-${ADMIN_USERNAME}           Admin_UAT
-${ADMIN_PASSWORD}           12345678Test
+${ADMIN_USERNAME}           admin@painamnae.com
+${ADMIN_PASSWORD}           Admin@12345
 
 *** Keywords ***
 Open Login Page
     [Documentation]    เปิด Browser และไปหน้า Login (ใช้ครั้งเดียวใน Suite Setup)
     Open Browser    ${BASE_URL}/login    ${BROWSER}
     Maximize Browser Window
-    Set Selenium Speed    0.3s
+    Set Selenium Speed    0.4s
     Wait Until Page Contains    เข้าสู่ระบบ    15s
 
 Navigate To Login Page

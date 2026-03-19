@@ -4,6 +4,7 @@ Library           SeleniumLibrary
 Resource          delete_account_resource.robot
 Suite Setup       Open Login Page
 Suite Teardown    Close All Browsers
+Test Teardown     Sleep    2s
 
 *** Test Cases ***
 DR-08 - Block Delete When Incident PENDING
