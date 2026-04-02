@@ -6,14 +6,12 @@ Suite Teardown    Close All Browsers
 ${BASE_URL}             https://cssekku3-5.cpkku.com/
 ${PASSENGER_USERNAME}   TestPassenger_UAT
 ${PASSENGER_PASSWORD}   12345678Test
-${CHROMEDRIVER}         C:\\Users\\porap\\.wdm\\drivers\\chromedriver\\win64\\145.0.7632.117\\chromedriver-win32\\chromedriver.exe
 
 *** Test Cases ***
 Step 1 - Login As Passenger
     [Documentation]    ผู้โดยสารรายงานความประพฤติคนขับสำเร็จ
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys
-    ${service}=    Evaluate    sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${CHROMEDRIVER}')    sys
-    Create Webdriver    Chrome    options=${options}    service=${service}
+    Create Webdriver    Chrome    options=${options}
     Go To    ${BASE_URL}/login
     Maximize Browser Window
     Set Selenium Speed    0.5s

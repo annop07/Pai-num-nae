@@ -3,10 +3,10 @@ Documentation     UAT - Admin Change Status from INVESTIGATING to RESOLVED
 Library           SeleniumLibrary
 
 *** Variables ***
-${BASE_URL}       http://localhost:3001
+${BASE_URL}       https://cssekku3-5.cpkku.com/
 ${BROWSER}        chrome
-${USERNAME}     admin123
-${PASSWORD}     Admin@12345
+${USERNAME}       admin@painamnae.com
+${PASSWORD}       Admin@12345
 
 *** Test Cases ***
 UAT-Admin-ChangeStatus-002
@@ -21,24 +21,26 @@ UAT-Admin-ChangeStatus-002
     Input Text    xpath=//input[@type='text']    ${USERNAME}
     Input Text    xpath=//input[@type='password']    ${PASSWORD}
     Click Button    xpath=//button[contains(.,'เข้าสู่ระบบ')]
+    Wait Until Location Does Not Contain    /login    15s
 
-    Wait Until Page Contains    Incident Management    10s
+    Go To    ${BASE_URL}/admin/incidents
+    Wait Until Location Contains    /incidents    10s
 
     # ===== เลือก Incident ที่เป็น INVESTIGATING =====
-    Wait Until Page Contains    INVESTIGATING    15s
-    Click Element    xpath=//td[contains(.,'INVESTIGATING')]/following::button[contains(.,'View')][1]
+    Wait Until Page Contains    กำลังตรวจสอบ    15s
+    Click Element    xpath=//td[contains(.,'กำลังตรวจสอบ')]/following::button[contains(.,'ดูรายละเอียดและดำเนินการ')][1]
 
     # ===== รอ Form เปิด =====
-    Wait Until Element Is Visible    xpath=//label[contains(.,'New Status')]    10s
+    Wait Until Element Is Visible    xpath=//label[contains(.,'สถานะใหม่')]    10s
 
     # ===== เลือก New Status = RESOLVED =====
-    Select From List By Label
-    ...    xpath=//label[contains(.,'New Status')]/following::select[1]
+    Select From List By Value
+    ...    xpath=//label[contains(.,'สถานะใหม่')]/following::select[1]
     ...    RESOLVED
 
     # ===== เลือก Reason Category =====
     Select From List By Label
-    ...    xpath=//label[contains(.,'Reason Category')]/following::select[1]
+    ...    xpath=//label[contains(.,'หมวดหมู่เหตุผล')]/following::select[1]
     ...    ตรวจสอบหลักฐานแล้ว
 
     # ===== กรอก Description =====
@@ -58,6 +60,6 @@ UAT-Admin-ChangeStatus-002
     Click Button    xpath=//button[contains(.,'รายงาน')]
 
     # ===== Verify Success =====
-    Wait Until Page Contains    RESOLVED    15s
+    Wait Until Page Contains    แก้ไขแล้ว    15s
 
     Close Browser

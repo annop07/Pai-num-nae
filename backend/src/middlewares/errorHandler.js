@@ -2,9 +2,7 @@ const { Prisma } = require('@prisma/client');
 const ApiError = require('../utils/ApiError');
 
 const errorHandler = (err, req, res, next) => {
-    if (process.env.NODE_ENV !== 'production') {
-        console.error('💥 AN ERROR OCCURRED 💥:', err);
-    }
+    console.error('💥 AN ERROR OCCURRED 💥:', err);
 
     // เริ่มต้นจากค่า default
     let statusCode = err.statusCode || 500;

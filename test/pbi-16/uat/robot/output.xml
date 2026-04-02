@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.11.8 on darwin)" generated="2026-03-19T09:45:41.603399" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-PostDelete-002" source="/Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/UAT-PostDelete-002.robot">
+<test id="s1-t1" name="PD-03 - Deleted User Data Still Exists Before Purge Job" line="10">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-19T09:45:41.622911" level="INFO">Starting process:
+node /Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/resources/set_deleted_at_90days.js TestPassengerDelete@gmail.com</msg>
+<msg time="2026-03-19T09:45:41.624878" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-19T09:45:44.030255" level="INFO">Process completed.</msg>
+<msg time="2026-03-19T09:45:44.030867" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SCRIPTS_DIR}/set_deleted_at_90days.js</arg>
+<arg>TestPassengerDelete@gmail.com</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-19T09:45:41.622702" elapsed="2.408229"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:44.032935" level="INFO">STDOUT: UPDATED:1</msg>
+<arg>STDOUT: ${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.031675" elapsed="0.001310"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:44.033646" level="INFO">STDERR: </msg>
+<arg>STDERR: ${result.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.033138" elapsed="0.000552"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${result.stdout}</arg>
+<arg>UPDATED:1</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.033825" elapsed="0.000807"/>
+</kw>
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-19T09:45:44.035248" level="INFO">Starting process:
+node /Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/resources/check_user_exists.js TestPassengerDelete@gmail.com</msg>
+<msg time="2026-03-19T09:45:44.039638" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-19T09:45:44.661324" level="INFO">Process completed.</msg>
+<msg time="2026-03-19T09:45:44.662163" level="INFO">${check} = &lt;result object with rc 0&gt;</msg>
+<var>${check}</var>
+<arg>node</arg>
+<arg>${SCRIPTS_DIR}/check_user_exists.js</arg>
+<arg>TestPassengerDelete@gmail.com</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.034776" elapsed="0.627461"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:44.664768" level="INFO">STDOUT: USER_EXISTS:TestPassengerDelete@gmail.com
+DELETED_AT:Fri Dec 19 2025 09:45:43 GMT+0700 (Indochina Time)</msg>
+<arg>STDOUT: ${check.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.663160" elapsed="0.001698"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:44.665704" level="INFO">STDERR: </msg>
+<arg>STDERR: ${check.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.665109" elapsed="0.000647"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${check.stdout}</arg>
+<arg>USER_EXISTS:TestPassengerDelete@gmail.com</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.665950" elapsed="0.000758"/>
+</kw>
+<doc>PD-03: ตั้ง deleted_at ย้อนหลัง 90 วัน แล้วตรวจสอบว่าข้อมูลยังอยู่ครบก่อน Purge Job รัน</doc>
+<status status="PASS" start="2026-03-19T09:45:41.622015" elapsed="3.044911"/>
+</test>
+<test id="s1-t2" name="PD-04 - User Data Permanently Deleted After Purge Job" line="24">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-19T09:45:44.669005" level="INFO">Starting process:
+node /Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/resources/run_purge_job.js</msg>
+<msg time="2026-03-19T09:45:44.673783" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-19T09:45:45.303039" level="INFO">Process completed.</msg>
+<msg time="2026-03-19T09:45:45.303716" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SCRIPTS_DIR}/run_purge_job.js</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-19T09:45:44.668497" elapsed="0.635263"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:45.305889" level="INFO">STDOUT: PURGE_COMPLETED
+DELETED_COUNT:1</msg>
+<arg>STDOUT: ${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.304431" elapsed="0.001515"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:45.306670" level="INFO">STDERR: </msg>
+<arg>STDERR: ${result.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.306122" elapsed="0.000587"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${result.stdout}</arg>
+<arg>PURGE_COMPLETED</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.306845" elapsed="0.000650"/>
+</kw>
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-19T09:45:45.308257" level="INFO">Starting process:
+node /Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/resources/check_user_exists.js TestPassengerDelete@gmail.com</msg>
+<msg time="2026-03-19T09:45:45.313902" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-19T09:45:45.921969" level="INFO">Process completed.</msg>
+<msg time="2026-03-19T09:45:45.922223" level="INFO">${check} = &lt;result object with rc 0&gt;</msg>
+<var>${check}</var>
+<arg>node</arg>
+<arg>${SCRIPTS_DIR}/check_user_exists.js</arg>
+<arg>TestPassengerDelete@gmail.com</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.307645" elapsed="0.614596"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:45.923112" level="INFO">STDOUT: USER_NOT_FOUND</msg>
+<arg>STDOUT: ${check.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.922528" elapsed="0.000609"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:45.923450" level="INFO">STDERR: </msg>
+<arg>STDERR: ${check.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.923207" elapsed="0.000264"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${check.stdout}</arg>
+<arg>USER_NOT_FOUND</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.923530" elapsed="0.000271"/>
+</kw>
+<doc>PD-04: รัน Purge Job แบบ Manual แล้วตรวจสอบว่าข้อมูลผู้ใช้ถูกลบถาวร</doc>
+<status status="PASS" start="2026-03-19T09:45:44.667195" elapsed="1.256688"/>
+</test>
+<test id="s1-t3" name="PD-05 - Related Data Handled After Purge" line="38">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-19T09:45:45.924806" level="INFO">Starting process:
+node /Users/annopsangsila/Desktop/Year3_2/Software_EN/Sprint/SE/Pai-num-nae/test/pbi-16/uat/robot/resources/check_related_data.js TestPassengerDelete@gmail.com</msg>
+<msg time="2026-03-19T09:45:45.926847" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-19T09:45:46.917450" level="INFO">Process completed.</msg>
+<msg time="2026-03-19T09:45:46.917986" level="INFO">${check} = &lt;result object with rc 0&gt;</msg>
+<var>${check}</var>
+<arg>node</arg>
+<arg>${SCRIPTS_DIR}/check_related_data.js</arg>
+<arg>TestPassengerDelete@gmail.com</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-19T09:45:45.924592" elapsed="0.993566"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:46.920213" level="INFO">STDOUT: BOOKINGS_COUNT:0
+INCIDENTS_COUNT:0
+RELATED_DATA_CLEANED</msg>
+<arg>STDOUT: ${check.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:46.918700" elapsed="0.001565"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-19T09:45:46.920950" level="INFO">STDERR: </msg>
+<arg>STDERR: ${check.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-19T09:45:46.920416" elapsed="0.000578"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${check.stdout}</arg>
+<arg>RELATED_DATA_CLEANED</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-19T09:45:46.921126" elapsed="0.000631"/>
+</kw>
+<doc>PD-05: หลัง Purge Job รัน ตรวจสอบข้อมูลที่เกี่ยวข้อง เช่น Booking History, Incident ว่าถูกจัดการตามนโยบาย</doc>
+<status status="PASS" start="2026-03-19T09:45:45.924002" elapsed="0.997910"/>
+</test>
+<doc>UAT - Soft Delete 90 Days Simulation (Post-Delete Behavior)</doc>
+<status status="PASS" start="2026-03-19T09:45:41.604017" elapsed="5.318406"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-PostDelete-002" id="s1" pass="3" fail="0" skip="0">UAT-PostDelete-002</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

@@ -668,6 +668,9 @@ const submitPaymentProof = async ({ bookingId, payload, evidenceFiles, passenger
     );
 
     return fetchDetailedConfirmationTx(tx, confirmation.id);
+  }, {
+    maxWait: 5000,
+    timeout: 15000,
   });
 };
 
@@ -811,6 +814,9 @@ const confirmPaymentProof = async (id, driverId, payload = {}) => {
     );
 
     return fetchDetailedConfirmationTx(tx, id);
+  }, {
+    maxWait: 5000,
+    timeout: 15000,
   });
 };
 
@@ -892,6 +898,9 @@ const rejectPaymentProof = async (id, driverId, reason) => {
     );
 
     return fetchDetailedConfirmationTx(tx, id);
+  }, {
+    maxWait: 5000,
+    timeout: 15000,
   });
 };
 
